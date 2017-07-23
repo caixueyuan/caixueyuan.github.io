@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://caixueyuan.github.io/"/>
-  <updated>2017-07-03T13:32:05.232Z</updated>
+  <updated>2017-07-19T15:48:29.486Z</updated>
   <id>https://caixueyuan.github.io/</id>
   
   <author>
@@ -14,6 +14,73 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>进程间通讯</title>
+    <link href="https://caixueyuan.github.io/2017/07/19/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E8%AE%AF/"/>
+    <id>https://caixueyuan.github.io/2017/07/19/进程间通讯/</id>
+    <published>2017-07-19T15:46:57.000Z</published>
+    <updated>2017-07-19T15:48:29.486Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="进程间通讯"><a href="#进程间通讯" class="headerlink" title="进程间通讯"></a>进程间通讯</h2><h3 id="1-管道-匿名管道（pipe）"><a href="#1-管道-匿名管道（pipe）" class="headerlink" title="1,管道/匿名管道（pipe）"></a>1,管道/匿名管道（pipe）</h3><blockquote>
+<ul>
+<li>管道都是半双工，数据只能向一个方向流动</li>
+<li>只能用于父子进程或者兄弟进程之间</li>
+<li>单独构成一种独立的文件系统（就是有输入输出)</li>
+</ul>
+</blockquote>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;进程间通讯&quot;&gt;&lt;a href=&quot;#进程间通讯&quot; class=&quot;headerlink&quot; title=&quot;进程间通讯&quot;&gt;&lt;/a&gt;进程间通讯&lt;/h2&gt;&lt;h3 id=&quot;1-管道-匿名管道（pipe）&quot;&gt;&lt;a href=&quot;#1-管道-匿名管道（pipe）&quot; class=&quot;he
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>JavaScript学习笔记</title>
+    <link href="https://caixueyuan.github.io/2017/07/04/JavaScript%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    <id>https://caixueyuan.github.io/2017/07/04/JavaScript学习笔记/</id>
+    <published>2017-07-04T15:10:15.000Z</published>
+    <updated>2017-07-04T15:10:15.692Z</updated>
+    
+    <summary type="html">
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Spring学习笔记</title>
+    <link href="https://caixueyuan.github.io/2017/07/04/Spring%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    <id>https://caixueyuan.github.io/2017/07/04/Spring学习笔记/</id>
+    <published>2017-07-04T12:16:49.000Z</published>
+    <updated>2017-07-04T12:27:28.135Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="Spring-Security"><a href="#Spring-Security" class="headerlink" title="Spring Security"></a>Spring Security</h2><h3 id="1，Spring-Security功能性要求："><a href="#1，Spring-Security功能性要求：" class="headerlink" title="1，Spring Security功能性要求："></a>1，Spring Security功能性要求：</h3><blockquote>
+<ul>
+<li>它使用Servlet规范中的Filter保护Web请求并限制URL级别的访问</li>
+<li>还能够使用Spring AOP保护方法调用————借助于对象代理和使用通知，能够保护只有具备适当权限的用户才能访问安全保护的方法。</li>
+</ul>
+</blockquote>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;Spring-Security&quot;&gt;&lt;a href=&quot;#Spring-Security&quot; class=&quot;headerlink&quot; title=&quot;Spring Security&quot;&gt;&lt;/a&gt;Spring Security&lt;/h2&gt;&lt;h3 id=&quot;1，Spring-Secu
+    
+    </summary>
+    
+      <category term="学习笔记" scheme="https://caixueyuan.github.io/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+    
+      <category term="Java框架，笔记" scheme="https://caixueyuan.github.io/tags/Java%E6%A1%86%E6%9E%B6%EF%BC%8C%E7%AC%94%E8%AE%B0/"/>
+    
+  </entry>
   
   <entry>
     <title>图解HTTP</title>
