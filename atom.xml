@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://caixueyuan.github.io/"/>
-  <updated>2017-07-25T16:08:41.686Z</updated>
+  <updated>2017-07-25T16:13:34.089Z</updated>
   <id>https://caixueyuan.github.io/</id>
   
   <author>
@@ -20,24 +20,17 @@
     <link href="https://caixueyuan.github.io/2017/07/25/Java%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%9F%BA%E7%A1%80/"/>
     <id>https://caixueyuan.github.io/2017/07/25/Java多线程基础/</id>
     <published>2017-07-25T14:26:28.000Z</published>
-    <updated>2017-07-25T16:08:41.686Z</updated>
+    <updated>2017-07-25T16:13:34.089Z</updated>
     
     <content type="html"><![CDATA[<h2 id="Volatile"><a href="#Volatile" class="headerlink" title="Volatile"></a>Volatile</h2><blockquote>
 <p>1,Volatile变量具有synchronized的可见性特性，但是不具备原子特性。</p>
-<ul>
-<li>原理：</li>
-</ul>
 </blockquote>
-<p>处理器为了提高处理速度，不直接和内存进行通讯，而是将系统内存的数据独到内部缓存后再进行操作，但操作完后不知什么时候会写到内存。</p>
+<h3 id="原理："><a href="#原理：" class="headerlink" title="原理："></a><strong>原理</strong>：</h3><p>处理器为了提高处理速度，不直接和内存进行通讯，而是将系统内存的数据独到内部缓存后再进行操作，但操作完后不知什么时候会写到内存。</p>
 <p>如果对声明了volatile变量进行写操作时，JVM会向处理器发送一条Lock前缀的指令，将这个变量所在缓存行的数据写会到系统内存。 这一步确保了如果有其他线程对声明了volatile变量进行修改，则立即更新主内存中数据。</p>
 <p>但这时候其他处理器的缓存还是旧的，所以在多处理器环境下，为了保证各个处理器缓存一致，每个处理会通过嗅探在总线上传播的数据来检查 自己的缓存是否过期，当处理器发现自己缓存行对应的内存地址被修改了，就会将当前处理器的缓存行设置成无效状态，当处理器要对这个数据进行修改操作时，会强制重新从系统内存把数据读到处理器缓存里。 这一步确保了其他线程获得的声明了volatile变量都是从主内存中获取最新的。</p>
 <p>多个变量之间或者某个变量的当前值与修改后值之间没有约束。<br>对于x++等递增操作，要保证是原子操作，然后不能够只是使用volatile<br>但是呢，volatile的性能比较好。</p>
-<blockquote>
-<p>2,保证有序性</p>
-</blockquote>
-<p>Lock前缀指令实际上相当于一个内存屏障（也成内存栅栏），它确保指令重排序时不会把其后面的指令排到内存屏障之前的位置，也不会把前面的指令排到内存屏障的后面；即在执行到内存屏障这句指令时，在它前面的操作已经全部完成。</p>
-<p>正确使用的方法：</p>
-<blockquote>
+<h3 id="2-保证有序性"><a href="#2-保证有序性" class="headerlink" title="2,保证有序性"></a>2,保证有序性</h3><p>Lock前缀指令实际上相当于一个内存屏障（也成内存栅栏），它确保指令重排序时不会把其后面的指令排到内存屏障之前的位置，也不会把前面的指令排到内存屏障的后面；即在执行到内存屏障这句指令时，在它前面的操作已经全部完成。</p>
+<h3 id="正确使用的方法："><a href="#正确使用的方法：" class="headerlink" title="正确使用的方法："></a>正确使用的方法：</h3><blockquote>
 <ul>
 <li>状态标志<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">volatile</span> <span class="keyword">boolean</span> shutdownRequested;</div><div class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">shutdown</span><span class="params">()</span></span>&#123;</div><div class="line">    shutdownRequested=<span class="keyword">true</span>;</div><div class="line">&#125;</div><div class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">doWork</span><span class="params">()</span></span>&#123;</div><div class="line">    <span class="keyword">while</span>(!shutdownRequested)&#123;</div><div class="line">        <span class="comment">//do stuff</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 </li>
@@ -58,8 +51,7 @@
 <p>首先的话，在每个线程Thread内部有一个ThreadLocal.ThreadLocalMap类型的变量的threadLocals,这个threadLocals就是用来存储实际的变量的副本的，键值为当前的ThreadLocal变量，value为变量的副本。</p>
 <p>初始时，在Thread里面，threadLocals为空，当通过ThreadLocal变量调用get()方法或者set()方法，就会对Thread类中的threadLocals进行初始化，并且以当前ThreadLocal变量为键值，以ThreadLocal要保存的副本变量为value，存到threadLocals。</p>
 <p>在进行get之前，必须先set，否则会报空指针异常；</p>
-<p><strong>例子</strong></p>
-<figure class="highlight lasso"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="literal">void</span> <span class="built_in">set</span>(T value) &#123;</div><div class="line">    <span class="keyword">Thread</span> t = <span class="keyword">Thread</span>.currentThread();</div><div class="line">    ThreadLocalMap <span class="built_in">map</span> = getMap(t);</div><div class="line">    <span class="keyword">if</span> (<span class="built_in">map</span> != <span class="built_in">null</span>)</div><div class="line">        <span class="built_in">map</span>.<span class="built_in">set</span>(this, value);</div><div class="line">    <span class="keyword">else</span></div><div class="line">        createMap(t, value);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="例子"><a href="#例子" class="headerlink" title="例子"></a><strong>例子</strong></h3><figure class="highlight lasso"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="literal">void</span> <span class="built_in">set</span>(T value) &#123;</div><div class="line">    <span class="keyword">Thread</span> t = <span class="keyword">Thread</span>.currentThread();</div><div class="line">    ThreadLocalMap <span class="built_in">map</span> = getMap(t);</div><div class="line">    <span class="keyword">if</span> (<span class="built_in">map</span> != <span class="built_in">null</span>)</div><div class="line">        <span class="built_in">map</span>.<span class="built_in">set</span>(this, value);</div><div class="line">    <span class="keyword">else</span></div><div class="line">        createMap(t, value);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>首先通过getMap(Thread t)方法获取一个和当前线程相关的ThreadLocalMap，然后将变量的值设置到这个ThreadLocalMap对象中，当然如果获取到的ThreadLocalMap对象为空，就通过createMap方法创建。</p>
 <p>线程隔离的秘密，就在于ThreadLocalMap这个类。ThreadLocalMap是ThreadLocal类的一个静态内部类，它实现了键值对的设置和获取（对比Map对象来理解），每个线程中都有一个独立的ThreadLocalMap副本，它所存储的值，只能被当前线程读取和修改。ThreadLocal类通过操作每一个线程特有的ThreadLocalMap副本，从而实现了变量访问在不同线程中的隔离。因为每个线程的变量都是自己特有的，完全不会有并发错误。还有一点就是，ThreadLocalMap存储的键值对中的键是this对象指向的ThreadLocal对象，而值就是你所设置的对象了</p>
 ]]></content>
