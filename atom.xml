@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://caixueyuan.github.io/"/>
-  <updated>2017-07-25T16:13:34.089Z</updated>
+  <updated>2017-07-26T16:00:20.975Z</updated>
   <id>https://caixueyuan.github.io/</id>
   
   <author>
@@ -14,6 +14,59 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Java线程池</title>
+    <link href="https://caixueyuan.github.io/2017/07/26/Java%E7%BA%BF%E7%A8%8B%E6%B1%A0/"/>
+    <id>https://caixueyuan.github.io/2017/07/26/Java线程池/</id>
+    <published>2017-07-26T13:10:29.000Z</published>
+    <updated>2017-07-26T16:00:20.975Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="线程池"><a href="#线程池" class="headerlink" title="线程池"></a>线程池</h2><h3 id="Java线程池"><a href="#Java线程池" class="headerlink" title="Java线程池"></a>Java线程池</h3><blockquote>
+<ul>
+<li>避免线程的创建和销毁带来的性能开销。</li>
+<li>避免大量的线程间因互相抢占系统资源导致的阻塞现象。</li>
+<li>能够对线程进行简单的管理并提供定时执行、间隔执行等功能。</li>
+</ul>
+</blockquote>
+<h3 id="JDK源码"><a href="#JDK源码" class="headerlink" title="JDK源码"></a>JDK源码</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Executor</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">execute</span><span class="params">(Runnable command)</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ExecutorService</span> <span class="keyword">extends</span> <span class="title">Executor</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">shutdown</span><span class="params">()</span></span>;</div><div class="line">    <span class="function">List&lt;Runnable&gt; <span class="title">shutdownNow</span><span class="params">()</span></span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">isShutdown</span><span class="params">()</span></span>;</div><div class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">isTerminated</span><span class="params">()</span></span>;</div><div class="line"></div><div class="line">    &lt;T&gt; <span class="function">Future&lt;T&gt; <span class="title">submit</span><span class="params">(Callable&lt;T&gt; task)</span></span>;</div><div class="line">    &lt;T&gt; <span class="function">Future&lt;T&gt; <span class="title">submit</span><span class="params">(Runnable task, T result)</span></span>;</div><div class="line">    Future&lt;?&gt; submit(Runnable task);</div><div class="line">    ...</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Executors</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ExecutorService <span class="title">newCachedThreadPool</span><span class="params">()</span> </span>&#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">new</span> ThreadPoolExecutor(<span class="number">0</span>, Integer.MAX_VALUE, <span class="number">60L</span>, TimeUnit.SECONDS,<span class="keyword">new</span> SynchronousQueue&lt;Runnable&gt;());</div><div class="line">    &#125;</div><div class="line">    ...</div><div class="line">&#125;</div><div class="line"><span class="comment">//创建线程池的方法</span></div><div class="line">ExecutorService pool=Executors.newCachedThreadPool();</div></pre></td></tr></table></figure>
+<p><strong>运行线程</strong><br><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">threadsPool.execute(<span class="keyword">new</span> Runnable() &#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// TODO Auto-generated method stub</span></div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<p><strong>使用submit</strong><br><figure class="highlight dart"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">Future&lt;<span class="built_in">Object</span>&gt; future = executor.submit(harReturnValuetask);</div><div class="line"><span class="keyword">try</span> &#123;</div><div class="line">     <span class="built_in">Object</span> s = future.<span class="keyword">get</span>();</div><div class="line">&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">    <span class="comment">// 处理中断异常</span></div><div class="line">&#125; <span class="keyword">catch</span> (ExecutionException e) &#123;</div><div class="line">    <span class="comment">// 处理无法执行任务异常</span></div><div class="line">&#125; <span class="keyword">finally</span> &#123;</div><div class="line">    <span class="comment">// 关闭线程池</span></div><div class="line">    executor.shutdown();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>1、如果线程池中的线程数量少于corePoolSize，即使线程池中有空闲线程，也会创建一个新的线程来执行新添加的任务；</p>
+<p>2、如果线程池中的线程数量大于等于corePoolSize，但缓冲队列workQueue未满，则将新添加的任务放到workQueue中，按照FIFO的原则依次等待执行（线程池中有线程空闲出来后依次将缓冲队列中的任务交付给空闲的线程执行）；</p>
+<p>3、如果线程池中的线程数量大于等于corePoolSize，且缓冲队列workQueue已满，但线程池中的线程数量小于maximumPoolSize，则会创建新的线程来处理被添加的任务；</p>
+<p><strong>线程池的关闭</strong>：<br>shutdownNow:线程池的状态设置为STOP，然后停止所有的正在执行或者暂停任务的线程，并返回等待执行任务的列表</p>
+<p>shutdow:将线程池的状态设置为SHUTDOWN状态，然后中断所有正在执行任务的线程</p>
+<h3 id="Java线程池的种类"><a href="#Java线程池的种类" class="headerlink" title="Java线程池的种类"></a>Java线程池的种类</h3><p><strong>newCachedThreadPool</strong><br>一个可根据需要创建新线程的线程池，但是在以前构造的线程可用时将重用它们。对于执行很多短期异步任务的程序而言，这些线程池通常可提高程序性能。调用 execute() 将重用以前构造的线程（如果线程可用）。如果现有线程没有可用的，则创建一个新线程并添加到池中。终止并从缓存中移除那些已有60秒钟未被使用的线程。因此，长时间保持空闲的线程池不会使用任何资源。</p>
+<p><strong>newSingleThreadExecutor</strong><br>该线程池只有一个线程，如果线程因为异常结束的话，新建一个线程来代替</p>
+<p><strong>newFixedThreadPool</strong><br>指定线程数目的线程池</p>
+<p><strong>newScheduleThreadPool</strong><br>创建一个大小无限的线程池</p>
+<h2 id="线程的名字"><a href="#线程的名字" class="headerlink" title="线程的名字"></a>线程的名字</h2><h3 id="线程组"><a href="#线程组" class="headerlink" title="线程组"></a>线程组</h3><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">ThreadGroup group</span>=Thread.currentThread().getThreadGroup();</div></pre></td></tr></table></figure>
+<figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">Thread</span>[] threads=<span class="keyword">new</span> <span class="keyword">Thread</span>[group.activeCount()]<span class="comment">;</span></div></pre></td></tr></table></figure>
+<p><strong>创建线程</strong><br><figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">Thread</span> <span class="keyword">thread</span>=<span class="keyword">new</span> <span class="keyword">Thread</span>(<span class="string">"thread"</span>)<span class="comment">;</span></div></pre></td></tr></table></figure></p>
+<p><strong>改名字</strong><br><figure class="highlight abnf"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">thread.setName()<span class="comment">;</span></div></pre></td></tr></table></figure></p>
+<h2 id="JVM参数设置"><a href="#JVM参数设置" class="headerlink" title="JVM参数设置"></a>JVM参数设置</h2><p><strong>-Xss-</strong>:设置每个线程的堆栈大小，JDK5.0以后每个线程堆栈大小为1M，以前每个线程的堆栈大小为256K。但是在操作系统对一个进程中的线程数还是有限制的，不能够无线生成，经验在3000-5000左右。</p>
+<h2 id="线程组-1"><a href="#线程组-1" class="headerlink" title="线程组"></a>线程组</h2><blockquote>
+<ul>
+<li>Java中使用ThreadGroup来表示线程组，它可以对一批线程进行分类管理。对线程组的控管理，即同时控制线程组里面的这一批线程</li>
+<li>用户创建的所有线程都属于指定线程组，如果没有显示指定属于哪个线程组，那么该线程就属于默认线程组（即main线程组）。默认情况下，子线程和父线程处于同一个线程组</li>
+<li>只有在创建线程时才能指定其所在的线程组，线程运行中途不能改变它所属的线程组，也就是说线程一旦指定所在的线程组，就直到该线程结束</li>
+</ul>
+</blockquote>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;线程池&quot;&gt;&lt;a href=&quot;#线程池&quot; class=&quot;headerlink&quot; title=&quot;线程池&quot;&gt;&lt;/a&gt;线程池&lt;/h2&gt;&lt;h3 id=&quot;Java线程池&quot;&gt;&lt;a href=&quot;#Java线程池&quot; class=&quot;headerlink&quot; title=&quot;Java线程池
+    
+    </summary>
+    
+      <category term="学习笔记" scheme="https://caixueyuan.github.io/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+    
+      <category term="线程池" scheme="https://caixueyuan.github.io/tags/%E7%BA%BF%E7%A8%8B%E6%B1%A0/"/>
+    
+  </entry>
   
   <entry>
     <title>Java多线程基础</title>
