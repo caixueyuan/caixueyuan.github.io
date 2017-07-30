@@ -77,7 +77,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Java学习笔记," />
+  <meta name="keywords" content="Swing," />
 
 
 
@@ -95,17 +95,17 @@
 
 
 
-<meta name="description" content="对象导论访问控制   第一个存在的原因：让客户端无法触及到程序员他们不能够触及到的部分 第二个存在的原因：允许客户端可以改变内部的工作方式而不是担心会影响到客户端程序员   继承：使得基类与导出类产生差异   直接在导出类中添加新方法 覆盖Override，改变现有的基类的方法  如果只是简单的Override，那么导出类is-a基类如果还添加新方法，那么导出类is-like-a基类 Java中具">
-<meta name="keywords" content="Java学习笔记">
+<meta name="description" content="Java SwingJava  Swing用纯Java编写，支持可更换的面板和主题，然而不是真的使用原生平台提供的设备，而是仅仅在表面上模仿它们。这意味着你可以在任意平台上使用Java支持的任意面板。轻量级组件的缺点则是执行速度较慢，优点就是可以在所有平台上采用统一的行为。Swing调用本地图形子系统中的底层例程，而不是依赖操作系统的高层用户界面模块。Swing 无法充分利用硬件 GUI 加速器和">
+<meta name="keywords" content="Swing">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Thinking In Java">
-<meta property="og:url" content="https://caixueyuan.github.io/2017/07/23/Thinking-In-Java/index.html">
+<meta property="og:title" content="JavaSwing">
+<meta property="og:url" content="https://caixueyuan.github.io/2017/07/28/JavaSwing/index.html">
 <meta property="og:site_name" content="caixueyuan">
-<meta property="og:description" content="对象导论访问控制   第一个存在的原因：让客户端无法触及到程序员他们不能够触及到的部分 第二个存在的原因：允许客户端可以改变内部的工作方式而不是担心会影响到客户端程序员   继承：使得基类与导出类产生差异   直接在导出类中添加新方法 覆盖Override，改变现有的基类的方法  如果只是简单的Override，那么导出类is-a基类如果还添加新方法，那么导出类is-like-a基类 Java中具">
-<meta property="og:updated_time" content="2017-07-24T16:08:11.224Z">
+<meta property="og:description" content="Java SwingJava  Swing用纯Java编写，支持可更换的面板和主题，然而不是真的使用原生平台提供的设备，而是仅仅在表面上模仿它们。这意味着你可以在任意平台上使用Java支持的任意面板。轻量级组件的缺点则是执行速度较慢，优点就是可以在所有平台上采用统一的行为。Swing调用本地图形子系统中的底层例程，而不是依赖操作系统的高层用户界面模块。Swing 无法充分利用硬件 GUI 加速器和">
+<meta property="og:updated_time" content="2017-07-30T15:53:25.070Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Thinking In Java">
-<meta name="twitter:description" content="对象导论访问控制   第一个存在的原因：让客户端无法触及到程序员他们不能够触及到的部分 第二个存在的原因：允许客户端可以改变内部的工作方式而不是担心会影响到客户端程序员   继承：使得基类与导出类产生差异   直接在导出类中添加新方法 覆盖Override，改变现有的基类的方法  如果只是简单的Override，那么导出类is-a基类如果还添加新方法，那么导出类is-like-a基类 Java中具">
+<meta name="twitter:title" content="JavaSwing">
+<meta name="twitter:description" content="Java SwingJava  Swing用纯Java编写，支持可更换的面板和主题，然而不是真的使用原生平台提供的设备，而是仅仅在表面上模仿它们。这意味着你可以在任意平台上使用Java支持的任意面板。轻量级组件的缺点则是执行速度较慢，优点就是可以在所有平台上采用统一的行为。Swing调用本地图形子系统中的底层例程，而不是依赖操作系统的高层用户界面模块。Swing 无法充分利用硬件 GUI 加速器和">
 
 
 
@@ -133,13 +133,13 @@
 
 
 
-  <link rel="canonical" href="https://caixueyuan.github.io/2017/07/23/Thinking-In-Java/"/>
+  <link rel="canonical" href="https://caixueyuan.github.io/2017/07/28/JavaSwing/"/>
 
 
 
 
 
-  <title>Thinking In Java | caixueyuan</title>
+  <title>JavaSwing | caixueyuan</title>
   
 
 
@@ -278,7 +278,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://caixueyuan.github.io/2017/07/23/Thinking-In-Java/">
+    <link itemprop="mainEntityOfPage" href="https://caixueyuan.github.io/2017/07/28/JavaSwing/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="caixueyuan">
@@ -295,7 +295,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Thinking In Java</h1>
+          <h1 class="post-title" itemprop="name headline">JavaSwing</h1>
         
 
         <div class="post-meta">
@@ -307,8 +307,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-23T23:11:41+08:00">
-                2017-07-23
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-28T21:50:15+08:00">
+                2017-07-28
               </time>
             
 
@@ -364,23 +364,21 @@
       
 
       
-        <h3 id="对象导论"><a href="#对象导论" class="headerlink" title="对象导论"></a>对象导论</h3><p><strong>访问控制</strong></p>
+        <h2 id="Java-Swing"><a href="#Java-Swing" class="headerlink" title="Java Swing"></a>Java Swing</h2><h3 id="Java-Swing-1"><a href="#Java-Swing-1" class="headerlink" title="Java  Swing"></a>Java  Swing</h3><p>用纯Java编写，支持可更换的面板和主题，然而不是真的使用原生平台提供的设备，而是仅仅在表面上模仿它们。这意味着你可以在任意平台上使用Java支持的任意面板。轻量级组件的缺点则是执行速度较慢，优点就是可以在所有平台上采用统一的行为。Swing调用本地图形子系统中的底层例程，而不是依赖操作系统的高层用户界面模块。Swing 无法充分利用硬件 GUI 加速器和专用主机 GUI 操作的优点。结果是 Swing 应用程序可能比本地 GUI 的程序运行速度都慢</p>
+<p>Java Swing**:<br>主要：JComponent,Panel,Window<br>布局管理器：LayoutManager</p>
+<h3 id="Java-AWT-Abstract-Window-Tookit"><a href="#Java-AWT-Abstract-Window-Tookit" class="headerlink" title="Java AWT(Abstract Window Tookit)"></a>Java AWT(Abstract Window Tookit)</h3><p>是Java的平台独立的视窗系统， 图形和使用者界面器件工具包，最根本的缺点是AWT在原生的用户界面之上仅提供了一个非常薄的抽象层，例如生成一个AWT的复选框会导致AWT直接调用下层原生例程来生成一个复选框，但是呢，由于底层的表现不一样可能会导致不同平台的表现不一样。</p>
 <blockquote>
-<ul>
-<li>第一个存在的原因：让客户端无法触及到程序员他们不能够触及到的部分</li>
-<li>第二个存在的原因：允许客户端可以改变内部的工作方式而不是担心会影响到客户端程序员</li>
-</ul>
+<p>AWT的一个很好的特性是可以对GUI组件自动进行销毁，是“线程安全”，不过会导致AWTGUI运行的速度更慢。</p>
+<h3 id="Java-SWT"><a href="#Java-SWT" class="headerlink" title="Java SWT:"></a>Java SWT:</h3><p>对于大部分现代主机来说，几乎所有的控件都是基于本地对等体的。这意味着基于 SWT 的 GUI 既具有主机外观，又具有主机的性能。<br>优缺点：不支持 GUI 控件的自动销毁，只能够自顶向下的构建GUI，不是线程安全的，</p>
 </blockquote>
-<p><strong>继承</strong>：使得基类与导出类产生差异</p>
-<blockquote>
-<ul>
-<li>直接在导出类中添加新方法</li>
-<li>覆盖Override，改变现有的基类的方法</li>
-</ul>
-<p>如果只是简单的Override，那么导出类<code>is-a</code>基类<br>如果还添加新方法，那么导出类<code>is-like-a</code>基类</p>
-<p>Java中具体类或者抽象类是单根继承结构，但是Java接口确是多根继承结构</p>
-</blockquote>
-<h3 id="一起都是对象"><a href="#一起都是对象" class="headerlink" title="一起都是对象"></a>一起都是对象</h3>
+<h2 id="Java-Swing的四个重量级顶层界面组件：JFrame，JApplet，JDialog和JWindow"><a href="#Java-Swing的四个重量级顶层界面组件：JFrame，JApplet，JDialog和JWindow" class="headerlink" title="Java Swing的四个重量级顶层界面组件：JFrame，JApplet，JDialog和JWindow"></a>Java Swing的四个重量级顶层界面组件：JFrame，JApplet，JDialog和JWindow</h2><h3 id="JFrame："><a href="#JFrame：" class="headerlink" title="JFrame："></a>JFrame：</h3><h2 id="顶层类和非顶层类的区别："><a href="#顶层类和非顶层类的区别：" class="headerlink" title="顶层类和非顶层类的区别："></a>顶层类和非顶层类的区别：</h2><p>顶层容器和其他组件区别在于顶层容器没有自身的paint逻辑，所有的顶层容器都是通过底层系统API来绘制对等体的方式来进行paint，自身没有JAVA 2D的paint逻辑实现，对等体化成什么样子顶层容器就是什么样子，他只是可以控制对等体的一些可配置显示的属性。Swing的 4个顶层容器都是在addNotify时才会getToolkit().createPeer(this)（Frame/Dialog/Window）, 而addNotify并不是在构造时被调用，而是在pack/show或setvisible（这3个所谓的realized具现化方法）时被调用。创建了对等体peer后还要通过peer.pShow（show/setVisible(true)调用）调用才会要求底层系统进行显示（所以只有pack是不会显示窗口的）。在显示窗口后底层消息队列得到通知，此后随着窗口被最小化后恢复或被遮盖后恢复等系统操作后同样能从底层消息得到通知</p>
+<p>轻量级Swing组件将绘制有关的职责都委托给了ui成员对象，ui对象使用JAVA2D API 进行绘制，paint成什么样那就是这个组件的样子。具体就是在构造的时候即要 updateUI{setUI(UIManger.getUI(this))}。UIManger会根据当前L&amp;F的选择，根据 this.uiClassID来得到ui成员类并建立实例，以后的paint回调等都推托给ui成员类paint，这也算是一种策略模式。Setui的过程中除了保存这个ui实例外，将repaint来通知RepaintManager进行paint回调完成组件绘制。轻量级Swing组件在addNotify时也会去创建对等体getToolkit().createPeer(this)( LightWeightPeer)，但这个peer的实现（NullComponentPeer）是个空壳子，只是作为一个轻量级组件的标记，以后的很多事件处理等都要判断peer是否instance of LightWeightPeer从而能够进行不同处理。</p>
+<p>同样的Addnotify也不是在构造时被调用，而是在被加入container时被调用</p>
+<p>![<a href="http://developer.51cto.com/art/200907/137337.htm" target="_blank" rel="external">http://developer.51cto.com/art/200907/137337.htm</a>]</p>
+<h2 id="Swing-MVC"><a href="#Swing-MVC" class="headerlink" title="Swing MVC"></a>Swing MVC</h2><p>严格的说，Swing中的MVC实际上是MVC的一个变体：M-VC。 Swing中只显示的定义了Model接口，而在一个UI对象中集成了视图和控制器的部分机制。View和Control比较松散的交叉组合在一起，而更多的控制逻辑是在事件监听者部分引入的。</p>
+<p>在Swing中基本上每一个组件都会有对应的Model对象。但其并不是一一对应的，一个Model接口可以为多个Swing对向服务，例如：JProgressBar，JScrollBar，JSlider这三个组件使用的都是BoundedRangeModel接口。除了Model接口外，为了实现多个视感间的自由切换，每个Swing组件还包含一个UI接口，也就是View-Controller，负责对组件的绘制和接受用户输入。<br>　　Model-View是Subject和Obverser的关系，因而，模型的改变必须要在UI对象中体现出来。Swing使用了JavaBeans的事件模型来实现这种通知机制。具体而言，有两种实现办法，一是仅仅通知事件监听者状态改变了，然后由事件监听者向模型提取必要的状态信息。这种机制对于事件频繁的组件很有效。另外的一种办法是模型向监听者发送包含了已改变的状态信息的通知给UI。这两种方法根据其优劣被分别是现在不同的组件中。比如在JScollBar中使用的是第一种方法，在JTable中使用的是第二种方法。而对Model而言，为了能够支持多个View，它并不知道具体的每一个View。它维护一个对其数据感兴趣的Obverser的列表，使得当数据改变的时候，能够通知到每一个Swing组件对象。</p>
+<h2 id="使用JFrame，JButton，JLabel写一个例子"><a href="#使用JFrame，JButton，JLabel写一个例子" class="headerlink" title="使用JFrame，JButton，JLabel写一个例子"></a>使用JFrame，JButton，JLabel写一个例子</h2><h3 id="JFrame"><a href="#JFrame" class="headerlink" title="JFrame"></a>JFrame</h3><p>```</p>
+
       
     </div>
 
@@ -409,7 +407,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Java学习笔记/" rel="tag"># Java学习笔记</a>
+            <a href="/tags/Swing/" rel="tag"># Swing</a>
           
         </div>
       
@@ -422,8 +420,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/07/23/Java集合/" rel="next" title="Java集合">
-                <i class="fa fa-chevron-left"></i> Java集合
+              <a href="/2017/07/27/Java嵌套类/" rel="next" title="Java嵌套类">
+                <i class="fa fa-chevron-left"></i> Java嵌套类
               </a>
             
           </div>
@@ -432,8 +430,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/07/25/进程-线程-Java/" rel="prev" title="进程-线程-Java">
-                进程-线程-Java <i class="fa fa-chevron-right"></i>
+              <a href="/2017/07/30/JavaSwing进阶/" rel="prev" title="JavaSwing进阶">
+                JavaSwing进阶 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -570,7 +568,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#对象导论"><span class="nav-number">1.</span> <span class="nav-text">对象导论</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#一起都是对象"><span class="nav-number">2.</span> <span class="nav-text">一起都是对象</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Java-Swing"><span class="nav-number">1.</span> <span class="nav-text">Java Swing</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Java-Swing-1"><span class="nav-number">1.1.</span> <span class="nav-text">Java  Swing</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java-AWT-Abstract-Window-Tookit"><span class="nav-number">1.2.</span> <span class="nav-text">Java AWT(Abstract Window Tookit)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java-SWT"><span class="nav-number">1.3.</span> <span class="nav-text">Java SWT:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java-Swing的四个重量级顶层界面组件：JFrame，JApplet，JDialog和JWindow"><span class="nav-number">2.</span> <span class="nav-text">Java Swing的四个重量级顶层界面组件：JFrame，JApplet，JDialog和JWindow</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#JFrame："><span class="nav-number">2.1.</span> <span class="nav-text">JFrame：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#顶层类和非顶层类的区别："><span class="nav-number">3.</span> <span class="nav-text">顶层类和非顶层类的区别：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Swing-MVC"><span class="nav-number">4.</span> <span class="nav-text">Swing MVC</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用JFrame，JButton，JLabel写一个例子"><span class="nav-number">5.</span> <span class="nav-text">使用JFrame，JButton，JLabel写一个例子</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#JFrame"><span class="nav-number">5.1.</span> <span class="nav-text">JFrame</span></a></li></ol></li></ol></div>
             
 
           </div>
