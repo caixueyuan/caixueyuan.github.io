@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://caixueyuan.github.io/"/>
-  <updated>2017-07-30T15:55:46.222Z</updated>
+  <updated>2017-07-31T16:15:21.959Z</updated>
   <id>https://caixueyuan.github.io/</id>
   
   <author>
@@ -14,6 +14,87 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>JDBC</title>
+    <link href="https://caixueyuan.github.io/2017/07/31/JDBC/"/>
+    <id>https://caixueyuan.github.io/2017/07/31/JDBC/</id>
+    <published>2017-07-31T13:16:40.000Z</published>
+    <updated>2017-07-31T16:15:21.959Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="JDBC"><a href="#JDBC" class="headerlink" title="JDBC"></a>JDBC</h2><h3 id="用JDBC连接一个数据库"><a href="#用JDBC连接一个数据库" class="headerlink" title="用JDBC连接一个数据库"></a>用JDBC连接一个数据库</h3><p><strong>特点</strong>：JDBC是面向“与平台无关”设计的<br><strong>原理</strong>：JDBC为我们提供了一个“驱动程序管理器”，它能动态维护数据库查询所需的所有驱动程序对象.驱动程序对象会在装载时由“驱动程序管理器”自动注册，并可用Class.forName()强行装载。</p>
+<p><img src="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/JDBC/JDBC%E6%95%B0%E6%8D%AE%E5%BA%93%E6%A8%A1%E5%9E%8B.png" alt="JDBC数据库驱动模型"></p>
+<p>加载数据库驱动<br><figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">Class</span><span class="selector-class">.forName</span>("<span class="selector-tag">oracle</span><span class="selector-class">.jdbc</span><span class="selector-class">.driver</span><span class="selector-class">.OracleDriver</span>");</div><div class="line"><span class="selector-tag">Class</span><span class="selector-class">.forName</span>("<span class="selector-tag">com</span><span class="selector-class">.microsoft</span><span class="selector-class">.jdbc</span><span class="selector-class">.SQLServerDriver</span>");</div><div class="line"><span class="selector-tag">Class</span><span class="selector-class">.forName</span>("<span class="selector-tag">com</span><span class="selector-class">.mysql</span><span class="selector-class">.jdbc</span><span class="selector-class">.Driver</span>");</div></pre></td></tr></table></figure></p>
+<p>Class.forName()将对应的驱动类加载到内存中，然后执行内存中的static静态代码段，代码中，会创建一个驱动Driver的实例，放入DriverManager中，供DriverManager使用<br><strong>方法一</strong>：<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">Driver driver=(Driver) Class.forName(<span class="string">"com.mysql.jdbc.Driver"</span>).newInstance();</div><div class="line">		</div><div class="line">String  <span class="attribute">url</span>=<span class="string">"jdbc:mysql://localhost:3306/JDBCTEST"</span>;</div><div class="line">Properties <span class="attribute">props</span>=new Properties();</div><div class="line">props.put(<span class="string">"user"</span>, <span class="string">"root"</span>);</div><div class="line">props.put(<span class="string">"password"</span>, <span class="string">"yuan1286"</span>);</div><div class="line">		<span class="built_in"></span></div><div class="line">Connection <span class="attribute">connection</span>=driver.connect(url, props);</div></pre></td></tr></table></figure></p>
+<p><strong>方法二</strong><br><figure class="highlight abnf"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">String url=<span class="string">"jdbc:mysql://localhost:3306/JDBCTEST"</span><span class="comment">;</span></div><div class="line">Driver dd=(Driver)Class.forName(<span class="string">"com.mysql.jdbc.Driver"</span>).newInstance()<span class="comment">;</span></div><div class="line">Driver driver=DriverManager.getDriver(url)<span class="comment">;</span></div><div class="line">System.out.println(driver)<span class="comment">;</span></div><div class="line">System.out.println(dd)<span class="comment">;</span></div><div class="line">System.out.println(dd==driver)<span class="comment">;</span></div><div class="line"></div><div class="line">DriverManager.deregisterDriver(driver)<span class="comment">;</span></div><div class="line">DriverManager.registerDriver(dd)<span class="comment">;</span></div><div class="line"></div><div class="line"><span class="attribute">driver</span>=DriverManager.getDriver(url)<span class="comment">;</span></div><div class="line">System.out.println(driver)<span class="comment">;</span></div><div class="line">System.out.println(dd)<span class="comment">;</span></div><div class="line">System.out.println(driver==dd)<span class="comment">;</span></div></pre></td></tr></table></figure></p>
+<p>运行的结果<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">com<span class="selector-class">.mysql</span><span class="selector-class">.jdbc</span><span class="selector-class">.Driver</span>@<span class="number">232204</span>a1</div><div class="line">com<span class="selector-class">.mysql</span><span class="selector-class">.jdbc</span><span class="selector-class">.Driver</span>@<span class="number">135</span>fbaa4</div><div class="line">false</div><div class="line">com<span class="selector-class">.mysql</span><span class="selector-class">.jdbc</span><span class="selector-class">.Driver</span>@<span class="number">135</span>fbaa4</div><div class="line">com<span class="selector-class">.mysql</span><span class="selector-class">.jdbc</span><span class="selector-class">.Driver</span>@<span class="number">135</span>fbaa4</div><div class="line">true</div></pre></td></tr></table></figure></p>
+<p><strong>方法三</strong><br><figure class="highlight gauss"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">String</span> url = <span class="string">"jdbc:mysql://localhost:3306/JDBCTEST"</span>;  </div><div class="line"><span class="comment">//设置值系统变量jdbc.drivers  </span></div><div class="line"><span class="keyword">System</span>.setProperty(<span class="string">"jdbc.drivers"</span>, <span class="string">"com.mysql.jdbc.Driver"</span>);  </div><div class="line"><span class="comment">//2.通过特定的url获取driver  </span></div><div class="line">Driver driver = DriverManager.getDriver(url);  </div><div class="line"><span class="comment">//打印是否存在  </span></div><div class="line"><span class="keyword">System</span>.out.println(driver);</div></pre></td></tr></table></figure></p>
+<h3 id="当要执行的SQL语句有参数时，应怎么样使用statement"><a href="#当要执行的SQL语句有参数时，应怎么样使用statement" class="headerlink" title="当要执行的SQL语句有参数时，应怎么样使用statement"></a>当要执行的SQL语句有参数时，应怎么样使用statement</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">Connection cn=DriverManager.getConnection(url,uid,pwd);</div><div class="line">Statement sm=cn.createStatement();</div><div class="line">sm.executeQuery(sql);//用于<span class="keyword">select</span></div><div class="line">sm.executeUpdate(<span class="keyword">sql</span>);//用于<span class="keyword">delete</span>，<span class="keyword">update</span>，<span class="keyword">insert</span>，<span class="keyword">drop</span></div><div class="line"></div><div class="line">### 怎么样获取<span class="keyword">SQL</span>语句的查询结果，并遍历提取</div></pre></td></tr></table></figure>
+<pre><code>String url = &quot;jdbc:mysql://localhost:3306/JDBCTEST&quot;;  
+//设置值系统变量jdbc.drivers  
+System.setProperty(&quot;jdbc.drivers&quot;, &quot;com.mysql.jdbc.Driver&quot;);  
+//2.通过特定的url获取driver  
+Driver driver = DriverManager.getDriver(url);  
+//打印是否存在  
+System.out.println(driver);  
+String uid=&quot;root&quot;;
+String password=&quot;yuan1286&quot;;
+Connection conn=DriverManager.getConnection(url,uid,password);
+
+String sql=&quot;select * from USERS&quot;;
+PreparedStatement ps=conn.prepareStatement(sql);
+ResultSet rs=ps.executeQuery();
+while(rs.next()){
+    String username=rs.getString(&quot;username&quot;);
+    String passwd=rs.getString(&quot;passwd&quot;);
+    System.out.println(username+&quot;    &quot;+passwd);
+}
+rs.close();
+ps.close();
+conn.close();
+</code></pre><figure class="highlight clean"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">### 在JDBC中开始/提交一个事务</div></pre></td></tr></table></figure>
+<pre><code>try{
+    conn.setAutoCommit(false);
+    String sql=&quot;update USERS set passwd = &apos;123456&apos; where username = &apos;caixueyuan&apos; and passwd= &apos;12345678&apos; &quot;;
+    PreparedStatement ps=conn.prepareStatement(sql);
+    int rs=ps.executeUpdate();
+    System.out.println(rs);
+    conn.commit();
+}
+catch(SQLException e){
+    conn.rollback();
+    e.printStackTrace();
+}
+</code></pre><figure class="highlight clean"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">### 执行存储过程并获取返回结果</div></pre></td></tr></table></figure>
+<pre><code>try{
+    String username=&quot;hello&quot;;
+    CallableStatement proc=conn.prepareCall(&quot;{ call select3(?,?)}&quot;);
+    proc.setString(&quot;username&quot;, username);
+    proc.registerOutParameter(2, Types.INTEGER);
+
+    proc.execute();
+
+    Integer number=proc.getInt(&quot;number&quot;);
+    System.out.println(number.toString());
+}
+catch(SQLException e){
+    e.printStackTrace();
+}
+</code></pre><figure class="highlight oxygene"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">``` sql</div><div class="line">delimiter <span class="comment">//</span></div><div class="line"><span class="keyword">create</span> <span class="function"><span class="keyword">procedure</span> <span class="title">select3</span><span class="params">(<span class="keyword">in</span> username varchar(20)</span>,<span class="title">out</span> <span class="title">number</span> <span class="title">int</span>)</span></div><div class="line"><span class="title">BEGIN</span></div><div class="line">	<span class="title">select</span> <span class="title">count</span><span class="params">(*)</span>  <span class="title">from</span> <span class="title">USERS</span> <span class="title">into</span> <span class="title">number</span>;</div><div class="line"><span class="keyword">END</span>;</div><div class="line"><span class="comment">//</span></div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;JDBC&quot;&gt;&lt;a href=&quot;#JDBC&quot; class=&quot;headerlink&quot; title=&quot;JDBC&quot;&gt;&lt;/a&gt;JDBC&lt;/h2&gt;&lt;h3 id=&quot;用JDBC连接一个数据库&quot;&gt;&lt;a href=&quot;#用JDBC连接一个数据库&quot; class=&quot;headerlink&quot; 
+    
+    </summary>
+    
+      <category term="学习笔记" scheme="https://caixueyuan.github.io/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+    
+      <category term="JDBC" scheme="https://caixueyuan.github.io/tags/JDBC/"/>
+    
+  </entry>
   
   <entry>
     <title>JavaSwing进阶</title>
