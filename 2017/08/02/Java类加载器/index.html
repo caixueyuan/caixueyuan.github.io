@@ -1,0 +1,790 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="JVM," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="caixueyuan" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="JAVA类加载机制概念：虚拟机把描述类的数据从Class文件加载到内存，并对数据进行校验，转换解析初始化，最终形成可以被虚拟机直接使用的JAVA类型 在语言JAVA中，类型的加载、连接和初始化过程都是在程序运行期间完成的。 JAVA里天生可以动态扩展的语言特性就是依赖动态加载和动态链接这个特点实现的。 类加载的时机整个生命周期：加载，验证，准备，解析，初始化，使用和卸载 加载：时机：   遇到ne">
+<meta name="keywords" content="JVM">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java类加载器">
+<meta property="og:url" content="https://caixueyuan.github.io/2017/08/02/Java类加载器/index.html">
+<meta property="og:site_name" content="caixueyuan">
+<meta property="og:description" content="JAVA类加载机制概念：虚拟机把描述类的数据从Class文件加载到内存，并对数据进行校验，转换解析初始化，最终形成可以被虚拟机直接使用的JAVA类型 在语言JAVA中，类型的加载、连接和初始化过程都是在程序运行期间完成的。 JAVA里天生可以动态扩展的语言特性就是依赖动态加载和动态链接这个特点实现的。 类加载的时机整个生命周期：加载，验证，准备，解析，初始化，使用和卸载 加载：时机：   遇到ne">
+<meta property="og:image" content="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/jvm/%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%A8%A1%E5%9E%8B.png">
+<meta property="og:updated_time" content="2017-08-02T15:55:09.606Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java类加载器">
+<meta name="twitter:description" content="JAVA类加载机制概念：虚拟机把描述类的数据从Class文件加载到内存，并对数据进行校验，转换解析初始化，最终形成可以被虚拟机直接使用的JAVA类型 在语言JAVA中，类型的加载、连接和初始化过程都是在程序运行期间完成的。 JAVA里天生可以动态扩展的语言特性就是依赖动态加载和动态链接这个特点实现的。 类加载的时机整个生命周期：加载，验证，准备，解析，初始化，使用和卸载 加载：时机：   遇到ne">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/jvm/%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%A8%A1%E5%9E%8B.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://caixueyuan.github.io/2017/08/02/Java类加载器/"/>
+
+
+
+
+
+  <title>Java类加载器 | caixueyuan</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">caixueyuan</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">SCUT</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://caixueyuan.github.io/2017/08/02/Java类加载器/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="caixueyuan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="caixueyuan">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java类加载器</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-02T19:31:53+08:00">
+                2017-08-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/学习笔记/" itemprop="url" rel="index">
+                    <span itemprop="name">学习笔记</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="JAVA类加载机制"><a href="#JAVA类加载机制" class="headerlink" title="JAVA类加载机制"></a>JAVA类加载机制</h2><p>概念：虚拟机把描述类的数据从Class文件加载到内存，并对数据进行校验，转换解析初始化，最终形成可以被虚拟机直接使用的JAVA类型</p>
+<p>在语言JAVA中，类型的加载、连接和初始化过程都是在程序运行期间完成的。</p>
+<p>JAVA里天生可以动态扩展的语言特性就是依赖动态加载和动态链接这个特点实现的。</p>
+<h3 id="类加载的时机"><a href="#类加载的时机" class="headerlink" title="类加载的时机"></a>类加载的时机</h3><p>整个生命周期：<strong>加载，验证，准备，解析，初始化，使用和卸载</strong></p>
+<h3 id="加载："><a href="#加载：" class="headerlink" title="加载："></a>加载：</h3><p>时机：</p>
+<blockquote>
+<ul>
+<li>遇到new,getstatic,putstatic,invokestatic(new()，读取一个类的静态文件，调用一个静态方法）</li>
+<li>反射</li>
+<li>初始化一个类，先要加载父类</li>
+<li>包含main函数的类</li>
+<li>如果一个java.lang.invoke.MethodHandle实例最后的解析结果REF_getStatic,REF_putStatic,REF_invokeStatic的方法句柄</li>
+</ul>
+</blockquote>
+<p>接口：以上都是，但是第3点要进行修改，修改为：当一个类在初始化时，要求其父类全部都已经初始化，但是一个接口在初始化时，并不要求其父接口全部都完成了初始化，只有在真正使用到接口的时候才会初始化。</p>
+<p>加载阶段完成后，虚拟机外部的二进制字节流就按照虚拟机所需要的格式存储在方法区之中，方法区中的数据存储格式由虚拟机实现自行定义，然后在内存中实例化一个java.lang.Class对象，作为外部程序访问方法区中的类型的数据的接口。</p>
+<h3 id="验证："><a href="#验证：" class="headerlink" title="验证："></a>验证：</h3><p>确保Class文件的字节流中包含的信息符合当前虚拟机的要求，并且不会危害虚拟机自身的安全。</p>
+<h3 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h3><p>正式为类变量分配内存并设置类变量初始化值的阶段<br>public static int value=123;在准备阶段的值为0<br>public static final int value=123;在准备阶段的值为123</p>
+<h3 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h3><p>虚拟机将常量池内的符号引用替换为直接引用的过程</p>
+<blockquote>
+<p>*符号引用：一组符号来描述所引用的目标</p>
+<ul>
+<li>直接引用：直接指向目标的指针，相对偏移量或是一个能间接定位到目标的句柄</li>
+</ul>
+</blockquote>
+<h3 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h3><p>执行类中的JAVA程序代码</p>
+<p><clinit>是由编译器自动收集类中的所有类变量的赋值动作和静态语句块（static{}块）<br>父类<clinit>优先于子类<br>接口不能使用静态语句块，执行接口的<clinit>不需要执行父接口的<clinit>方法，只有使用到了父接口定义的变量时，父接口才会初始化。</clinit></clinit></clinit></clinit></p>
+<h2 id="类加载器"><a href="#类加载器" class="headerlink" title="类加载器"></a>类加载器</h2><h3 id="类与类加载器"><a href="#类与类加载器" class="headerlink" title="类与类加载器"></a>类与类加载器</h3><p>每一个类加载器都有一个独立的类名称空间，要比较两个类是否相等，要在同一个类加载器中。</p>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.io.IOException;</div><div class="line"><span class="keyword">import</span> java.io.InputStream;</div><div class="line"></div><div class="line"><span class="keyword">public</span> class ClassLoaderTest &#123;</div><div class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> main(<span class="keyword">String</span>[] args) <span class="keyword">throws</span> InstantiationException, IllegalAccessException, ClassNotFoundException&#123;</div><div class="line">		ClassLoader myLoader=<span class="keyword">new</span> ClassLoader()&#123;</div><div class="line">			@Override</div><div class="line">			<span class="keyword">public</span> Class&lt;?&gt; loadClass(<span class="keyword">String</span> name) <span class="keyword">throws</span> ClassNotFoundException&#123;</div><div class="line">				<span class="keyword">try</span>&#123;</div><div class="line">					<span class="keyword">String</span> fileName=name.substring(name.lastIndexOf(<span class="string">"."</span>)+<span class="number">1</span>)+<span class="string">".class"</span>;</div><div class="line">					InputStream is=getClass().getResourceAsStream(fileName);</div><div class="line">					<span class="keyword">if</span>(is==<span class="keyword">null</span>)&#123;</div><div class="line">						<span class="keyword">return</span> <span class="keyword">super</span>.loadClass(name);</div><div class="line">					&#125;</div><div class="line">					<span class="built_in">byte</span>[] b=<span class="keyword">new</span> <span class="built_in">byte</span>[is.available()];</div><div class="line">					is.read(b);</div><div class="line">					<span class="keyword">return</span> defineClass(name,b,<span class="number">0</span>,b.length);</div><div class="line">				&#125;</div><div class="line">				<span class="keyword">catch</span>(IOException e)&#123;</div><div class="line">					<span class="keyword">throw</span> <span class="keyword">new</span> ClassNotFoundException();</div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">		&#125;;</div><div class="line">		<span class="keyword">Object</span> obj=myLoader.loadClass(<span class="string">"jaizai.ClassLoaderTest"</span>).newInstance();</div><div class="line">		System.out.<span class="built_in">println</span>(obj.getClass());</div><div class="line">		System.out.<span class="built_in">println</span>(obj <span class="keyword">instanceof</span> jaizai.ClassLoaderTest);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>结果<br><figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">jaizai</span>.<span class="title">ClassLoaderTest</span></span></div><div class="line"><span class="literal">false</span></div></pre></td></tr></table></figure></p>
+<h3 id="类加载器的种类"><a href="#类加载器的种类" class="headerlink" title="类加载器的种类"></a>类加载器的种类</h3><p><strong>启动类加载器（Bootstap ClassLoader)</strong>:负责将存放在<java_home>\lib目录中，或者被-Xbootclasspath参数所指定的路径中的，并且要被虚拟机设别。</java_home></p>
+<p><strong>扩展类加载器</strong>：负责加载<java_home>\lib\ext目录中</java_home></p>
+<p><strong>应用程序加载器</strong>：是ClassLoader.getSystemClassLoader()方法的返回值，负责加载用户类路径（ClassPath）所指定的类库。</p>
+<h3 id="双亲加载模型"><a href="#双亲加载模型" class="headerlink" title="双亲加载模型"></a>双亲加载模型</h3><p><img src="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/jvm/%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%A8%A1%E5%9E%8B.png" alt="双亲加载模型"></p>
+<figure class="highlight monkey"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line">protected <span class="class"><span class="keyword">Class</span>&lt;?&gt; <span class="title">loadClass</span>(<span class="title">String</span> <span class="title">name</span>, <span class="title">boolean</span> <span class="title">resolve</span>)</span></div><div class="line">        throws ClassNotFoundException</div><div class="line">    &#123;</div><div class="line">        synchronized (getClassLoadingLock(name)) &#123;</div><div class="line">            // First, check <span class="keyword">if</span> the <span class="class"><span class="keyword">class</span> <span class="title">has</span> <span class="title">already</span> <span class="title">been</span> <span class="title">loaded</span></span></div><div class="line">            <span class="class"><span class="keyword">Class</span>&lt;?&gt; <span class="title">c</span> = <span class="title">findLoadedClass</span>(<span class="title">name</span>);</span></div><div class="line">            <span class="keyword">if</span> (c == <span class="literal">null</span>) &#123;</div><div class="line">                long t0 = System.nanoTime();</div><div class="line">                <span class="keyword">try</span> &#123;</div><div class="line">                    <span class="keyword">if</span> (parent != <span class="literal">null</span>) &#123;</div><div class="line">                        c = parent.loadClass(name, <span class="literal">false</span>);</div><div class="line">                    &#125; <span class="keyword">else</span> &#123;</div><div class="line">                        c = findBootstrapClassOrNull(name);</div><div class="line">                    &#125;</div><div class="line">                &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</div><div class="line">                    // ClassNotFoundException thrown <span class="keyword">if</span> <span class="class"><span class="keyword">class</span> <span class="title">not</span> <span class="title">found</span></span></div><div class="line">                    // from the non-<span class="literal">null</span> parent <span class="class"><span class="keyword">class</span> <span class="title">loader</span></span></div><div class="line">                &#125;</div><div class="line"></div><div class="line">                <span class="keyword">if</span> (c == <span class="literal">null</span>) &#123;</div><div class="line">                    // <span class="keyword">If</span> still <span class="keyword">not</span> found, <span class="keyword">then</span> invoke findClass in order</div><div class="line">                    // <span class="keyword">to</span> find the <span class="class"><span class="keyword">class</span>.</span></div><div class="line">                    long t1 = System.nanoTime();</div><div class="line">                    c = findClass(name);</div><div class="line"></div><div class="line">                    // this is the defining <span class="class"><span class="keyword">class</span> <span class="title">loader</span>; <span class="title">record</span> <span class="title">the</span> <span class="title">stats</span></span></div><div class="line">                    sun.misc.PerfCounter.getParentDelegationTime().addTime(t1 - t0);</div><div class="line">                    sun.misc.PerfCounter.getFindClassTime().addElapsedTimeFrom(t1);</div><div class="line">                    sun.misc.PerfCounter.getFindClasses().increment();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">if</span> (resolve) &#123;</div><div class="line">                resolveClass(c);</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">return</span> c;</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<h2 id="类加载之后放在哪个区，有哪些参数可以控制该区的大小"><a href="#类加载之后放在哪个区，有哪些参数可以控制该区的大小" class="headerlink" title="类加载之后放在哪个区，有哪些参数可以控制该区的大小"></a>类加载之后放在哪个区，有哪些参数可以控制该区的大小</h2><h3 id="类加载之后放在方法区"><a href="#类加载之后放在方法区" class="headerlink" title="类加载之后放在方法区"></a>类加载之后放在方法区</h3><p>方法区存放虚拟机加载的类信息，常量、静态变量，是各个线程共享的内存区域，Class文件中除了有类的版本、字段、方法、接口等描述信息外，还有一项信息是常量池，用于存放编译器生成的各种符号引用，这部分内容将在类加载后放在方法区的运行时常量池中</p>
+<h3 id="参数控制方法区的大小"><a href="#参数控制方法区的大小" class="headerlink" title="参数控制方法区的大小"></a>参数控制方法区的大小</h3><p>java -XX:PermSize=128M -XX:MaxPermSize=256M MyTest<br>-XX:PerSize=128M:方法区初始大小<br>-XX:MaxPermSize:方法区最大值</p>
+<h2 id="让JVM从一开始就试用你指定的classLoader来加载类"><a href="#让JVM从一开始就试用你指定的classLoader来加载类" class="headerlink" title="让JVM从一开始就试用你指定的classLoader来加载类"></a>让JVM从一开始就试用你指定的classLoader来加载类</h2><p><strong>最简单的实例，不用绝对路径</strong><br><figure class="highlight processing"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> jaizai;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.io.IOException;</div><div class="line"><span class="keyword">import</span> java.io.InputStream;</div><div class="line"></div><div class="line"><span class="keyword">public</span> class ClassLoaderTest &#123;</div><div class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> main(<span class="keyword">String</span>[] args) <span class="keyword">throws</span> InstantiationException, IllegalAccessException, ClassNotFoundException&#123;</div><div class="line">		ClassLoader myLoader=<span class="keyword">new</span> ClassLoader()&#123;</div><div class="line">			@Override</div><div class="line">			<span class="keyword">public</span> Class&lt;?&gt; loadClass(<span class="keyword">String</span> name) <span class="keyword">throws</span> ClassNotFoundException&#123;</div><div class="line">				<span class="keyword">try</span>&#123;</div><div class="line">					<span class="keyword">String</span> fileName=name.substring(name.lastIndexOf(<span class="string">"."</span>)+<span class="number">1</span>)+<span class="string">".class"</span>;</div><div class="line">					InputStream is=getClass().getResourceAsStream(fileName);</div><div class="line">					<span class="comment">//System.out.println(is.toString());</span></div><div class="line">					<span class="keyword">if</span>(is==<span class="keyword">null</span>)&#123;</div><div class="line">						<span class="keyword">return</span> <span class="keyword">super</span>.loadClass(name);</div><div class="line">					&#125;</div><div class="line">					<span class="built_in">byte</span>[] b=<span class="keyword">new</span> <span class="built_in">byte</span>[is.available()];</div><div class="line">					is.read(b);</div><div class="line">					<span class="keyword">return</span> defineClass(name,b,<span class="number">0</span>,b.length);</div><div class="line">				&#125;</div><div class="line">				<span class="keyword">catch</span>(IOException e)&#123;</div><div class="line">					<span class="keyword">throw</span> <span class="keyword">new</span> ClassNotFoundException();</div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">		&#125;;</div><div class="line">		<span class="keyword">Object</span> obj=myLoader.loadClass(<span class="string">"jaizai.ClassLoaderTest"</span>).newInstance();</div><div class="line">		System.out.<span class="built_in">println</span>(obj.getClass().getClassLoader());</div><div class="line">		System.out.<span class="built_in">println</span>(obj.getClass().getClassLoader().getParent());</div><div class="line">		System.out.<span class="built_in">println</span>(obj.getClass());</div><div class="line">		System.out.<span class="built_in">println</span>(obj <span class="keyword">instanceof</span> jaizai.ClassLoaderTest);</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>结果：<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">jaizai.ClassLoaderTest$1@7852e922</div><div class="line">sun.misc.Launcher$AppClassLoader@73d16e93</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">jaizai</span>.<span class="title">ClassLoaderTest</span></span></div><div class="line"><span class="literal">false</span></div></pre></td></tr></table></figure></p>
+<h2 id="JRE安装后的ext目录的作用"><a href="#JRE安装后的ext目录的作用" class="headerlink" title="JRE安装后的ext目录的作用"></a>JRE安装后的ext目录的作用</h2><p>jre/lib/ext 目录中的 JAR 归档文件会被添加到通过虚拟机运行的所有应用程序的类路径</p>
+<h2 id="ClassNotFoundException和NoClassDefFoundError的区别"><a href="#ClassNotFoundException和NoClassDefFoundError的区别" class="headerlink" title="ClassNotFoundException和NoClassDefFoundError的区别"></a>ClassNotFoundException和NoClassDefFoundError的区别</h2><h3 id="ClassNotFoundException：发生在将类从文件系统中加载到内存"><a href="#ClassNotFoundException：发生在将类从文件系统中加载到内存" class="headerlink" title="ClassNotFoundException：发生在将类从文件系统中加载到内存"></a>ClassNotFoundException：发生在将类从文件系统中加载到内存</h3><blockquote>
+<ul>
+<li>Class.forName()</li>
+<li>ClassLoader.loadClass()</li>
+<li>ClassLoader.findSystemClass()</li>
+</ul>
+</blockquote>
+<p><strong>原因一</strong>：Java支持试用Class.forName()方法来动态的加载类，任意一个类的类名如果被作为参数传递给这个方法都将导致类被加载到JVM中，如果这个类在类路径中没有被找到，那么此时就会在运行时抛出ClassNotFoundException异常<br><strong>原因二</strong>：当一个类已经某个类加载器加载到内存中了，此时另一个类加载器又尝试着动态地从同一个包中加载这个类。</p>
+<p>解决：唯一需要做的就是要确保所需的类连同它依赖的包存在于类路径中（文件系统）</p>
+<h3 id="NoClassDefFoundError：连接时找不到需要的class"><a href="#NoClassDefFoundError：连接时找不到需要的class" class="headerlink" title="NoClassDefFoundError：连接时找不到需要的class"></a>NoClassDefFoundError：连接时找不到需要的class</h3><p>原因：如果JVM或者ClassLoader实例尝试加载（可以通过正常的方法调用，也可能是使用new来创建新的对象）类的时候却找不到类的定义。要查找的类在编译的时候是存在的，运行的时候却找不到了。这个错误往往是你使用new操作符来创建一个新的对象但却找不到该对象对应的类。</p>
+<p>解决方法：查找那些在开发期间存在于类路径下但在运行期间却不在类路径下的类。<code>System.getproperty(&quot;java.classpath&quot;)</code>可以进行调试。</p>
+<p><a href="https://my.oschina.net/jasonultimate/blog/166932" target="_blank" rel="external">ClassNotFoundException和NoClassDefFoundError的区别参考链接</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JVM/" rel="tag"># JVM</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/07/31/JDBC/" rel="next" title="JDBC">
+                <i class="fa fa-chevron-left"></i> JDBC
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="caixueyuan" />
+          <p class="site-author-name" itemprop="name">caixueyuan</p>
+           
+              <p class="site-description motion-element" itemprop="description">Java后台开发程序员</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#JAVA类加载机制"><span class="nav-number">1.</span> <span class="nav-text">JAVA类加载机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#类加载的时机"><span class="nav-number">1.1.</span> <span class="nav-text">类加载的时机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#加载："><span class="nav-number">1.2.</span> <span class="nav-text">加载：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#验证："><span class="nav-number">1.3.</span> <span class="nav-text">验证：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#准备"><span class="nav-number">1.4.</span> <span class="nav-text">准备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解析"><span class="nav-number">1.5.</span> <span class="nav-text">解析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#初始化"><span class="nav-number">1.6.</span> <span class="nav-text">初始化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#类加载器"><span class="nav-number">2.</span> <span class="nav-text">类加载器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#类与类加载器"><span class="nav-number">2.1.</span> <span class="nav-text">类与类加载器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类加载器的种类"><span class="nav-number">2.2.</span> <span class="nav-text">类加载器的种类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#双亲加载模型"><span class="nav-number">2.3.</span> <span class="nav-text">双亲加载模型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#类加载之后放在哪个区，有哪些参数可以控制该区的大小"><span class="nav-number">3.</span> <span class="nav-text">类加载之后放在哪个区，有哪些参数可以控制该区的大小</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#类加载之后放在方法区"><span class="nav-number">3.1.</span> <span class="nav-text">类加载之后放在方法区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参数控制方法区的大小"><span class="nav-number">3.2.</span> <span class="nav-text">参数控制方法区的大小</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#让JVM从一开始就试用你指定的classLoader来加载类"><span class="nav-number">4.</span> <span class="nav-text">让JVM从一开始就试用你指定的classLoader来加载类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JRE安装后的ext目录的作用"><span class="nav-number">5.</span> <span class="nav-text">JRE安装后的ext目录的作用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ClassNotFoundException和NoClassDefFoundError的区别"><span class="nav-number">6.</span> <span class="nav-text">ClassNotFoundException和NoClassDefFoundError的区别</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ClassNotFoundException：发生在将类从文件系统中加载到内存"><span class="nav-number">6.1.</span> <span class="nav-text">ClassNotFoundException：发生在将类从文件系统中加载到内存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NoClassDefFoundError：连接时找不到需要的class"><span class="nav-number">6.2.</span> <span class="nav-text">NoClassDefFoundError：连接时找不到需要的class</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">caixueyuan</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
