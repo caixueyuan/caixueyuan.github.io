@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://caixueyuan.github.io/"/>
-  <updated>2017-08-03T15:49:59.957Z</updated>
+  <updated>2017-08-03T16:12:44.085Z</updated>
   <id>https://caixueyuan.github.io/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="https://caixueyuan.github.io/2017/08/03/Java%E6%B3%9B%E5%9E%8B/"/>
     <id>https://caixueyuan.github.io/2017/08/03/Java泛型/</id>
     <published>2017-08-03T13:38:35.000Z</published>
-    <updated>2017-08-03T15:49:59.957Z</updated>
+    <updated>2017-08-03T16:12:44.085Z</updated>
     
     <content type="html"><![CDATA[<h2 id="泛型"><a href="#泛型" class="headerlink" title="泛型"></a>泛型</h2><h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>c#:在系统运行期生成，有自己的虚方法和类型数据，是真实类型<br>Java：只在程序源码中存在，在编译后的字节码文件中，就已经被替换成原来的原生类型，并在相应的地方插入了强制性代码，因此，对于运行期的Java语言来说，ArrayList<int>与ArrayList<string>就是同一个类型</string></int></p>
 <figure class="highlight arduino"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> main(<span class="keyword">String</span>[] args)&#123;</div><div class="line">    Map&lt;<span class="keyword">String</span>,<span class="keyword">String</span>&gt; <span class="built_in">map</span>=<span class="keyword">new</span> HashMap&lt;<span class="keyword">String</span>,<span class="keyword">String</span>&gt;();</div><div class="line">    <span class="built_in">map</span>.<span class="built_in">put</span>(<span class="string">"hello"</span>,<span class="string">"hello"</span>);</div><div class="line">    <span class="built_in">map</span>.<span class="built_in">put</span>(<span class="string">"world"</span>,<span class="string">"world"</span>);</div><div class="line">    System.out.<span class="built_in">println</span>(<span class="built_in">map</span>.<span class="built_in">get</span>(<span class="string">"hello"</span>));</div><div class="line">    System.out.<span class="built_in">println</span>(<span class="built_in">map</span>.<span class="built_in">get</span>(<span class="string">"world"</span>));</div><div class="line">&#125;</div></pre></td></tr></table></figure>
@@ -35,6 +35,14 @@
 <p>结果：<br><figure class="highlight julia"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="literal">I</span> am fruit</div><div class="line"><span class="literal">I</span> am Apple</div><div class="line"><span class="literal">I</span> am Banana</div></pre></td></tr></table></figure></p>
 <h3 id="lt-super-T-gt"><a href="#lt-super-T-gt" class="headerlink" title="&lt;? super T&gt;"></a>&lt;? super T&gt;</h3><figure class="highlight processing"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;Apple&gt; <span class="keyword">void</span> WhoIAm_super(List&lt;? <span class="keyword">super</span> Apple&gt; t)&#123;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">Object</span> item:t)&#123;</div><div class="line">		System.out.<span class="built_in">println</span>(item.toString());</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <figure class="highlight dart"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">List</span>&lt;? <span class="keyword">super</span> Apple&gt; fruitList=Arrays.asList(<span class="keyword">new</span> Fruit());</div><div class="line"><span class="built_in">List</span>&lt;? <span class="keyword">super</span> Apple&gt; appleList=Arrays.asList(<span class="keyword">new</span> Apple());</div><div class="line"><span class="built_in">List</span>&lt;? <span class="keyword">extends</span> Apple&gt; bananaList=Arrays.asList(<span class="keyword">new</span> Banana());<span class="comment">//这一行会报错。</span></div></pre></td></tr></table></figure>
+<h3 id="要点："><a href="#要点：" class="headerlink" title="要点："></a>要点：</h3><p>上界&lt;? extends T&gt;不能往里存，只能往外取<br>&lt;? extends Fruit&gt;会使往盘子里放东西的set( )方法失效。但取东西get( )方法还有效</p>
+<p>下界&lt;? super T&gt;不影响往里存，但往外取只能放在Object对象里<br>下界&lt;? super T&gt;不影响往里存，但往外取只能放在Object对象里下界&lt;? super T&gt;不影响往里存，但往外取只能放在Object对象里</p>
+<h3 id="PESS"><a href="#PESS" class="headerlink" title="PESS"></a>PESS</h3><blockquote>
+<ul>
+<li>频繁往外读取内容的，适合用上界extends</li>
+<li>经常往里插入的，适合用下界super</li>
+</ul>
+</blockquote>
 ]]></content>
     
     <summary type="html">
