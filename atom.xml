@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://caixueyuan.github.io/"/>
-  <updated>2017-08-03T16:12:44.085Z</updated>
+  <updated>2017-08-06T07:26:48.194Z</updated>
   <id>https://caixueyuan.github.io/</id>
   
   <author>
@@ -14,6 +14,109 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Linux操作系统内存基础</title>
+    <link href="https://caixueyuan.github.io/2017/08/06/Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%86%85%E5%AD%98%E5%9F%BA%E7%A1%80/"/>
+    <id>https://caixueyuan.github.io/2017/08/06/Linux操作系统内存基础/</id>
+    <published>2017-08-06T06:03:28.000Z</published>
+    <updated>2017-08-06T07:26:48.194Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="Linux操作系统"><a href="#Linux操作系统" class="headerlink" title="Linux操作系统"></a>Linux操作系统</h2><p>首先，这篇文章是参考这两篇blog<a href="http://blog.csdn.net/yusiguyuan/article/details/45155035" target="_blank" rel="external">Linux进程地址空间 &amp;&amp; 进程内存布局</a>和<a href="https://my.oschina.net/u/1770090/blog/263326" target="_blank" rel="external">Linux虚拟地址空间概述</a>，如果想要详细了解Linux 内存管理，请查看这两篇博客</p>
+<h3 id="Linux程序运行的关系图"><a href="#Linux程序运行的关系图" class="headerlink" title="Linux程序运行的关系图"></a>Linux程序运行的关系图</h3><p><img src="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/system/figure2.jpg" alt="Linux用户空间和内核空间"><br><img src="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/system/figure1.gif" alt="Linux程序调用"></p>
+<p>从这两个图，我们可以知道应用程序都是在用户空间中进行使用的，通过调用libc来进行或者是直接调用System Call Interface进行到内核空间来，并且通过SCI来调用系统内核的功能，然后Kernel通过调用已经编译好的代码来进行系统级别的调用，并且通过设备驱动程序来操作硬件。</p>
+<h3 id="Linux内核的主要子系统"><a href="#Linux内核的主要子系统" class="headerlink" title="Linux内核的主要子系统"></a>Linux内核的主要子系统</h3><p><img src="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/system/figure3.jpg" alt="Linux内核"><br>系统调用接口：SCI提供某些机制执行从用户空间到内核的函数调用<br><strong>进程管理</strong>：线程调度（O（1））<br><strong>内存管理</strong>：内存是按照所谓的内存页进行管理<br><strong>虚拟文件系统</strong>：它为文件系统提供了一个通用的接口抽象<br><img src="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/system/figure4.jpg" alt="虚拟文件系统"></p>
+<h3 id="Linux进程地址空间"><a href="#Linux进程地址空间" class="headerlink" title="Linux进程地址空间"></a>Linux进程地址空间</h3><p><img src="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/system/Linux%E4%BC%A0%E7%BB%9F%E5%86%85%E5%AD%98%E7%A9%BA%E9%97%B4.png" alt="Linux传统内存空间"></p>
+<p>Linux进程虚拟地址空间是linux内存管理一个重要的部分，我们知道，在IA-32系统上地址空间的范围可达2的32次幂=4G，总的地址空间通常按3：1的比例划分，用户态占用了3G，内核占用了1G。</p>
+<p>各进程的用户态虚拟地址空间起始于地址0，延伸到TASK_SIZE -1的位置，其上是内核的地址空间。</p>
+<ol>
+<li>text:代码段，映射程序的二进制代码，该区域为私有区域。</li>
+<li>DATA:数据段，映射程序中已经初始化的全局变量。（已经初始化的全局变量）。数据段保存在源代码中已经初始化的静态变量的内容。数据段不是匿名的，它映射了一部分的程序二进制镜像，也就是源代码中指定了初始值的静态变量</li>
+<li>BSS:存放程序中未初始化的全局变量.在ELF文件中，该区域的变量仅仅是个符号，并不占用文件空间，但程序加载后，会占用内存空间，并初始化为0（没有初始化的全局变量）。区别在于BSS保存的是未被初始化的静态变量内容，他们的值不是直接在程序的源码中设定的</li>
+<li>HEAP:运行时的堆，在程序运行中使用malloc申请的内存区域.该区域的内存增长方式是由低地址向高地址增长。malloc()函数</li>
+<li>MMAP：共享库及匿名文件的映射区域；该区域中会包含共享库的代码段和数据段。在栈的下方是内存映射段，内核将文件的内容直接映射到内存，加载动态库</li>
+<li>STACK：用户进程栈.该区域起始地址也存在一个随机值，通过PF_RANDOMIZE来设置。栈的增长方向是由高地址向低地址增长，并且若设置了RLIMIT_STACK即规定了栈的大小。调用一个方法或函数会将一个新的栈帧（stack frame）压入到栈中，只需要一个简单的指针指向栈的顶端即可，因此压栈（pushing）和退栈（popping）过程非常迅速、准确</li>
+</ol>
+<h3 id="由物理地址到虚拟地址的转换"><a href="#由物理地址到虚拟地址的转换" class="headerlink" title="由物理地址到虚拟地址的转换"></a>由物理地址到虚拟地址的转换</h3><p>IA-32架构可以访问4G的地址空间，通常会将线性地址空间划分为3：1的两个部分：用户态使用3G，内核态使用1G，即内核空间从0xC0000000开始，每个虚拟地址x都对应于物理地址x-0xC0000000。这样的设计可以加快内核空间的寻址速度（简单的减法操作）。在进程切换的过程中，只有用户态对应的页表被切换，高地址空间会公用内核页表。</p>
+<h3 id="虚拟地址空间的访问权限"><a href="#虚拟地址空间的访问权限" class="headerlink" title="虚拟地址空间的访问权限"></a>虚拟地址空间的访问权限</h3><ol>
+<li><p>用户空间禁止访问内核空间。</p>
+</li>
+<li><p>用户态通过系统调用切换到内核空间后，该进程处于内核态上下文，可以访问用户空间的内存。</p>
+</li>
+<li><p>中断抢占进程后，处于中断上下文时，不能访问用户空间。</p>
+</li>
+<li><p>内核线程不能访问用户空间。</p>
+</li>
+</ol>
+<h3 id="内核空间和用户空间"><a href="#内核空间和用户空间" class="headerlink" title="内核空间和用户空间"></a>内核空间和用户空间</h3><p> Linux系统对自身进行了划分，一部分核心软件独立于普通应用程序，运行在较高的特权级别上，它们驻留在被保护的内存空间上，拥有访问硬件设备的所有权限，Linux将此称为内核空间。<br>        相对地，应用程序则是在“用户空间”中运行。运行在用户空间的应用程序只能看到允许它们使用的部分系统资源，并且不能使用某些特定的系统功能，也不能直接访问内核空间和硬件设备，以及其他一些具体的使用限制。<br>        将用户空间和内核空间置于这种非对称访问机制下有很好的安全性，能有效抵御恶意用户的窥探，也能防止质量低劣的用户程序的侵害，从而使系统运行得更稳定可靠。<br>        内核空间在页表中拥有较高的特权级（ring2或以下），因此只要用户态的程序试图访问这些页，就会导致一个页错误（page fault）。在Linux中，内核空间是持续存在的，并且在所有进程中都映射到同样的物理内存，内核代码和数据总是可寻址的，随时准备处理中断和系统调用</p>
+<h3 id="栈和堆的区别"><a href="#栈和堆的区别" class="headerlink" title="栈和堆的区别"></a>栈和堆的区别</h3><p><img src="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/system/%E6%A0%88%E4%B8%8E%E5%A0%86%E7%9A%84%E5%8C%BA%E5%88%AB.png" alt="栈和堆的区别"></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;Linux操作系统&quot;&gt;&lt;a href=&quot;#Linux操作系统&quot; class=&quot;headerlink&quot; title=&quot;Linux操作系统&quot;&gt;&lt;/a&gt;Linux操作系统&lt;/h2&gt;&lt;p&gt;首先，这篇文章是参考这两篇blog&lt;a href=&quot;http://blog.csdn
+    
+    </summary>
+    
+    
+      <category term="Linux,内存管理" scheme="https://caixueyuan.github.io/tags/Linux-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Java虚拟机基础</title>
+    <link href="https://caixueyuan.github.io/2017/08/05/Java%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%9F%BA%E7%A1%80/"/>
+    <id>https://caixueyuan.github.io/2017/08/05/Java虚拟机基础/</id>
+    <published>2017-08-05T06:27:34.000Z</published>
+    <updated>2017-08-05T12:17:12.555Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="Java内存区域与内存溢出异常"><a href="#Java内存区域与内存溢出异常" class="headerlink" title="Java内存区域与内存溢出异常"></a>Java内存区域与内存溢出异常</h2><h3 id="程序计数器"><a href="#程序计数器" class="headerlink" title="程序计数器"></a>程序计数器</h3><p>由于Java虚拟机的多线程是通过线程切换并分配处理器执行时间的方式来实现的（线程私有的内存）</p>
+<h3 id="Java虚拟机栈"><a href="#Java虚拟机栈" class="headerlink" title="Java虚拟机栈"></a>Java虚拟机栈</h3><p>创建一个栈帧，用于存储局部变量表、操作数栈、动态链接、方法出口等方法，局部变量表所需要的内存空间在编译期间完成分配。当进入一个方法时，这个方法需要在帧中分配多大的局部变量空间是完全确定的，在方法运行期间不会改变局部变量的大小。</p>
+<h3 id="Java堆"><a href="#Java堆" class="headerlink" title="Java堆"></a>Java堆</h3><p>可以处于物理上不连续的内存空间中，但是逻辑上是连续的（-Xmx和-Xms）</p>
+<h3 id="方法区"><a href="#方法区" class="headerlink" title="方法区"></a>方法区</h3><p>存储已被虚拟机加载的类信息，常量，静态变量，即时编译器编译后的代码<br>高版本的Java虚拟机会对这个方法区进行GC</p>
+<h3 id="运行时常量池"><a href="#运行时常量池" class="headerlink" title="运行时常量池"></a>运行时常量池</h3><p>方法区，存放编译期生成的各种字面量和符号引用。</p>
+<p>###管理内存的方法<br>划分可用空间</p>
+<blockquote>
+<ul>
+<li>指针碰撞：指针向空闲空间挪动对象大小相等的距离</li>
+<li>空闲列表：维护一个记录空闲空间的列表<br>具体是Java虚拟机的GC机制来决定</li>
+</ul>
+</blockquote>
+<p>对象创建的位置：</p>
+<blockquote>
+<ul>
+<li>对分配内存空间的动作进行同步处理————实际上采用CAS配上失败重试的方式保证更新操作的原子性</li>
+<li>把内存分配的动作按照线程划分在不同的空间之中进行。（本地线程分配缓冲Thread Local Allocation Buffer)(-XX:+/-UserTLAB)</li>
+</ul>
+</blockquote>
+<p>对象在内存中存储的布局：</p>
+<blockquote>
+<ul>
+<li>对象头：存储对象自身的运行时数据（对象hashcode，分代年龄，标志位，锁状态标志，线程持有的锁，偏向线程ID，偏向时间戳），类型指针</li>
+<li>实例数据：实际的数据（在父类中定义的变量会出现在子类之前）</li>
+<li>对齐填充：填充为8bit的整数倍。</li>
+</ul>
+</blockquote>
+<p>对象的访问定位：</p>
+<blockquote>
+<ul>
+<li>使用句柄：在java堆中划出一个内存中来作为句柄池，句柄存储了对象实例数据和类型数据各自的具体地址信息<br>*使用直接指针。</li>
+</ul>
+</blockquote>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;Java内存区域与内存溢出异常&quot;&gt;&lt;a href=&quot;#Java内存区域与内存溢出异常&quot; class=&quot;headerlink&quot; title=&quot;Java内存区域与内存溢出异常&quot;&gt;&lt;/a&gt;Java内存区域与内存溢出异常&lt;/h2&gt;&lt;h3 id=&quot;程序计数器&quot;&gt;&lt;a hre
+    
+    </summary>
+    
+      <category term="JVM" scheme="https://caixueyuan.github.io/categories/JVM/"/>
+    
+    
+      <category term="JVM" scheme="https://caixueyuan.github.io/tags/JVM/"/>
+    
+  </entry>
   
   <entry>
     <title>Java泛型</title>

@@ -1,0 +1,749 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Linux,内存管理," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="caixueyuan" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="Linux操作系统首先，这篇文章是参考这两篇blogLinux进程地址空间 &amp;amp;&amp;amp; 进程内存布局和Linux虚拟地址空间概述，如果想要详细了解Linux 内存管理，请查看这两篇博客 Linux程序运行的关系图 从这两个图，我们可以知道应用程序都是在用户空间中进行使用的，通过调用libc来进行或者是直接调用System Call Interface进行到内核空间来，并且通过SCI来调用">
+<meta name="keywords" content="Linux,内存管理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux操作系统内存基础">
+<meta property="og:url" content="https://caixueyuan.github.io/2017/08/06/Linux操作系统内存基础/index.html">
+<meta property="og:site_name" content="caixueyuan">
+<meta property="og:description" content="Linux操作系统首先，这篇文章是参考这两篇blogLinux进程地址空间 &amp;amp;&amp;amp; 进程内存布局和Linux虚拟地址空间概述，如果想要详细了解Linux 内存管理，请查看这两篇博客 Linux程序运行的关系图 从这两个图，我们可以知道应用程序都是在用户空间中进行使用的，通过调用libc来进行或者是直接调用System Call Interface进行到内核空间来，并且通过SCI来调用">
+<meta property="og:image" content="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/system/figure2.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/system/figure1.gif">
+<meta property="og:image" content="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/system/figure3.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/system/figure4.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/system/Linux%E4%BC%A0%E7%BB%9F%E5%86%85%E5%AD%98%E7%A9%BA%E9%97%B4.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/system/%E6%A0%88%E4%B8%8E%E5%A0%86%E7%9A%84%E5%8C%BA%E5%88%AB.png">
+<meta property="og:updated_time" content="2017-08-06T07:26:48.194Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux操作系统内存基础">
+<meta name="twitter:description" content="Linux操作系统首先，这篇文章是参考这两篇blogLinux进程地址空间 &amp;amp;&amp;amp; 进程内存布局和Linux虚拟地址空间概述，如果想要详细了解Linux 内存管理，请查看这两篇博客 Linux程序运行的关系图 从这两个图，我们可以知道应用程序都是在用户空间中进行使用的，通过调用libc来进行或者是直接调用System Call Interface进行到内核空间来，并且通过SCI来调用">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/system/figure2.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://caixueyuan.github.io/2017/08/06/Linux操作系统内存基础/"/>
+
+
+
+
+
+  <title>Linux操作系统内存基础 | caixueyuan</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">caixueyuan</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">SCUT</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://caixueyuan.github.io/2017/08/06/Linux操作系统内存基础/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="caixueyuan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="caixueyuan">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Linux操作系统内存基础</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-06T14:03:28+08:00">
+                2017-08-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Linux操作系统"><a href="#Linux操作系统" class="headerlink" title="Linux操作系统"></a>Linux操作系统</h2><p>首先，这篇文章是参考这两篇blog<a href="http://blog.csdn.net/yusiguyuan/article/details/45155035" target="_blank" rel="external">Linux进程地址空间 &amp;&amp; 进程内存布局</a>和<a href="https://my.oschina.net/u/1770090/blog/263326" target="_blank" rel="external">Linux虚拟地址空间概述</a>，如果想要详细了解Linux 内存管理，请查看这两篇博客</p>
+<h3 id="Linux程序运行的关系图"><a href="#Linux程序运行的关系图" class="headerlink" title="Linux程序运行的关系图"></a>Linux程序运行的关系图</h3><p><img src="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/system/figure2.jpg" alt="Linux用户空间和内核空间"><br><img src="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/system/figure1.gif" alt="Linux程序调用"></p>
+<p>从这两个图，我们可以知道应用程序都是在用户空间中进行使用的，通过调用libc来进行或者是直接调用System Call Interface进行到内核空间来，并且通过SCI来调用系统内核的功能，然后Kernel通过调用已经编译好的代码来进行系统级别的调用，并且通过设备驱动程序来操作硬件。</p>
+<h3 id="Linux内核的主要子系统"><a href="#Linux内核的主要子系统" class="headerlink" title="Linux内核的主要子系统"></a>Linux内核的主要子系统</h3><p><img src="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/system/figure3.jpg" alt="Linux内核"><br>系统调用接口：SCI提供某些机制执行从用户空间到内核的函数调用<br><strong>进程管理</strong>：线程调度（O（1））<br><strong>内存管理</strong>：内存是按照所谓的内存页进行管理<br><strong>虚拟文件系统</strong>：它为文件系统提供了一个通用的接口抽象<br><img src="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/system/figure4.jpg" alt="虚拟文件系统"></p>
+<h3 id="Linux进程地址空间"><a href="#Linux进程地址空间" class="headerlink" title="Linux进程地址空间"></a>Linux进程地址空间</h3><p><img src="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/system/Linux%E4%BC%A0%E7%BB%9F%E5%86%85%E5%AD%98%E7%A9%BA%E9%97%B4.png" alt="Linux传统内存空间"></p>
+<p>Linux进程虚拟地址空间是linux内存管理一个重要的部分，我们知道，在IA-32系统上地址空间的范围可达2的32次幂=4G，总的地址空间通常按3：1的比例划分，用户态占用了3G，内核占用了1G。</p>
+<p>各进程的用户态虚拟地址空间起始于地址0，延伸到TASK_SIZE -1的位置，其上是内核的地址空间。</p>
+<ol>
+<li>text:代码段，映射程序的二进制代码，该区域为私有区域。</li>
+<li>DATA:数据段，映射程序中已经初始化的全局变量。（已经初始化的全局变量）。数据段保存在源代码中已经初始化的静态变量的内容。数据段不是匿名的，它映射了一部分的程序二进制镜像，也就是源代码中指定了初始值的静态变量</li>
+<li>BSS:存放程序中未初始化的全局变量.在ELF文件中，该区域的变量仅仅是个符号，并不占用文件空间，但程序加载后，会占用内存空间，并初始化为0（没有初始化的全局变量）。区别在于BSS保存的是未被初始化的静态变量内容，他们的值不是直接在程序的源码中设定的</li>
+<li>HEAP:运行时的堆，在程序运行中使用malloc申请的内存区域.该区域的内存增长方式是由低地址向高地址增长。malloc()函数</li>
+<li>MMAP：共享库及匿名文件的映射区域；该区域中会包含共享库的代码段和数据段。在栈的下方是内存映射段，内核将文件的内容直接映射到内存，加载动态库</li>
+<li>STACK：用户进程栈.该区域起始地址也存在一个随机值，通过PF_RANDOMIZE来设置。栈的增长方向是由高地址向低地址增长，并且若设置了RLIMIT_STACK即规定了栈的大小。调用一个方法或函数会将一个新的栈帧（stack frame）压入到栈中，只需要一个简单的指针指向栈的顶端即可，因此压栈（pushing）和退栈（popping）过程非常迅速、准确</li>
+</ol>
+<h3 id="由物理地址到虚拟地址的转换"><a href="#由物理地址到虚拟地址的转换" class="headerlink" title="由物理地址到虚拟地址的转换"></a>由物理地址到虚拟地址的转换</h3><p>IA-32架构可以访问4G的地址空间，通常会将线性地址空间划分为3：1的两个部分：用户态使用3G，内核态使用1G，即内核空间从0xC0000000开始，每个虚拟地址x都对应于物理地址x-0xC0000000。这样的设计可以加快内核空间的寻址速度（简单的减法操作）。在进程切换的过程中，只有用户态对应的页表被切换，高地址空间会公用内核页表。</p>
+<h3 id="虚拟地址空间的访问权限"><a href="#虚拟地址空间的访问权限" class="headerlink" title="虚拟地址空间的访问权限"></a>虚拟地址空间的访问权限</h3><ol>
+<li><p>用户空间禁止访问内核空间。</p>
+</li>
+<li><p>用户态通过系统调用切换到内核空间后，该进程处于内核态上下文，可以访问用户空间的内存。</p>
+</li>
+<li><p>中断抢占进程后，处于中断上下文时，不能访问用户空间。</p>
+</li>
+<li><p>内核线程不能访问用户空间。</p>
+</li>
+</ol>
+<h3 id="内核空间和用户空间"><a href="#内核空间和用户空间" class="headerlink" title="内核空间和用户空间"></a>内核空间和用户空间</h3><p> Linux系统对自身进行了划分，一部分核心软件独立于普通应用程序，运行在较高的特权级别上，它们驻留在被保护的内存空间上，拥有访问硬件设备的所有权限，Linux将此称为内核空间。<br>        相对地，应用程序则是在“用户空间”中运行。运行在用户空间的应用程序只能看到允许它们使用的部分系统资源，并且不能使用某些特定的系统功能，也不能直接访问内核空间和硬件设备，以及其他一些具体的使用限制。<br>        将用户空间和内核空间置于这种非对称访问机制下有很好的安全性，能有效抵御恶意用户的窥探，也能防止质量低劣的用户程序的侵害，从而使系统运行得更稳定可靠。<br>        内核空间在页表中拥有较高的特权级（ring2或以下），因此只要用户态的程序试图访问这些页，就会导致一个页错误（page fault）。在Linux中，内核空间是持续存在的，并且在所有进程中都映射到同样的物理内存，内核代码和数据总是可寻址的，随时准备处理中断和系统调用</p>
+<h3 id="栈和堆的区别"><a href="#栈和堆的区别" class="headerlink" title="栈和堆的区别"></a>栈和堆的区别</h3><p><img src="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/system/%E6%A0%88%E4%B8%8E%E5%A0%86%E7%9A%84%E5%8C%BA%E5%88%AB.png" alt="栈和堆的区别"></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux-内存管理/" rel="tag"># Linux,内存管理</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/05/Java虚拟机基础/" rel="next" title="Java虚拟机基础">
+                <i class="fa fa-chevron-left"></i> Java虚拟机基础
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="caixueyuan" />
+          <p class="site-author-name" itemprop="name">caixueyuan</p>
+           
+              <p class="site-description motion-element" itemprop="description">Java后台开发程序员</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux操作系统"><span class="nav-number">1.</span> <span class="nav-text">Linux操作系统</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Linux程序运行的关系图"><span class="nav-number">1.1.</span> <span class="nav-text">Linux程序运行的关系图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Linux内核的主要子系统"><span class="nav-number">1.2.</span> <span class="nav-text">Linux内核的主要子系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Linux进程地址空间"><span class="nav-number">1.3.</span> <span class="nav-text">Linux进程地址空间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#由物理地址到虚拟地址的转换"><span class="nav-number">1.4.</span> <span class="nav-text">由物理地址到虚拟地址的转换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#虚拟地址空间的访问权限"><span class="nav-number">1.5.</span> <span class="nav-text">虚拟地址空间的访问权限</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#内核空间和用户空间"><span class="nav-number">1.6.</span> <span class="nav-text">内核空间和用户空间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#栈和堆的区别"><span class="nav-number">1.7.</span> <span class="nav-text">栈和堆的区别</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">caixueyuan</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
