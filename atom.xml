@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://caixueyuan.github.io/"/>
-  <updated>2017-08-06T07:26:48.194Z</updated>
+  <updated>2017-08-07T16:28:57.376Z</updated>
   <id>https://caixueyuan.github.io/</id>
   
   <author>
@@ -14,6 +14,127 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Linux进程</title>
+    <link href="https://caixueyuan.github.io/2017/08/07/Linux%E8%BF%9B%E7%A8%8B/"/>
+    <id>https://caixueyuan.github.io/2017/08/07/Linux进程/</id>
+    <published>2017-08-07T14:22:13.000Z</published>
+    <updated>2017-08-07T16:28:57.376Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="查看一个进程都有哪些内存段组成"><a href="#查看一个进程都有哪些内存段组成" class="headerlink" title="查看一个进程都有哪些内存段组成"></a>查看一个进程都有哪些内存段组成</h2><p>一个进程包括PCB，程序段和数据段</p>
+<h3 id="PCB"><a href="#PCB" class="headerlink" title="PCB"></a>PCB</h3><p>进程创建时，操作系统就新建一个PCB结构，它之后就常驻内存，任一时刻可以存取, 在进程结束时删除。PCB是进程实体的一部分，是进程存在的唯一标志。</p>
+<p><strong>进程描述信息</strong></p>
+<blockquote>
+<ul>
+<li>进程标识符：标志各个进程，每个进程都有一个并且是唯一的标识号。</li>
+<li>用户标识符：进程归属的用户，用户标识符主要为共享和保护服务。</li>
+</ul>
+</blockquote>
+<p><strong>进程控制和管理信息</strong></p>
+<blockquote>
+<ul>
+<li>进程当前状态：描述进程的状态信息，作为处理机分配调度的依据</li>
+<li>进程优先级：描述进程抢占处理机的优先级，优先级高的进程可以优先获得处理机</li>
+<li>代码运行入口地址</li>
+<li>程序的外存地址</li>
+<li>进入内存的时间</li>
+<li>处理机占用的时间</li>
+<li>信号量的使用</li>
+</ul>
+</blockquote>
+<p><strong>资源分配清单</strong>：用于说明有关内存地址空间或虚拟地址空间的状况；所打开文件的 列表和所使用的输入/输出设备信息。</p>
+<blockquote>
+<ul>
+<li>代码段指针</li>
+<li>数据段指针</li>
+<li>堆栈段指针</li>
+<li>文件描述符</li>
+</ul>
+</blockquote>
+<p><strong>处理机相关信息</strong>：</p>
+<blockquote>
+<ul>
+<li>通用寄存器值</li>
+<li>地址寄存器值</li>
+<li>控制寄存器值</li>
+<li>标志寄存器值</li>
+</ul>
+</blockquote>
+<p>主要指处理机中各寄存器值，当进程被切换时，处理机状态信息 都必须保存在相应的PCB中，以便在该进程重新执行时，能再从断点继续执行。</p>
+<h3 id="程序段"><a href="#程序段" class="headerlink" title="程序段"></a>程序段</h3><p>程序段就是能被进程调度程序调度到CPU执行的程序代码段。注意，程序可以被多个进程共享，就是说多个进程可以运行同一个程序。</p>
+<h3 id="数据段"><a href="#数据段" class="headerlink" title="数据段"></a>数据段</h3><p>一个进程的数据段，可以是进程对应的程序加工处理的原始数据，也可以是程序执行时产生的中间或最终结果</p>
+<p><a href="http://c.biancheng.net/cpp/html/2591.html" target="_blank" rel="external">引用该链接</a></p>
+<h2 id="mmap系统调用与malloc函数的区别"><a href="#mmap系统调用与malloc函数的区别" class="headerlink" title="mmap系统调用与malloc函数的区别"></a>mmap系统调用与malloc函数的区别</h2><h3 id="mmap"><a href="#mmap" class="headerlink" title="mmap"></a>mmap</h3><ol>
+<li>fork()产生的子进程是复制的进程表，但是PID不同</li>
+<li>exec()改变进程的进程地址空间（虚拟）,它的PID保持原来的PID</li>
+<li>malloc() 在PCB表结构中的堆中申请空间，若空间申请失败的话，即超过给定的堆的最大空间时，会调用brk()系统进行调用，将堆空间向未使用的区域扩展，brk()之后新增的堆空间不会自动清除，需使用相应的系统调用来清除； </li>
+<li>mmap：使得进程之间通过映射同一个普通文件实现共享内存。普通文件被映射到进程地址空间后，进程可以像访问普通内存一样对文件进行访问，不必再调用read()，write（）等操作。</li>
+</ol>
+<p><img src="https://vinoit.me/images/linux/linux-memory-alloc-0.jpg" alt="brk"></p>
+<ol>
+<li>在申请的文件小于128K的时候，一般都是都是用brk(),一般都是在_edata来申请空间</li>
+<li>但是呢，A这块空间现在还是没有物理页与之对应，等到进程第一次读写A这块内存的时候，发生缺页中断，这个时候，内核才分配A这块内存对应的物理页。等到进程第一次读写A这块内存的时候，发生缺页中断，这个时候，内核才分配A这块内存对应的物理页</li>
+</ol>
+<p><img src="https://vinoit.me/images/linux/linux-memory-alloc-2.jpg" alt="mmap"></p>
+<p>在&gt;128K的内存申请的时候，在heap和stack中申请一段内存<br><strong>原因</strong>：<br>brk分配的内存需要等到高地址内存释放以后才能释放（例如，在B释放之前，A是不可能释放的，这就是内存碎片产生的原因，什么时候紧缩看下面），而mmap分配的内存可以单独释放。</p>
+<h3 id="偷页"><a href="#偷页" class="headerlink" title="偷页"></a>偷页</h3><p>页淘汰（page replacent,page stealing,pageout)工作是由一个系统进程完成的，页淘汰的时机，当内存空间页数低于系统所配置的最小阈值，启动（唤醒）页淘汰进程，页淘汰进程被启动后就开始不停的选择和淘汰页面，直到内存的空闲页面达到系统所配置的最大阈值为止。</p>
+<p>页淘汰算法：FIFO，最近最少使用（LRU），最近未使用算法（NRU）</p>
+<h2 id="让一个进程向磁盘导出其内存中内容"><a href="#让一个进程向磁盘导出其内存中内容" class="headerlink" title="让一个进程向磁盘导出其内存中内容"></a>让一个进程向磁盘导出其内存中内容</h2><p><a href="http://www.cnblogs.com/biyeymyhjob/archive/2012/07/20/2601655.html" target="_blank" rel="external">参考链接</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;查看一个进程都有哪些内存段组成&quot;&gt;&lt;a href=&quot;#查看一个进程都有哪些内存段组成&quot; class=&quot;headerlink&quot; title=&quot;查看一个进程都有哪些内存段组成&quot;&gt;&lt;/a&gt;查看一个进程都有哪些内存段组成&lt;/h2&gt;&lt;p&gt;一个进程包括PCB，程序段和数据段&lt;
+    
+    </summary>
+    
+      <category term="Linux , 操作系统" scheme="https://caixueyuan.github.io/categories/Linux-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+    
+      <category term="进程 , Linux" scheme="https://caixueyuan.github.io/tags/%E8%BF%9B%E7%A8%8B-Linux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>JVM垃圾收集机制</title>
+    <link href="https://caixueyuan.github.io/2017/08/06/JVM%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E6%9C%BA%E5%88%B6/"/>
+    <id>https://caixueyuan.github.io/2017/08/06/JVM垃圾收集机制/</id>
+    <published>2017-08-06T09:05:50.000Z</published>
+    <updated>2017-08-06T16:10:48.419Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="Java垃圾收集机制"><a href="#Java垃圾收集机制" class="headerlink" title="Java垃圾收集机制"></a>Java垃圾收集机制</h2><h3 id="可以作为GC-Root的对象"><a href="#可以作为GC-Root的对象" class="headerlink" title="可以作为GC Root的对象"></a>可以作为GC Root的对象</h3><ol>
+<li>虚拟机栈中引用的对象</li>
+<li>方法区中类的静态属性引用的对象</li>
+<li>方法区中常量引用的对象</li>
+<li>本地方法栈中引用的对象</li>
+</ol>
+<h3 id="无用的类的判定的方法"><a href="#无用的类的判定的方法" class="headerlink" title="无用的类的判定的方法"></a>无用的类的判定的方法</h3><ol>
+<li>该类的所有的实例都已经被回收，也就是Java堆中不存在该类的任何实例</li>
+<li>加载该类的ClassLoader已经被回收</li>
+<li>该类的对应的java.lang.Class对象没有在任何地方被引用们无法在任何地方通过反射访问该类的方法</li>
+</ol>
+<h3 id="枚举根节点"><a href="#枚举根节点" class="headerlink" title="枚举根节点"></a>枚举根节点</h3><blockquote>
+<ul>
+<li>OopMap</li>
+<li>安全点</li>
+<li>安全区域</li>
+</ul>
+</blockquote>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;Java垃圾收集机制&quot;&gt;&lt;a href=&quot;#Java垃圾收集机制&quot; class=&quot;headerlink&quot; title=&quot;Java垃圾收集机制&quot;&gt;&lt;/a&gt;Java垃圾收集机制&lt;/h2&gt;&lt;h3 id=&quot;可以作为GC-Root的对象&quot;&gt;&lt;a href=&quot;#可以作为GC-
+    
+    </summary>
+    
+      <category term="学习笔记" scheme="https://caixueyuan.github.io/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+    
+      <category term="JVM , 垃圾收集" scheme="https://caixueyuan.github.io/tags/JVM-%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86/"/>
+    
+  </entry>
   
   <entry>
     <title>Linux操作系统内存基础</title>
@@ -974,202 +1095,6 @@
 <p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
 <h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
 <p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.
-    
-    </summary>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>Hello World</title>
-    <link href="https://caixueyuan.github.io/2017/07/03/%E5%9B%BE%E8%A7%A3HTTP%20(2)/"/>
-    <id>https://caixueyuan.github.io/2017/07/03/图解HTTP (2)/</id>
-    <published>2017-07-02T16:00:00.000Z</published>
-    <updated>2017-07-03T13:27:48.143Z</updated>
-    
-    <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<p>##简单的HTTP协议</p>
-<p>###1，对于告知服务器意图的HTTP方法：</p>
-<blockquote>
-<ul>
-<li>GET:获取资源</li>
-<li>POST:传输实体主体</li>
-<li>PUT:传输文件</li>
-<li>HEAD:只是获得报文的头文件</li>
-<li>DELETE:删除文件</li>
-<li>TRACE:追踪路径</li>
-<li>CONNECT:要求用隧道协议链接代理</li>
-</ul>
-</blockquote>
-<p>###2，持久连接节省通信量</p>
-<blockquote>
-<p>1,持久链接的好处在于减少了TCP链接的重复建立和断开造成的额外开销，减少了服务器的负载<br>2,管线化：并发发送多个请求</p>
-<p>###3，使用Cookie的状态管理<br>在没有Cookie之前，服务器端生成Cookie，在客户端中写入Cookie信息来控制客户端的状态，客户端会根据从服务器发送的的相应报文中的<code>Set-Cookie</code>的首部字段信息，通知客户端来保存Cookie，在下次客户端再往该服务器发送请求时，<strong>自动</strong>在请求报文中加入Cookie值后发送出去。</p>
-<p>##HTTP报文内的HTTP信息</p>
-</blockquote>
-<p>###3，编码提升传输速率</p>
-<blockquote>
-<ul>
-<li>压缩传输：报文主体等于实体主体，只有在传输中进行编码操作时，实体主体的内容发生变化，才导致它和报文主体发生差异</li>
-<li>分块传输编码：在HTTP通信过程中，请求的编码实体资源尚未全部传输完成之前，浏览器无法显示请求页面。</li>
-</ul>
-</blockquote>
-<p>###4，发送多种数据的多部分对象集合</p>
-<blockquote>
-<p><code>multipart/form-data</code>在web表单文件上传时使用<br><code>multipart/byteranges</code>响应<strong>报文</strong>包含了多个范围的内容时使用</p>
-</blockquote>
-<p>###5，获取部分内容的范围请求（Range Request）</p>
-<p>###6，内容协调<code>Content Negotiation</code>返回最合适的内容</p>
-<blockquote>
-<ul>
-<li>Accept</li>
-<li>Acept-Charset</li>
-<li>Accept-Encoding</li>
-<li>Accept-Language</li>
-<li>Content-Language<br>类型</li>
-<li>Server-driven Negotiation</li>
-<li>Agent-driven Negotiation</li>
-<li>Transparent Negotiation</li>
-</ul>
-</blockquote>
-<p>##返回结果的HTTP状态</p>
-<p>###1，1XX接收的请求正在处理</p>
-<p>###2，2XX成功</p>
-<blockquote>
-<ul>
-<li>200 OK 成功处理</li>
-<li>204 No Content:在返回的响应报文中不含实体的主题部分</li>
-<li>206 Partial Content：范围请求，GET</li>
-</ul>
-</blockquote>
-<p>###3,3XX重定向：浏览器需要执行某些特殊的处理一正确处理请求</p>
-<blockquote>
-<ul>
-<li>301:Moved Permanently</li>
-<li>302:Found 书签，URI临时性质改变</li>
-<li>303:See Other:由于请求过程的资源存在了另一个URI，应使用GET方向定向获取请求的资源。</li>
-<li>304:Not Modified:(服务器端资源没有改变，可直接使用客户端未过期的缓存）客户端发送附带条件的请求时，但因为请求未满足条件的情况后</li>
-<li>307:Temporary Redirect</li>
-</ul>
-</blockquote>
-<p>###4,4XX客户端是发生错误的原因</p>
-<blockquote>
-<ul>
-<li>400:请求报文中存在语法错误</li>
-<li>401 Unauthorized:需要通过HTTP认证的认证信息，返回含有401的响应必须包含一个用于被请求资源的WWW-Authenticate首部用以质询用户信息，当浏览器初次接收到401响应吗，会跳出认证用的对话窗口</li>
-<li>403 Forbidden:对请求资源的访问被服务器拒绝了</li>
-<li>404: Not Found:没有找到请求的资源</li>
-</ul>
-</blockquote>
-<p>###5，5XX：服务器本身错误</p>
-<blockquote>
-<ul>
-<li>500： Internal Server Error服务器在执行请求的时候出现错误</li>
-<li>503： Service Unavailable:服务器暂时处于超负载或正在进行停机维护</li>
-</ul>
-</blockquote>
-<hr>
-<p>##与HTTP协作的Web服务器</p>
-<p>###1,用单台虚拟主机实现多个域名</p>
-<blockquote>
-<ul>
-<li>在发送HTTP请求时，必须在Host首部内完整指定主机名或域名的URI</li>
-</ul>
-</blockquote>
-<p>###2,通信数据转发程序</p>
-<blockquote>
-<ul>
-<li>代理：代理不改变URL，会直接发送给前方持有资源的目标服务器，需要附加上Via首部字段以标记出经过的主机信息<br>可以分为两种（是否使用缓存，是否修改报文（透明和非透明）</li>
-<li>网关：网关能使通信线路上的服务器提供非HTTP协议服务，提高通信的安全性</li>
-<li>隧道：SSL通信，隧道本身不会去解析HTTP请求</li>
-</ul>
-</blockquote>
-<p>###3，保存资源缓存</p>
-<blockquote>
-<ul>
-<li>缓存的有效性</li>
-<li>客户端缓存</li>
-</ul>
-</blockquote>
-<p>##HTTP首部</p>
-<p>###1，HTTP首部字段传递重要信息</p>
-<blockquote>
-<p>使用首部字段是为了给浏览器和服务器提供报文主体大小、所使用的语言、认证信息等内容。</p>
-</blockquote>
-<p>##2，HTTP首部字段类型：</p>
-<blockquote>
-<ul>
-<li>通用首部字段</li>
-<li>请求首部字段</li>
-<li>响应首部字段</li>
-<li>实体首部字段</li>
-</ul>
-</blockquote>
-<p>1，端到端首部（End-to-end Header）：转发给请求/响应对应的最终接收目标，且必须保存在由缓存生成的响应中<br>2，逐跳首部(Hop-by-hop Header):会因为通过缓存或代理而不再转发。</p>
-<p>###3，HTTP/1.1通用首部字段</p>
-<blockquote>
-<p><strong>Cache-Controller</strong>：</p>
-</blockquote>
-<p><code>Cache-Control:public</code>:其他用户也可以利用缓存<br><code>Cache-Control:private</code>:响应只以特定的用户作为对象<br><code>Cache-Control:no-cache=Location</code>:防止从缓存中返回过期的资源<br><code>Cache-Control:no-store</code>:缓存中不能在本地存储请求或响应的任一部分。<br><code>Cache-Control:s-maxage=604800</code>(单位为秒）：只适用于供多位用户使用的公共缓存服务器<br><code>Cache-Control:max-age=604800</code>:当接收到客户端的请求时，缓存服务器直接向客户端返回<br><code>Cache-Control:min-fresh=60</code>：指令缓存服务器返回至少还没过指定时间的缓存资源<br><code>Cache-Control:max-stale=3600</code>:指示缓存资源，即使过期也照常接收</p>
-<p>###4，Cookie：</p>
-<blockquote>
-<p>Set-Cookie:开始状态管理所使用的Cookie信息，响应首部字段<br>Cookie :服务器收到的Cookie信息（请求首部字段）</p>
-</blockquote>
-<p>##确保Web安全的HTTPS</p>
-<p>###1，HTTP的缺点</p>
-<blockquote>
-<ul>
-<li>1，通信使用明文，内容可能被窃听<br>TCP/IP是可能被窃听的网络<br>方法：通信加密(<strong>SSL</strong>(<code>Secure Socket Layer</code>安全套接层） TLS（Transport Layer Security）安全传输协议）的组合使用，内容的加密</li>
-<li>不验证通信方的身份，因此有可能遭遇伪装<br>方法：查明证书</li>
-<li>无法证明报文的完整性，所以有可能被篡改<br>攻击：中间人攻击<br>方法：MD5和SHA-1等散列值校验，用来确认文件的数字签名方法</li>
-</ul>
-</blockquote>
-<p>###2，HTTPS（加密，认证，完整性保护）</p>
-<blockquote>
-<ul>
-<li>HTTPS是身披SSL外壳的HTTP</li>
-<li>相互交换密钥的公开密钥加密技术（公开密钥加密，共享密钥加密）<br>HTTPS采用混合加密机制，首先，使用公开密钥进行加密来传送共享密钥，然后再通过共享密钥进行加密</li>
-<li>证明公开密钥正确性的证书（证明公开密钥本身是正确的，由数字证书认证机构，如EV SSL证书</li>
-<li>MAC(Message Authentication Code)：能够查知报文是否被篡改，保证报文的完整性。</li>
-</ul>
-</blockquote>
-<p>##确保访问用户身份的认证</p>
-<p>###1，BASIC认证</p>
-<blockquote>
-<p>使用Base64编码方式，基本上算是明文</p>
-</blockquote>
-<p>###2,DIGEST认证</p>
-<blockquote>
-<p>发送临时的质询码（随机数）给客户端，客户端发送摘要，以及由质询码计算出来的响应码，然后服务器进行验证</p>
-</blockquote>
-<p>###3，SSL客户端认证</p>
-<blockquote>
-<p>双因素：认证客户端计算机，通过密码来证明本人在使用<br>需要客户端证书</p>
-</blockquote>
-<p>###4,基于表单认证</p>
-<blockquote>
-<p>通过Session管理及Cookie应用</p>
-</blockquote>
-<p>##基于HTTP的功能追加协议</p>
-<p>###HTTP的瓶颈：</p>
-<blockquote>
-<ul>
-<li>1,一个连接只可发送一个请求</li>
-<li>2,请求只能从客户端开始</li>
-<li>3,请求/响应首部未经压缩就发送</li>
-<li>4,发送冗长的首部</li>
-<li>5,可任意选择数据压缩格式</li>
-</ul>
-</blockquote>
-<p>###WekSocket</p>
-<blockquote>
-<p>在建立HTTP连接之后切换Upgrade到WebSocket中，具有推送功能和减少通信量（首部更少）</p>
-</blockquote>
 ]]></content>
     
     <summary type="html">

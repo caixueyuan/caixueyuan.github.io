@@ -1,0 +1,798 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="进程 , Linux," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="caixueyuan" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="查看一个进程都有哪些内存段组成一个进程包括PCB，程序段和数据段 PCB进程创建时，操作系统就新建一个PCB结构，它之后就常驻内存，任一时刻可以存取, 在进程结束时删除。PCB是进程实体的一部分，是进程存在的唯一标志。 进程描述信息   进程标识符：标志各个进程，每个进程都有一个并且是唯一的标识号。 用户标识符：进程归属的用户，用户标识符主要为共享和保护服务。   进程控制和管理信息   进程当前">
+<meta name="keywords" content="进程 , Linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux进程">
+<meta property="og:url" content="https://caixueyuan.github.io/2017/08/07/Linux进程/index.html">
+<meta property="og:site_name" content="caixueyuan">
+<meta property="og:description" content="查看一个进程都有哪些内存段组成一个进程包括PCB，程序段和数据段 PCB进程创建时，操作系统就新建一个PCB结构，它之后就常驻内存，任一时刻可以存取, 在进程结束时删除。PCB是进程实体的一部分，是进程存在的唯一标志。 进程描述信息   进程标识符：标志各个进程，每个进程都有一个并且是唯一的标识号。 用户标识符：进程归属的用户，用户标识符主要为共享和保护服务。   进程控制和管理信息   进程当前">
+<meta property="og:image" content="https://vinoit.me/images/linux/linux-memory-alloc-0.jpg">
+<meta property="og:image" content="https://vinoit.me/images/linux/linux-memory-alloc-2.jpg">
+<meta property="og:updated_time" content="2017-08-07T16:28:57.376Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux进程">
+<meta name="twitter:description" content="查看一个进程都有哪些内存段组成一个进程包括PCB，程序段和数据段 PCB进程创建时，操作系统就新建一个PCB结构，它之后就常驻内存，任一时刻可以存取, 在进程结束时删除。PCB是进程实体的一部分，是进程存在的唯一标志。 进程描述信息   进程标识符：标志各个进程，每个进程都有一个并且是唯一的标识号。 用户标识符：进程归属的用户，用户标识符主要为共享和保护服务。   进程控制和管理信息   进程当前">
+<meta name="twitter:image" content="https://vinoit.me/images/linux/linux-memory-alloc-0.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://caixueyuan.github.io/2017/08/07/Linux进程/"/>
+
+
+
+
+
+  <title>Linux进程 | caixueyuan</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">caixueyuan</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">SCUT</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://caixueyuan.github.io/2017/08/07/Linux进程/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="caixueyuan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="caixueyuan">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Linux进程</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-07T22:22:13+08:00">
+                2017-08-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-操作系统/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux , 操作系统</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="查看一个进程都有哪些内存段组成"><a href="#查看一个进程都有哪些内存段组成" class="headerlink" title="查看一个进程都有哪些内存段组成"></a>查看一个进程都有哪些内存段组成</h2><p>一个进程包括PCB，程序段和数据段</p>
+<h3 id="PCB"><a href="#PCB" class="headerlink" title="PCB"></a>PCB</h3><p>进程创建时，操作系统就新建一个PCB结构，它之后就常驻内存，任一时刻可以存取, 在进程结束时删除。PCB是进程实体的一部分，是进程存在的唯一标志。</p>
+<p><strong>进程描述信息</strong></p>
+<blockquote>
+<ul>
+<li>进程标识符：标志各个进程，每个进程都有一个并且是唯一的标识号。</li>
+<li>用户标识符：进程归属的用户，用户标识符主要为共享和保护服务。</li>
+</ul>
+</blockquote>
+<p><strong>进程控制和管理信息</strong></p>
+<blockquote>
+<ul>
+<li>进程当前状态：描述进程的状态信息，作为处理机分配调度的依据</li>
+<li>进程优先级：描述进程抢占处理机的优先级，优先级高的进程可以优先获得处理机</li>
+<li>代码运行入口地址</li>
+<li>程序的外存地址</li>
+<li>进入内存的时间</li>
+<li>处理机占用的时间</li>
+<li>信号量的使用</li>
+</ul>
+</blockquote>
+<p><strong>资源分配清单</strong>：用于说明有关内存地址空间或虚拟地址空间的状况；所打开文件的 列表和所使用的输入/输出设备信息。</p>
+<blockquote>
+<ul>
+<li>代码段指针</li>
+<li>数据段指针</li>
+<li>堆栈段指针</li>
+<li>文件描述符</li>
+</ul>
+</blockquote>
+<p><strong>处理机相关信息</strong>：</p>
+<blockquote>
+<ul>
+<li>通用寄存器值</li>
+<li>地址寄存器值</li>
+<li>控制寄存器值</li>
+<li>标志寄存器值</li>
+</ul>
+</blockquote>
+<p>主要指处理机中各寄存器值，当进程被切换时，处理机状态信息 都必须保存在相应的PCB中，以便在该进程重新执行时，能再从断点继续执行。</p>
+<h3 id="程序段"><a href="#程序段" class="headerlink" title="程序段"></a>程序段</h3><p>程序段就是能被进程调度程序调度到CPU执行的程序代码段。注意，程序可以被多个进程共享，就是说多个进程可以运行同一个程序。</p>
+<h3 id="数据段"><a href="#数据段" class="headerlink" title="数据段"></a>数据段</h3><p>一个进程的数据段，可以是进程对应的程序加工处理的原始数据，也可以是程序执行时产生的中间或最终结果</p>
+<p><a href="http://c.biancheng.net/cpp/html/2591.html" target="_blank" rel="external">引用该链接</a></p>
+<h2 id="mmap系统调用与malloc函数的区别"><a href="#mmap系统调用与malloc函数的区别" class="headerlink" title="mmap系统调用与malloc函数的区别"></a>mmap系统调用与malloc函数的区别</h2><h3 id="mmap"><a href="#mmap" class="headerlink" title="mmap"></a>mmap</h3><ol>
+<li>fork()产生的子进程是复制的进程表，但是PID不同</li>
+<li>exec()改变进程的进程地址空间（虚拟）,它的PID保持原来的PID</li>
+<li>malloc() 在PCB表结构中的堆中申请空间，若空间申请失败的话，即超过给定的堆的最大空间时，会调用brk()系统进行调用，将堆空间向未使用的区域扩展，brk()之后新增的堆空间不会自动清除，需使用相应的系统调用来清除； </li>
+<li>mmap：使得进程之间通过映射同一个普通文件实现共享内存。普通文件被映射到进程地址空间后，进程可以像访问普通内存一样对文件进行访问，不必再调用read()，write（）等操作。</li>
+</ol>
+<p><img src="https://vinoit.me/images/linux/linux-memory-alloc-0.jpg" alt="brk"></p>
+<ol>
+<li>在申请的文件小于128K的时候，一般都是都是用brk(),一般都是在_edata来申请空间</li>
+<li>但是呢，A这块空间现在还是没有物理页与之对应，等到进程第一次读写A这块内存的时候，发生缺页中断，这个时候，内核才分配A这块内存对应的物理页。等到进程第一次读写A这块内存的时候，发生缺页中断，这个时候，内核才分配A这块内存对应的物理页</li>
+</ol>
+<p><img src="https://vinoit.me/images/linux/linux-memory-alloc-2.jpg" alt="mmap"></p>
+<p>在&gt;128K的内存申请的时候，在heap和stack中申请一段内存<br><strong>原因</strong>：<br>brk分配的内存需要等到高地址内存释放以后才能释放（例如，在B释放之前，A是不可能释放的，这就是内存碎片产生的原因，什么时候紧缩看下面），而mmap分配的内存可以单独释放。</p>
+<h3 id="偷页"><a href="#偷页" class="headerlink" title="偷页"></a>偷页</h3><p>页淘汰（page replacent,page stealing,pageout)工作是由一个系统进程完成的，页淘汰的时机，当内存空间页数低于系统所配置的最小阈值，启动（唤醒）页淘汰进程，页淘汰进程被启动后就开始不停的选择和淘汰页面，直到内存的空闲页面达到系统所配置的最大阈值为止。</p>
+<p>页淘汰算法：FIFO，最近最少使用（LRU），最近未使用算法（NRU）</p>
+<h2 id="让一个进程向磁盘导出其内存中内容"><a href="#让一个进程向磁盘导出其内存中内容" class="headerlink" title="让一个进程向磁盘导出其内存中内容"></a>让一个进程向磁盘导出其内存中内容</h2><p><a href="http://www.cnblogs.com/biyeymyhjob/archive/2012/07/20/2601655.html" target="_blank" rel="external">参考链接</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/进程-Linux/" rel="tag"># 进程 , Linux</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/06/JVM垃圾收集机制/" rel="next" title="JVM垃圾收集机制">
+                <i class="fa fa-chevron-left"></i> JVM垃圾收集机制
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="caixueyuan" />
+          <p class="site-author-name" itemprop="name">caixueyuan</p>
+           
+              <p class="site-description motion-element" itemprop="description">Java后台开发程序员</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#查看一个进程都有哪些内存段组成"><span class="nav-number">1.</span> <span class="nav-text">查看一个进程都有哪些内存段组成</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#PCB"><span class="nav-number">1.1.</span> <span class="nav-text">PCB</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#程序段"><span class="nav-number">1.2.</span> <span class="nav-text">程序段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据段"><span class="nav-number">1.3.</span> <span class="nav-text">数据段</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mmap系统调用与malloc函数的区别"><span class="nav-number">2.</span> <span class="nav-text">mmap系统调用与malloc函数的区别</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#mmap"><span class="nav-number">2.1.</span> <span class="nav-text">mmap</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#偷页"><span class="nav-number">2.2.</span> <span class="nav-text">偷页</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#让一个进程向磁盘导出其内存中内容"><span class="nav-number">3.</span> <span class="nav-text">让一个进程向磁盘导出其内存中内容</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">caixueyuan</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
