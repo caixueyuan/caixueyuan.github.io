@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://caixueyuan.github.io/"/>
-  <updated>2017-08-07T16:28:57.376Z</updated>
+  <updated>2017-08-13T09:29:21.592Z</updated>
   <id>https://caixueyuan.github.io/</id>
   
   <author>
@@ -14,6 +14,165 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>JAVA远程调试</title>
+    <link href="https://caixueyuan.github.io/2017/08/13/JAVA%E8%BF%9C%E7%A8%8B%E8%B0%83%E8%AF%95/"/>
+    <id>https://caixueyuan.github.io/2017/08/13/JAVA远程调试/</id>
+    <published>2017-08-13T03:49:24.000Z</published>
+    <updated>2017-08-13T09:29:21.592Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="JPDA"><a href="#JPDA" class="headerlink" title="JPDA"></a>JPDA</h2><h3 id="JPDA（Java-Platform-Debugger-Architecture）"><a href="#JPDA（Java-Platform-Debugger-Architecture）" class="headerlink" title="JPDA（Java Platform Debugger Architecture）"></a>JPDA（Java Platform Debugger Architecture）</h3><blockquote>
+<ul>
+<li>JVMTI(Java Virtual Machine Tool Interface)</li>
+<li>JDWP(Java Debugger Wire Protocol)</li>
+<li>JDI(Java Debug Interface)</li>
+</ul>
+</blockquote>
+<h3 id="三个模块的作用"><a href="#三个模块的作用" class="headerlink" title="三个模块的作用"></a>三个模块的作用</h3><table>
+<thead>
+<tr>
+<th>模块</th>
+<th style="text-align:right">层次</th>
+<th style="text-align:center">编程语言</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>JVMTI</td>
+<td style="text-align:right">底层</td>
+<td style="text-align:center">C</td>
+<td>获取及控制当前虚拟机状态</td>
+</tr>
+<tr>
+<td>JDMP</td>
+<td style="text-align:right">中介层</td>
+<td style="text-align:center">C</td>
+<td>定义JVMTI和JDI交互的数据格式</td>
+</tr>
+<tr>
+<td>JDI</td>
+<td style="text-align:right">高层</td>
+<td style="text-align:center">Java</td>
+<td>提供Java API来远程控制被调试虚拟机</td>
+</tr>
+</tbody>
+</table>
+<h3 id="JVMTI（Java虚拟机工具接口）"><a href="#JVMTI（Java虚拟机工具接口）" class="headerlink" title="JVMTI（Java虚拟机工具接口）"></a>JVMTI（Java虚拟机工具接口）</h3><p>处于整个JPDA体系的最底层，所有调试功能本质上都是JVMTI提供的</p>
+<h3 id="JDMP"><a href="#JDMP" class="headerlink" title="JDMP"></a>JDMP</h3><p>是一个为Java调试而设计的一个通讯交互协议，它定了调试器和被调试器程序之间传递的信息的格式，有两种方式，一种是提供了socket方式，一种是在Windows上的shared memory方式</p>
+<h3 id="JDI（Java调试接口）"><a href="#JDI（Java调试接口）" class="headerlink" title="JDI（Java调试接口）"></a>JDI（Java调试接口）</h3><p>JDI是三个模块中的最高层的接口，在多数的 JDK 中，它是由 Java 语言实现的，通过它，调试工具开发人员就能通过前端虚拟机上的调试器来远程操控后端虚拟机上被调试程序的运行，JDI 不仅能帮助开发人员格式化 JDWP 数据，而且还能为 JDWP 数据传输提供队列、缓存等优化服务。</p>
+<h3 id="JDI详解"><a href="#JDI详解" class="headerlink" title="JDI详解"></a>JDI详解</h3><p>以上引用于<a href="https://www.ibm.com/developerworks/cn/java/j-lo-jpda4/index.html" target="_blank" rel="external">深入了解Java调试体系</a></p>
+<h3 id="JDI工作方式"><a href="#JDI工作方式" class="headerlink" title="JDI工作方式"></a>JDI工作方式</h3><p>首先，调试器（Debuuger）通过 Bootstrap 获取唯一的虚拟机管理器，</p>
+<p>获取虚拟机管理器（VirtualMachineManager）<br><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">VirtualMachineManager virtualMachineManager</span> </div><div class="line">    = Bootstrap.virtualMachineManager();</div></pre></td></tr></table></figure></p>
+<p>虚拟机管理器将在第一次被调用时初始化可用的链接器。一般地，调试器会默认地采用启动型链接器进行链接</p>
+<p>获取默认的链接器（Connector）<br><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">LaunchingConnector defaultConnector</span> = virtualMachineManager.defaultConnector();</div></pre></td></tr></table></figure></p>
+<p>然后，调试器调用链接器的 launch () 来启动目标程序，并完成调试器与目标虚拟机的链接</p>
+<p>启动目标程序，连接调试器（Debuuger）与目标虚拟机（VirtualMachine）<br><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">VirtualMachine targetVM</span> = defaultConnector.launch(arguments);</div></pre></td></tr></table></figure></p>
+<h2 id="eclipse调试远程调试"><a href="#eclipse调试远程调试" class="headerlink" title="eclipse调试远程调试"></a>eclipse调试远程调试</h2><h3 id="方法："><a href="#方法：" class="headerlink" title="方法："></a>方法：</h3><p><strong>-Xdebug</strong>:启动调试特性<br><code>-Xrunjdwp:&lt;sub-options&gt;</code>:在目标VM中加载JDWP实现，它通过传输和JDWP协议和独立的调试器应用程序通信</p>
+<p><strong>transport</strong>：通常使用套接字链接<br><strong>server</strong>：如果为y的话，目标应用程序监听将要连接的调试器应用程序，否则，它将连接到特定地址上的调试器应用程序<br><strong>address</strong>：连接的传输地址，如果服务器为 n，将尝试连接到该地址上的调试器应用程序。否则，将在这个端口监听连接</p>
+<p><strong>suspend</strong>：如果值为 y，目标 VM 将暂停，直到调试器应用程序进行连接</p>
+<h3 id="调试方法"><a href="#调试方法" class="headerlink" title="调试方法"></a>调试方法</h3><ol>
+<li>首先，编写程序</li>
+<li>打上断点，进行编译，打包成jar</li>
+<li>运行软件<code>java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,address=&quot;8000&quot; -jar test.jar</code></li>
+<li>然后在eclipse中<code>Run &gt; Debug Configurations</code>中进行监听来获取该断点。</li>
+</ol>
+<h2 id="反编译和逆向工程"><a href="#反编译和逆向工程" class="headerlink" title="反编译和逆向工程"></a>反编译和逆向工程</h2><h3 id="反编译"><a href="#反编译" class="headerlink" title="反编译"></a>反编译</h3><p>通过javap来通过class文件获取操作栈</p>
+<h3 id="逆向工程"><a href="#逆向工程" class="headerlink" title="逆向工程"></a>逆向工程</h3><p>实际应用中出现了两类逆向工程。</p>
+<ol>
+<li>软件的源代码可用，但是更高层次的部分几乎没有描述文档或者描述文档不再适用或者丢失。</li>
+<li>软件没有可用的源代码，任何能找到它的源代码的努力都被称为逆向工程</li>
+</ol>
+<p>也就是一种分析目标系统的过程，其目的就是识别出系统的各个组件以及他们之间的关系，并以其他的形式或者在较高的抽象层次上，重建系统的表征。</p>
+<h3 id="如何反编译Java程序"><a href="#如何反编译Java程序" class="headerlink" title="如何反编译Java程序"></a>如何反编译Java程序</h3><ol>
+<li><p>使用命令<br><code>javap -verbose TestIpp</code></p>
+</li>
+<li><p>在实际使用上，可以使用jad</p>
+</li>
+</ol>
+<h2 id="源代码混淆"><a href="#源代码混淆" class="headerlink" title="源代码混淆"></a>源代码混淆</h2><h3 id="概念："><a href="#概念：" class="headerlink" title="概念："></a>概念：</h3><p>代码混淆（Obfuscated code）是将计算机程序的代码，转换成一种功能上等价，但是难于阅读和理解的形式的行为</p>
+<h3 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h3><p>保护源代码，防止被反编译，保护知识产权</p>
+<h3 id="方法：-1"><a href="#方法：-1" class="headerlink" title="方法："></a>方法：</h3><blockquote>
+<ul>
+<li>将代码中的各种元素，如变量，函数，类的名字改写成无意义的名字</li>
+<li>重写代码中的部分逻辑（for改为while）</li>
+<li>打乱代码的格式（删除空格，将多行代码挤到一行中）</li>
+<li>添加花指令（通过特殊的指令来使得反汇编器出错，进而干扰反编译工作的进行</li>
+</ul>
+</blockquote>
+<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><blockquote>
+<ul>
+<li>java代码不能够使用反射</li>
+<li>还是可以进行反向工程，只是难度增大</li>
+<li>被混淆的代码难以理解</li>
+</ul>
+</blockquote>
+<h2 id="JIT"><a href="#JIT" class="headerlink" title="JIT"></a>JIT</h2><h3 id="概念：-1"><a href="#概念：-1" class="headerlink" title="概念："></a>概念：</h3><p>提高热点代码的执行效率，在运行时，虚拟机将会把这些代码编译成与平台相关的机器码，并进行各种层次的优化</p>
+<h3 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h3><p>解析器和编译器</p>
+<blockquote>
+<ul>
+<li>解析器：程序需要迅速启动和执行</li>
+<li>编译器：获取更高的执行效率</li>
+</ul>
+</blockquote>
+<p><strong>编译对象与触发条件</strong>：</p>
+<blockquote>
+<p>被多次调用的方法</p>
+</blockquote>
+<p>基于计数器的热点代码探测方法，超过一定的阈值就会触发编译，调用方法的时候会先检查是否有已经编译过的版本，如果有会优先执行编译过的代码，有计数器热度的衰减（可以使用-XX：-UseCounterDecay来关闭热度衰减）<br>参数：<code>-XX:CompileThreshold</code>来指定阈值</p>
+<blockquote>
+<ul>
+<li>被多次执行的循环体</li>
+</ul>
+</blockquote>
+<p>回边计数器没有技术热度衰减的过程</p>
+<h3 id="编译过程"><a href="#编译过程" class="headerlink" title="编译过程"></a>编译过程</h3><blockquote>
+<ul>
+<li>client 编译</li>
+</ul>
+</blockquote>
+<ol>
+<li>字节码—–&gt;(方法内联，常量传播）——-&gt;HIR(SSA)高级中间代码表示</li>
+<li>——–&gt;(空值检查消除，范围检查消除。。）——&gt; LTR（低级中间代码表示）</li>
+<li>——&gt;寄存器分配，窥孔优化，机器码生成——》本地代码</li>
+</ol>
+<h3 id="查看编译结果"><a href="#查看编译结果" class="headerlink" title="查看编译结果"></a>查看编译结果</h3><p>参数：-XX:+PrintCompilation</p>
+<h3 id="编译方法"><a href="#编译方法" class="headerlink" title="编译方法"></a>编译方法</h3><blockquote>
+<ul>
+<li>默认：混合编译(解释器和编译器）</li>
+<li>Client Compiler:-client</li>
+<li>server compiler:-server</li>
+<li>编译模式：-Xcomp</li>
+<li>解析模式：-Xint</li>
+</ul>
+</blockquote>
+<h2 id="打印出Java进程的所有进程的堆栈"><a href="#打印出Java进程的所有进程的堆栈" class="headerlink" title="打印出Java进程的所有进程的堆栈"></a>打印出Java进程的所有进程的堆栈</h2><p>jstack（Stack Trace For Java）：用于生成虚拟机当前时刻的线程快照<br>线程快照就是当前虚拟机内每一个线程正在执行的方法堆栈的集合，用来定位线程出现长时间停顿的原因</p>
+<p>jstack [option] vmid;</p>
+<p><strong>jstack -l</strong>:除了堆栈外，显示关于锁的附加信息<br><strong>jstack -F</strong>：当正常输出的请求不被响应时，强制输出线程堆栈<br><strong>jstack -m</strong>：如果调用到本地方法的话，可以显示C/C++的堆栈</p>
+<p>可以使用<br><code>java-XX:+PrintAssembly</code>来显示反汇编的结果</p>
+<h2 id="JVM小工具"><a href="#JVM小工具" class="headerlink" title="JVM小工具"></a>JVM小工具</h2><h3 id="jps"><a href="#jps" class="headerlink" title="jps"></a>jps</h3><p><strong>作用</strong>：列出正在运行的虚拟机进程，并显示虚拟机执行主类名称以及这些进程的本地虚拟机唯一ID（Local Virtual Machine Identifier）（LVMID）<br><strong><em>对于本地虚拟机进程来说，LVMID与操作系统的进程ID（PID）是一致的</em></strong></p>
+<p><strong>jps -l</strong>:输出主类的全名，如果进程执行的是jar包，输出jar路径<br><strong>jps -q</strong>:只输出LVMID，省略主类的名称<br><strong>jps -m</strong>：输出虚拟机进程启动时传递给main()函数的参数<br><strong>jps -v</strong>：输出虚拟机进程启动时的JVM参数</p>
+<h3 id="jstat："><a href="#jstat：" class="headerlink" title="jstat："></a>jstat：</h3><p>可以显示本地或者全程虚拟机进程中的类装载，内存，垃圾收集，JIT参数</p>
+<h3 id="jinfo："><a href="#jinfo：" class="headerlink" title="jinfo："></a>jinfo：</h3><p>实时参看和调整虚拟机各种参数</p>
+<h3 id="jmsp："><a href="#jmsp：" class="headerlink" title="jmsp："></a>jmsp：</h3><p>用于生成堆转储快照</p>
+<h3 id="jhat："><a href="#jhat：" class="headerlink" title="jhat："></a>jhat：</h3><p>虚拟机转储快照分析工具</p>
+<h3 id="jstack："><a href="#jstack：" class="headerlink" title="jstack："></a>jstack：</h3><p>java堆栈跟踪工具</p>
+<h3 id="HSDIS"><a href="#HSDIS" class="headerlink" title="HSDIS"></a>HSDIS</h3><p>JIT生成代码的反汇编</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;JPDA&quot;&gt;&lt;a href=&quot;#JPDA&quot; class=&quot;headerlink&quot; title=&quot;JPDA&quot;&gt;&lt;/a&gt;JPDA&lt;/h2&gt;&lt;h3 id=&quot;JPDA（Java-Platform-Debugger-Architecture）&quot;&gt;&lt;a href=&quot;#JPDA
+    
+    </summary>
+    
+      <category term="学习笔记" scheme="https://caixueyuan.github.io/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+    
+      <category term="Java , 远程调试" scheme="https://caixueyuan.github.io/tags/Java-%E8%BF%9C%E7%A8%8B%E8%B0%83%E8%AF%95/"/>
+    
+  </entry>
   
   <entry>
     <title>Linux进程</title>
@@ -1076,33 +1235,6 @@
     
     
       <category term="网络协议" scheme="https://caixueyuan.github.io/tags/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Hello World</title>
-    <link href="https://caixueyuan.github.io/2017/07/03/hello-world/"/>
-    <id>https://caixueyuan.github.io/2017/07/03/hello-world/</id>
-    <published>2017-07-03T12:45:33.878Z</published>
-    <updated>2017-07-03T12:45:33.879Z</updated>
-    
-    <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.
-    
-    </summary>
-    
     
   </entry>
   

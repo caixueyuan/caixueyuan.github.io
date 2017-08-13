@@ -1,0 +1,873 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Java , 远程调试," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="caixueyuan" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="JPDAJPDA（Java Platform Debugger Architecture）  JVMTI(Java Virtual Machine Tool Interface) JDWP(Java Debugger Wire Protocol) JDI(Java Debug Interface)   三个模块的作用   模块 层次 编程语言 作用     JVMTI 底层 C 获取及控制当前虚拟">
+<meta name="keywords" content="Java , 远程调试">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JAVA远程调试">
+<meta property="og:url" content="https://caixueyuan.github.io/2017/08/13/JAVA远程调试/index.html">
+<meta property="og:site_name" content="caixueyuan">
+<meta property="og:description" content="JPDAJPDA（Java Platform Debugger Architecture）  JVMTI(Java Virtual Machine Tool Interface) JDWP(Java Debugger Wire Protocol) JDI(Java Debug Interface)   三个模块的作用   模块 层次 编程语言 作用     JVMTI 底层 C 获取及控制当前虚拟">
+<meta property="og:updated_time" content="2017-08-13T09:29:21.592Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JAVA远程调试">
+<meta name="twitter:description" content="JPDAJPDA（Java Platform Debugger Architecture）  JVMTI(Java Virtual Machine Tool Interface) JDWP(Java Debugger Wire Protocol) JDI(Java Debug Interface)   三个模块的作用   模块 层次 编程语言 作用     JVMTI 底层 C 获取及控制当前虚拟">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://caixueyuan.github.io/2017/08/13/JAVA远程调试/"/>
+
+
+
+
+
+  <title>JAVA远程调试 | caixueyuan</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">caixueyuan</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">SCUT</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://caixueyuan.github.io/2017/08/13/JAVA远程调试/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="caixueyuan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="caixueyuan">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">JAVA远程调试</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-13T11:49:24+08:00">
+                2017-08-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/学习笔记/" itemprop="url" rel="index">
+                    <span itemprop="name">学习笔记</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="JPDA"><a href="#JPDA" class="headerlink" title="JPDA"></a>JPDA</h2><h3 id="JPDA（Java-Platform-Debugger-Architecture）"><a href="#JPDA（Java-Platform-Debugger-Architecture）" class="headerlink" title="JPDA（Java Platform Debugger Architecture）"></a>JPDA（Java Platform Debugger Architecture）</h3><blockquote>
+<ul>
+<li>JVMTI(Java Virtual Machine Tool Interface)</li>
+<li>JDWP(Java Debugger Wire Protocol)</li>
+<li>JDI(Java Debug Interface)</li>
+</ul>
+</blockquote>
+<h3 id="三个模块的作用"><a href="#三个模块的作用" class="headerlink" title="三个模块的作用"></a>三个模块的作用</h3><table>
+<thead>
+<tr>
+<th>模块</th>
+<th style="text-align:right">层次</th>
+<th style="text-align:center">编程语言</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>JVMTI</td>
+<td style="text-align:right">底层</td>
+<td style="text-align:center">C</td>
+<td>获取及控制当前虚拟机状态</td>
+</tr>
+<tr>
+<td>JDMP</td>
+<td style="text-align:right">中介层</td>
+<td style="text-align:center">C</td>
+<td>定义JVMTI和JDI交互的数据格式</td>
+</tr>
+<tr>
+<td>JDI</td>
+<td style="text-align:right">高层</td>
+<td style="text-align:center">Java</td>
+<td>提供Java API来远程控制被调试虚拟机</td>
+</tr>
+</tbody>
+</table>
+<h3 id="JVMTI（Java虚拟机工具接口）"><a href="#JVMTI（Java虚拟机工具接口）" class="headerlink" title="JVMTI（Java虚拟机工具接口）"></a>JVMTI（Java虚拟机工具接口）</h3><p>处于整个JPDA体系的最底层，所有调试功能本质上都是JVMTI提供的</p>
+<h3 id="JDMP"><a href="#JDMP" class="headerlink" title="JDMP"></a>JDMP</h3><p>是一个为Java调试而设计的一个通讯交互协议，它定了调试器和被调试器程序之间传递的信息的格式，有两种方式，一种是提供了socket方式，一种是在Windows上的shared memory方式</p>
+<h3 id="JDI（Java调试接口）"><a href="#JDI（Java调试接口）" class="headerlink" title="JDI（Java调试接口）"></a>JDI（Java调试接口）</h3><p>JDI是三个模块中的最高层的接口，在多数的 JDK 中，它是由 Java 语言实现的，通过它，调试工具开发人员就能通过前端虚拟机上的调试器来远程操控后端虚拟机上被调试程序的运行，JDI 不仅能帮助开发人员格式化 JDWP 数据，而且还能为 JDWP 数据传输提供队列、缓存等优化服务。</p>
+<h3 id="JDI详解"><a href="#JDI详解" class="headerlink" title="JDI详解"></a>JDI详解</h3><p>以上引用于<a href="https://www.ibm.com/developerworks/cn/java/j-lo-jpda4/index.html" target="_blank" rel="external">深入了解Java调试体系</a></p>
+<h3 id="JDI工作方式"><a href="#JDI工作方式" class="headerlink" title="JDI工作方式"></a>JDI工作方式</h3><p>首先，调试器（Debuuger）通过 Bootstrap 获取唯一的虚拟机管理器，</p>
+<p>获取虚拟机管理器（VirtualMachineManager）<br><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">VirtualMachineManager virtualMachineManager</span> </div><div class="line">    = Bootstrap.virtualMachineManager();</div></pre></td></tr></table></figure></p>
+<p>虚拟机管理器将在第一次被调用时初始化可用的链接器。一般地，调试器会默认地采用启动型链接器进行链接</p>
+<p>获取默认的链接器（Connector）<br><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">LaunchingConnector defaultConnector</span> = virtualMachineManager.defaultConnector();</div></pre></td></tr></table></figure></p>
+<p>然后，调试器调用链接器的 launch () 来启动目标程序，并完成调试器与目标虚拟机的链接</p>
+<p>启动目标程序，连接调试器（Debuuger）与目标虚拟机（VirtualMachine）<br><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">VirtualMachine targetVM</span> = defaultConnector.launch(arguments);</div></pre></td></tr></table></figure></p>
+<h2 id="eclipse调试远程调试"><a href="#eclipse调试远程调试" class="headerlink" title="eclipse调试远程调试"></a>eclipse调试远程调试</h2><h3 id="方法："><a href="#方法：" class="headerlink" title="方法："></a>方法：</h3><p><strong>-Xdebug</strong>:启动调试特性<br><code>-Xrunjdwp:&lt;sub-options&gt;</code>:在目标VM中加载JDWP实现，它通过传输和JDWP协议和独立的调试器应用程序通信</p>
+<p><strong>transport</strong>：通常使用套接字链接<br><strong>server</strong>：如果为y的话，目标应用程序监听将要连接的调试器应用程序，否则，它将连接到特定地址上的调试器应用程序<br><strong>address</strong>：连接的传输地址，如果服务器为 n，将尝试连接到该地址上的调试器应用程序。否则，将在这个端口监听连接</p>
+<p><strong>suspend</strong>：如果值为 y，目标 VM 将暂停，直到调试器应用程序进行连接</p>
+<h3 id="调试方法"><a href="#调试方法" class="headerlink" title="调试方法"></a>调试方法</h3><ol>
+<li>首先，编写程序</li>
+<li>打上断点，进行编译，打包成jar</li>
+<li>运行软件<code>java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,address=&quot;8000&quot; -jar test.jar</code></li>
+<li>然后在eclipse中<code>Run &gt; Debug Configurations</code>中进行监听来获取该断点。</li>
+</ol>
+<h2 id="反编译和逆向工程"><a href="#反编译和逆向工程" class="headerlink" title="反编译和逆向工程"></a>反编译和逆向工程</h2><h3 id="反编译"><a href="#反编译" class="headerlink" title="反编译"></a>反编译</h3><p>通过javap来通过class文件获取操作栈</p>
+<h3 id="逆向工程"><a href="#逆向工程" class="headerlink" title="逆向工程"></a>逆向工程</h3><p>实际应用中出现了两类逆向工程。</p>
+<ol>
+<li>软件的源代码可用，但是更高层次的部分几乎没有描述文档或者描述文档不再适用或者丢失。</li>
+<li>软件没有可用的源代码，任何能找到它的源代码的努力都被称为逆向工程</li>
+</ol>
+<p>也就是一种分析目标系统的过程，其目的就是识别出系统的各个组件以及他们之间的关系，并以其他的形式或者在较高的抽象层次上，重建系统的表征。</p>
+<h3 id="如何反编译Java程序"><a href="#如何反编译Java程序" class="headerlink" title="如何反编译Java程序"></a>如何反编译Java程序</h3><ol>
+<li><p>使用命令<br><code>javap -verbose TestIpp</code></p>
+</li>
+<li><p>在实际使用上，可以使用jad</p>
+</li>
+</ol>
+<h2 id="源代码混淆"><a href="#源代码混淆" class="headerlink" title="源代码混淆"></a>源代码混淆</h2><h3 id="概念："><a href="#概念：" class="headerlink" title="概念："></a>概念：</h3><p>代码混淆（Obfuscated code）是将计算机程序的代码，转换成一种功能上等价，但是难于阅读和理解的形式的行为</p>
+<h3 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h3><p>保护源代码，防止被反编译，保护知识产权</p>
+<h3 id="方法：-1"><a href="#方法：-1" class="headerlink" title="方法："></a>方法：</h3><blockquote>
+<ul>
+<li>将代码中的各种元素，如变量，函数，类的名字改写成无意义的名字</li>
+<li>重写代码中的部分逻辑（for改为while）</li>
+<li>打乱代码的格式（删除空格，将多行代码挤到一行中）</li>
+<li>添加花指令（通过特殊的指令来使得反汇编器出错，进而干扰反编译工作的进行</li>
+</ul>
+</blockquote>
+<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><blockquote>
+<ul>
+<li>java代码不能够使用反射</li>
+<li>还是可以进行反向工程，只是难度增大</li>
+<li>被混淆的代码难以理解</li>
+</ul>
+</blockquote>
+<h2 id="JIT"><a href="#JIT" class="headerlink" title="JIT"></a>JIT</h2><h3 id="概念：-1"><a href="#概念：-1" class="headerlink" title="概念："></a>概念：</h3><p>提高热点代码的执行效率，在运行时，虚拟机将会把这些代码编译成与平台相关的机器码，并进行各种层次的优化</p>
+<h3 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h3><p>解析器和编译器</p>
+<blockquote>
+<ul>
+<li>解析器：程序需要迅速启动和执行</li>
+<li>编译器：获取更高的执行效率</li>
+</ul>
+</blockquote>
+<p><strong>编译对象与触发条件</strong>：</p>
+<blockquote>
+<p>被多次调用的方法</p>
+</blockquote>
+<p>基于计数器的热点代码探测方法，超过一定的阈值就会触发编译，调用方法的时候会先检查是否有已经编译过的版本，如果有会优先执行编译过的代码，有计数器热度的衰减（可以使用-XX：-UseCounterDecay来关闭热度衰减）<br>参数：<code>-XX:CompileThreshold</code>来指定阈值</p>
+<blockquote>
+<ul>
+<li>被多次执行的循环体</li>
+</ul>
+</blockquote>
+<p>回边计数器没有技术热度衰减的过程</p>
+<h3 id="编译过程"><a href="#编译过程" class="headerlink" title="编译过程"></a>编译过程</h3><blockquote>
+<ul>
+<li>client 编译</li>
+</ul>
+</blockquote>
+<ol>
+<li>字节码—–&gt;(方法内联，常量传播）——-&gt;HIR(SSA)高级中间代码表示</li>
+<li>——–&gt;(空值检查消除，范围检查消除。。）——&gt; LTR（低级中间代码表示）</li>
+<li>——&gt;寄存器分配，窥孔优化，机器码生成——》本地代码</li>
+</ol>
+<h3 id="查看编译结果"><a href="#查看编译结果" class="headerlink" title="查看编译结果"></a>查看编译结果</h3><p>参数：-XX:+PrintCompilation</p>
+<h3 id="编译方法"><a href="#编译方法" class="headerlink" title="编译方法"></a>编译方法</h3><blockquote>
+<ul>
+<li>默认：混合编译(解释器和编译器）</li>
+<li>Client Compiler:-client</li>
+<li>server compiler:-server</li>
+<li>编译模式：-Xcomp</li>
+<li>解析模式：-Xint</li>
+</ul>
+</blockquote>
+<h2 id="打印出Java进程的所有进程的堆栈"><a href="#打印出Java进程的所有进程的堆栈" class="headerlink" title="打印出Java进程的所有进程的堆栈"></a>打印出Java进程的所有进程的堆栈</h2><p>jstack（Stack Trace For Java）：用于生成虚拟机当前时刻的线程快照<br>线程快照就是当前虚拟机内每一个线程正在执行的方法堆栈的集合，用来定位线程出现长时间停顿的原因</p>
+<p>jstack [option] vmid;</p>
+<p><strong>jstack -l</strong>:除了堆栈外，显示关于锁的附加信息<br><strong>jstack -F</strong>：当正常输出的请求不被响应时，强制输出线程堆栈<br><strong>jstack -m</strong>：如果调用到本地方法的话，可以显示C/C++的堆栈</p>
+<p>可以使用<br><code>java-XX:+PrintAssembly</code>来显示反汇编的结果</p>
+<h2 id="JVM小工具"><a href="#JVM小工具" class="headerlink" title="JVM小工具"></a>JVM小工具</h2><h3 id="jps"><a href="#jps" class="headerlink" title="jps"></a>jps</h3><p><strong>作用</strong>：列出正在运行的虚拟机进程，并显示虚拟机执行主类名称以及这些进程的本地虚拟机唯一ID（Local Virtual Machine Identifier）（LVMID）<br><strong><em>对于本地虚拟机进程来说，LVMID与操作系统的进程ID（PID）是一致的</em></strong></p>
+<p><strong>jps -l</strong>:输出主类的全名，如果进程执行的是jar包，输出jar路径<br><strong>jps -q</strong>:只输出LVMID，省略主类的名称<br><strong>jps -m</strong>：输出虚拟机进程启动时传递给main()函数的参数<br><strong>jps -v</strong>：输出虚拟机进程启动时的JVM参数</p>
+<h3 id="jstat："><a href="#jstat：" class="headerlink" title="jstat："></a>jstat：</h3><p>可以显示本地或者全程虚拟机进程中的类装载，内存，垃圾收集，JIT参数</p>
+<h3 id="jinfo："><a href="#jinfo：" class="headerlink" title="jinfo："></a>jinfo：</h3><p>实时参看和调整虚拟机各种参数</p>
+<h3 id="jmsp："><a href="#jmsp：" class="headerlink" title="jmsp："></a>jmsp：</h3><p>用于生成堆转储快照</p>
+<h3 id="jhat："><a href="#jhat：" class="headerlink" title="jhat："></a>jhat：</h3><p>虚拟机转储快照分析工具</p>
+<h3 id="jstack："><a href="#jstack：" class="headerlink" title="jstack："></a>jstack：</h3><p>java堆栈跟踪工具</p>
+<h3 id="HSDIS"><a href="#HSDIS" class="headerlink" title="HSDIS"></a>HSDIS</h3><p>JIT生成代码的反汇编</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java-远程调试/" rel="tag"># Java , 远程调试</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/07/Linux进程/" rel="next" title="Linux进程">
+                <i class="fa fa-chevron-left"></i> Linux进程
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="caixueyuan" />
+          <p class="site-author-name" itemprop="name">caixueyuan</p>
+           
+              <p class="site-description motion-element" itemprop="description">Java后台开发程序员</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">22</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#JPDA"><span class="nav-number">1.</span> <span class="nav-text">JPDA</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#JPDA（Java-Platform-Debugger-Architecture）"><span class="nav-number">1.1.</span> <span class="nav-text">JPDA（Java Platform Debugger Architecture）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三个模块的作用"><span class="nav-number">1.2.</span> <span class="nav-text">三个模块的作用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JVMTI（Java虚拟机工具接口）"><span class="nav-number">1.3.</span> <span class="nav-text">JVMTI（Java虚拟机工具接口）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JDMP"><span class="nav-number">1.4.</span> <span class="nav-text">JDMP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JDI（Java调试接口）"><span class="nav-number">1.5.</span> <span class="nav-text">JDI（Java调试接口）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JDI详解"><span class="nav-number">1.6.</span> <span class="nav-text">JDI详解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JDI工作方式"><span class="nav-number">1.7.</span> <span class="nav-text">JDI工作方式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#eclipse调试远程调试"><span class="nav-number">2.</span> <span class="nav-text">eclipse调试远程调试</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#方法："><span class="nav-number">2.1.</span> <span class="nav-text">方法：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#调试方法"><span class="nav-number">2.2.</span> <span class="nav-text">调试方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#反编译和逆向工程"><span class="nav-number">3.</span> <span class="nav-text">反编译和逆向工程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#反编译"><span class="nav-number">3.1.</span> <span class="nav-text">反编译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#逆向工程"><span class="nav-number">3.2.</span> <span class="nav-text">逆向工程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何反编译Java程序"><span class="nav-number">3.3.</span> <span class="nav-text">如何反编译Java程序</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#源代码混淆"><span class="nav-number">4.</span> <span class="nav-text">源代码混淆</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#概念："><span class="nav-number">4.1.</span> <span class="nav-text">概念：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#作用"><span class="nav-number">4.2.</span> <span class="nav-text">作用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法：-1"><span class="nav-number">4.3.</span> <span class="nav-text">方法：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缺点"><span class="nav-number">4.4.</span> <span class="nav-text">缺点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JIT"><span class="nav-number">5.</span> <span class="nav-text">JIT</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#概念：-1"><span class="nav-number">5.1.</span> <span class="nav-text">概念：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#运行"><span class="nav-number">5.2.</span> <span class="nav-text">运行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编译过程"><span class="nav-number">5.3.</span> <span class="nav-text">编译过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看编译结果"><span class="nav-number">5.4.</span> <span class="nav-text">查看编译结果</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编译方法"><span class="nav-number">5.5.</span> <span class="nav-text">编译方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#打印出Java进程的所有进程的堆栈"><span class="nav-number">6.</span> <span class="nav-text">打印出Java进程的所有进程的堆栈</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JVM小工具"><span class="nav-number">7.</span> <span class="nav-text">JVM小工具</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#jps"><span class="nav-number">7.1.</span> <span class="nav-text">jps</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jstat："><span class="nav-number">7.2.</span> <span class="nav-text">jstat：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jinfo："><span class="nav-number">7.3.</span> <span class="nav-text">jinfo：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jmsp："><span class="nav-number">7.4.</span> <span class="nav-text">jmsp：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jhat："><span class="nav-number">7.5.</span> <span class="nav-text">jhat：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jstack："><span class="nav-number">7.6.</span> <span class="nav-text">jstack：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HSDIS"><span class="nav-number">7.7.</span> <span class="nav-text">HSDIS</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">caixueyuan</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
