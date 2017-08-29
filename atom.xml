@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://caixueyuan.github.io/"/>
-  <updated>2017-08-23T16:25:17.275Z</updated>
+  <updated>2017-08-29T15:55:33.088Z</updated>
   <id>https://caixueyuan.github.io/</id>
   
   <author>
@@ -14,6 +14,46 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>磁盘阵列</title>
+    <link href="https://caixueyuan.github.io/2017/08/29/%E7%A3%81%E7%9B%98%E9%98%B5%E5%88%97/"/>
+    <id>https://caixueyuan.github.io/2017/08/29/磁盘阵列/</id>
+    <published>2017-08-29T14:51:24.000Z</published>
+    <updated>2017-08-29T15:55:33.088Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="RAID"><a href="#RAID" class="headerlink" title="RAID"></a>RAID</h2><p><a href="https://www.zhihu.com/question/20131784" target="_blank" rel="external">RAID有哪几种有什么区别？</a></p>
+<h2 id="什么是软RAID5，硬RAID5？"><a href="#什么是软RAID5，硬RAID5？" class="headerlink" title="什么是软RAID5，硬RAID5？"></a>什么是软RAID5，硬RAID5？</h2><p><a href="https://www.zhihu.com/question/19613331" target="_blank" rel="external">软RAID和硬RAID各有什么优劣</a></p>
+<h2 id="磁带机，是块设备还是字符设备"><a href="#磁带机，是块设备还是字符设备" class="headerlink" title="磁带机，是块设备还是字符设备"></a>磁带机，是块设备还是字符设备</h2><p><a href="https://www.zhihu.com/question/40472366" target="_blank" rel="external">块设备和字符设备</a></p>
+<h2 id="dd"><a href="#dd" class="headerlink" title="dd"></a>dd</h2><p><a href="http://man.linuxde.net/dd" target="_blank" rel="external">dd命令</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;RAID&quot;&gt;&lt;a href=&quot;#RAID&quot; class=&quot;headerlink&quot; title=&quot;RAID&quot;&gt;&lt;/a&gt;RAID&lt;/h2&gt;&lt;p&gt;&lt;a href=&quot;https://www.zhihu.com/question/20131784&quot; target=&quot;_bla
+    
+    </summary>
+    
+      <category term="操作系统" scheme="https://caixueyuan.github.io/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+    
+      <category term="磁盘阵列" scheme="https://caixueyuan.github.io/tags/%E7%A3%81%E7%9B%98%E9%98%B5%E5%88%97/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>嵌入式入门</title>
+    <link href="https://caixueyuan.github.io/2017/08/28/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%85%A5%E9%97%A8/"/>
+    <id>https://caixueyuan.github.io/2017/08/28/嵌入式入门/</id>
+    <published>2017-08-28T13:18:22.000Z</published>
+    <updated>2017-08-28T13:18:22.486Z</updated>
+    
+    <summary type="html">
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>JxBrowser性能测试</title>
@@ -1061,48 +1101,6 @@
     
     </summary>
     
-    
-  </entry>
-  
-  <entry>
-    <title>JavaScript学习笔记</title>
-    <link href="https://caixueyuan.github.io/2017/07/04/JavaScript%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
-    <id>https://caixueyuan.github.io/2017/07/04/JavaScript学习笔记/</id>
-    <published>2017-07-04T15:10:15.000Z</published>
-    <updated>2017-07-04T15:10:15.692Z</updated>
-    
-    <summary type="html">
-    
-    </summary>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>Spring学习笔记</title>
-    <link href="https://caixueyuan.github.io/2017/07/04/Spring%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
-    <id>https://caixueyuan.github.io/2017/07/04/Spring学习笔记/</id>
-    <published>2017-07-04T12:16:49.000Z</published>
-    <updated>2017-07-04T12:27:28.135Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="Spring-Security"><a href="#Spring-Security" class="headerlink" title="Spring Security"></a>Spring Security</h2><h3 id="1，Spring-Security功能性要求："><a href="#1，Spring-Security功能性要求：" class="headerlink" title="1，Spring Security功能性要求："></a>1，Spring Security功能性要求：</h3><blockquote>
-<ul>
-<li>它使用Servlet规范中的Filter保护Web请求并限制URL级别的访问</li>
-<li>还能够使用Spring AOP保护方法调用————借助于对象代理和使用通知，能够保护只有具备适当权限的用户才能访问安全保护的方法。</li>
-</ul>
-</blockquote>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;Spring-Security&quot;&gt;&lt;a href=&quot;#Spring-Security&quot; class=&quot;headerlink&quot; title=&quot;Spring Security&quot;&gt;&lt;/a&gt;Spring Security&lt;/h2&gt;&lt;h3 id=&quot;1，Spring-Secu
-    
-    </summary>
-    
-      <category term="学习笔记" scheme="https://caixueyuan.github.io/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
-    
-    
-      <category term="Java框架，笔记" scheme="https://caixueyuan.github.io/tags/Java%E6%A1%86%E6%9E%B6%EF%BC%8C%E7%AC%94%E8%AE%B0/"/>
     
   </entry>
   
