@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://caixueyuan.github.io/"/>
-  <updated>2017-08-29T15:55:33.088Z</updated>
+  <updated>2018-03-19T12:54:30.476Z</updated>
   <id>https://caixueyuan.github.io/</id>
   
   <author>
@@ -14,6 +14,44 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>JavvaScript类型、值和变量</title>
+    <link href="https://caixueyuan.github.io/2018/03/19/JavaScript%E7%B1%BB%E5%9E%8B%E3%80%81%E5%80%BC%E5%92%8C%E5%8F%98%E9%87%8F/"/>
+    <id>https://caixueyuan.github.io/2018/03/19/JavaScript类型、值和变量/</id>
+    <published>2018-03-19T08:49:19.000Z</published>
+    <updated>2018-03-19T12:54:30.476Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="类型、值和变量"><a href="#类型、值和变量" class="headerlink" title="类型、值和变量"></a>类型、值和变量</h2><h3 id="包装对象"><a href="#包装对象" class="headerlink" title="包装对象"></a>包装对象</h3><blockquote>
+<ul>
+<li>==等于运算符将原始值和其包装对象视为平等</li>
+<li>=== 全等运算符将它们视为不等</li>
+</ul>
+</blockquote>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">var s</span> = <span class="string">'test'</span></div><div class="line">s.len = 4;</div><div class="line"><span class="attribute">var t</span> = s.len;</div></pre></td></tr></table></figure>
+<p>最后的结果为<strong>undefined</strong>，因为字符串为不可变类型，不能够为其赋值，如果强行赋值，只是为其创建一个临时类型，然后在赋值之后进行销毁，本质上不能够为不可变类型赋值。</p>
+<h3 id="类型转换"><a href="#类型转换" class="headerlink" title="类型转换"></a>类型转换</h3><p><strong>所有的对象（包括数组和函数）都转换为true</strong></p>
+<blockquote>
+<ul>
+<li>对象到字符串的转换toString()</li>
+<li>对象到数组的转换valueOf()</li>
+</ul>
+</blockquote>
+<h3 id="变量作用域"><a href="#变量作用域" class="headerlink" title="变量作用域"></a>变量作用域</h3><p><strong>JavaScript的函数作用域是指在函数内声明的所有变量在函数体内始终是可见的</strong>：也就是说JavaScript函数里声明的所有变量都被“提前”至函数体的顶部。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;类型、值和变量&quot;&gt;&lt;a href=&quot;#类型、值和变量&quot; class=&quot;headerlink&quot; title=&quot;类型、值和变量&quot;&gt;&lt;/a&gt;类型、值和变量&lt;/h2&gt;&lt;h3 id=&quot;包装对象&quot;&gt;&lt;a href=&quot;#包装对象&quot; class=&quot;headerlink&quot; titl
+    
+    </summary>
+    
+      <category term="JavaScript学习笔记" scheme="https://caixueyuan.github.io/categories/JavaScript%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+    
+      <category term="JavaScript基础" scheme="https://caixueyuan.github.io/tags/JavaScript%E5%9F%BA%E7%A1%80/"/>
+    
+  </entry>
   
   <entry>
     <title>磁盘阵列</title>
@@ -1076,31 +1114,6 @@
     
     
       <category term="Java基础" scheme="https://caixueyuan.github.io/tags/Java%E5%9F%BA%E7%A1%80/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>进程间通讯</title>
-    <link href="https://caixueyuan.github.io/2017/07/19/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E8%AE%AF/"/>
-    <id>https://caixueyuan.github.io/2017/07/19/进程间通讯/</id>
-    <published>2017-07-19T15:46:57.000Z</published>
-    <updated>2017-07-19T15:48:29.486Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="进程间通讯"><a href="#进程间通讯" class="headerlink" title="进程间通讯"></a>进程间通讯</h2><h3 id="1-管道-匿名管道（pipe）"><a href="#1-管道-匿名管道（pipe）" class="headerlink" title="1,管道/匿名管道（pipe）"></a>1,管道/匿名管道（pipe）</h3><blockquote>
-<ul>
-<li>管道都是半双工，数据只能向一个方向流动</li>
-<li>只能用于父子进程或者兄弟进程之间</li>
-<li>单独构成一种独立的文件系统（就是有输入输出)</li>
-</ul>
-</blockquote>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;进程间通讯&quot;&gt;&lt;a href=&quot;#进程间通讯&quot; class=&quot;headerlink&quot; title=&quot;进程间通讯&quot;&gt;&lt;/a&gt;进程间通讯&lt;/h2&gt;&lt;h3 id=&quot;1-管道-匿名管道（pipe）&quot;&gt;&lt;a href=&quot;#1-管道-匿名管道（pipe）&quot; class=&quot;he
-    
-    </summary>
-    
     
   </entry>
   
