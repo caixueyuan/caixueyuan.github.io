@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://caixueyuan.github.io/"/>
-  <updated>2018-03-19T12:54:30.476Z</updated>
+  <updated>2018-03-25T13:14:43.676Z</updated>
   <id>https://caixueyuan.github.io/</id>
   
   <author>
@@ -16,11 +16,103 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>JavvaScript类型、值和变量</title>
-    <link href="https://caixueyuan.github.io/2018/03/19/JavaScript%E7%B1%BB%E5%9E%8B%E3%80%81%E5%80%BC%E5%92%8C%E5%8F%98%E9%87%8F/"/>
-    <id>https://caixueyuan.github.io/2018/03/19/JavaScript类型、值和变量/</id>
+    <title>JavaScript学习笔记（二）</title>
+    <link href="https://caixueyuan.github.io/2018/03/23/JavaScript%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89/"/>
+    <id>https://caixueyuan.github.io/2018/03/23/JavaScript学习笔记（二）/</id>
+    <published>2018-03-23T06:17:09.000Z</published>
+    <updated>2018-03-25T13:14:43.676Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="表达式和运算符"><a href="#表达式和运算符" class="headerlink" title="表达式和运算符"></a>表达式和运算符</h2><h3 id="算术运算符"><a href="#算术运算符" class="headerlink" title="算术运算符"></a>算术运算符</h3><blockquote>
+<p>在JavaScript中，所有的数字都是浮点型的，除法运算的结果也是浮点型的</p>
+<p>NaN和其他任何值都是不相等的，包括它本身，通过x！==x来判断x是否为NaN，只有在x为NaN的时候，这个表达式的值才为true。</p>
+</blockquote>
+<h3 id="逻辑表达式"><a href="#逻辑表达式" class="headerlink" title="逻辑表达式"></a>逻辑表达式</h3><blockquote>
+<p>假值是false，null，undefined，0，-0，NaN和’’，所有的其他的值包括所有的对象都是真值</p>
+<p>eval允许我们执行那些对上下文没有任何依赖的全局脚本代码段</p>
+<p>delete不能够删除var声明的变量，返回false，在严格条件下，将抛出异常</p>
+<p>var声明的全局变量是无法通过delete删除的。</p>
+</blockquote>
+<h3 id="语句"><a href="#语句" class="headerlink" title="语句"></a>语句</h3><blockquote>
+<ul>
+<li><p>由于对每个case的匹配操作实际上是“====”恒等运算符比较，而不是“==”相等运算符比较，所以，表达式和case的匹配并不会做任何类型转换。</p>
+</li>
+<li><p>for/in 循环并不会遍历对象的所有属性，只有“可枚举”的属性才能够遍历，由JavaScript语言核心所定义的内置方法不是“可枚举”的。</p>
+</li>
+</ul>
+</blockquote>
+<p><strong>判断JavaScript实现是否支持严格模式</strong><br><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">var hasStrictMode</span> = (function()&#123;<span class="string">"use strict"</span>;<span class="attribute">r</span><span class="attribute">e</span><span class="attribute">t</span><span class="attribute">u</span><span class="attribute">r</span><span class="attribute">n</span> <span class="attribute">t</span><span class="attribute">h</span><span class="attribute">i</span><span class="attribute">s</span> === undefined&#125;());</div></pre></td></tr></table></figure></p>
+<h3 id="对象：JavaScript对象是动态的"><a href="#对象：JavaScript对象是动态的" class="headerlink" title="对象：JavaScript对象是动态的"></a>对象：JavaScript对象是动态的</h3><p>属性特征：</p>
+<blockquote>
+<ul>
+<li>可写：标明是否可用设置该属性的值</li>
+<li>可枚举：标明是否通过for/in循环返回该属性</li>
+<li>可配置：表明是否能够删除或者修改该属性</li>
+</ul>
+</blockquote>
+<p>对象</p>
+<blockquote>
+<ul>
+<li>包含属性</li>
+<li>对象的原型指向另外一个对象，本对象的属性继承自它的原型对象</li>
+<li>对象的类是一个标识对象类型的字符串</li>
+<li>对象的扩展标记指明了是否可以向该对象添加新属性</li>
+</ul>
+</blockquote>
+<p>判断属性</p>
+<blockquote>
+<ul>
+<li>hasOwnProperty()用来检测给定的名字是否是对象的自有属性</li>
+<li>propertyIsEnumerable()只有检测是自有属性且这个属性的可枚举性为true</li>
+<li>！=== 判断一个属性是否为undefined</li>
+<li>in 区分值为null的情况</li>
+</ul>
+</blockquote>
+<p><code>Object.getOwnPropertyDescrptor()</code>得到自由属性的描述符<br><code>Object.definePeoperty()</code> 传入要修改的对象、要创建或者修改的属性的名称以及属性描述符对象</p>
+<p><code>Object.getPrototypeOf()</code>查询原型<br><code>Object.isPrototypeOf()</code>检测一个对象是否是另一个对象的原型</p>
+<p><code>Object.esExtensible()</code>来判断该对象是否是可扩展的<br><code>Object.preventExtensions()</code>将对象转换为不可扩展的，一旦设置为不可扩展，就没有办法设置为可扩展啦<br><code>Object.seal()</code>将对象设置为不可扩展，将对象的所有的自有属性都设置为不可配置的<br><code>Object.isSealed()</code>检测对象是否封闭<br><code>Object.freeze()</code>将对象设置为不可扩展的和将其属性设置为不可配置的，将自有的所有数据属性设置为制只读<br><code>Object.isFrozen()</code>检测对象是否冻结</p>
+<h3 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h3><p>所有的索引都是属性名，但只有在0-2^32-2之间的整数属性名才是索引。本质上数组和对象之间是没有区别的，只是数组的索引都是0-2^32-2，而且自动维持length属性值的变化</p>
+<p><code>push()</code>在数组末尾增加一个或者多个元素<br><code>unshift()</code>在数组的首部插入一个元素，并且将其他元素依次移到更高的索引处<br><code>pop()</code>一次减少长度1并返回被删除元素<br><code>unshift()</code>从头部删除一个元素，并将其他元素依次移动更低的索引处<br><code>splice()</code>删除，删除，替换数组元素<br><code>Array.join()</code>将数组中所有的元素都转化为字符串并连接在一起<br><code>数组.forEach(function(v,i,a){})</code>从头到为遍历一遍数组，参数含义分别为（数组元素，元素的索引，数组的本身)</p>
+<h3 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h3><hr>
+<p><strong>函数调用</strong><br>定义并调用一个函数来确定当前脚本运行时是否为严格模式<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> strict = (<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">return</span> !<span class="keyword">this</span>;</div><div class="line">    &#125;());</div></pre></td></tr></table></figure></p>
+<p>标识符arguments是指向实参对象的引用，实参对象是一个类数组对象<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">f</span>(<span class="params">x,y,z</span>)</span>&#123;</div><div class="line">    <span class="keyword">if</span>(<span class="built_in">arguments</span>.length != <span class="number">3</span>)&#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">"function f called with "</span> + <span class="built_in">arguments</span>.length +</div><div class="line">            <span class="string">"arguments,but it expects 3 arguments."</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>callee属性指代当前正在执行的函数<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> factorial = <span class="function"><span class="keyword">function</span>(<span class="params">x</span>)</span>&#123;</div><div class="line">    <span class="keyword">if</span>(x &lt;= <span class="number">1</span>)</div><div class="line">        <span class="keyword">return</span> <span class="number">1</span>;</div><div class="line">    <span class="keyword">return</span> x * <span class="built_in">arguments</span>.callee(x<span class="number">-1</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>caller:调用当前正在执行的函数的函数</p>
+<p>嵌套的函数不会将作用域内的私有成员复制一份，也不会对所绑定的变量生成静态快照<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">constfuncs</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> funcs = [];</div><div class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> i =<span class="number">0</span> ;i&lt;<span class="number">10</span>;i++)</div><div class="line">        funcs[i] = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123; <span class="keyword">return</span> i;&#125;;</div><div class="line">        <span class="keyword">return</span> funcs;</div><div class="line">&#125;</div><div class="line"><span class="keyword">var</span> funcs = constfuncs();</div><div class="line">funcs[<span class="number">5</span>]()</div></pre></td></tr></table></figure></p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="literal">result</span>:<span class="number">10</span>;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>call() 和 apply()<br>call()的第一个参数都会变成this的值，哪怕传入的实参是原始值甚至是null或者undefined。<br>f.call(o,1,2);<br>f.apply(o,[1,2])<br>f为函数名，o为对象名字</p>
+<p>bind()<br>将函数绑定至某个对象中</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> scope = <span class="string">"global"</span>;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">constructFunction</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> scope = <span class="string">"local"</span>;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Function</span>(<span class="string">"return scope"</span>);</div><div class="line">&#125;</div><div class="line">constructFunction()()=====&gt;<span class="string">"global"</span></div></pre></td></tr></table></figure>
+<p>函数体代码的编译总是会在顶层函数中。</p>
+<blockquote>
+<ul>
+<li>map对每个元素都进行操作，单独</li>
+<li>reduce将多个元素都结合成一个元素</li>
+</ul>
+</blockquote>
+<p>memorize()函数创建一个新的对象，这个对象呗当做缓存并赋值给一个局部变量，因此对于返回的函数来说它是私有的，所返回的函数将它的是实参数组转换为字符串，并将字符串用作缓存对象的属性名。如果在缓存中存在这个值，则直接返回它。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> factorial = memorize(<span class="function"><span class="keyword">function</span>(<span class="params">n</span>)</span>&#123;</div><div class="line">    <span class="keyword">return</span> (n&lt;=<span class="number">1</span>) ? <span class="number">1</span>:n * factorial(n<span class="number">-1</span>);</div><div class="line">    &#125;);</div><div class="line">factorial(<span class="number">5</span>)   =====&gt;<span class="number">120</span>(对于<span class="number">1</span><span class="number">-4</span>的值都有缓存）</div></pre></td></tr></table></figure></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;表达式和运算符&quot;&gt;&lt;a href=&quot;#表达式和运算符&quot; class=&quot;headerlink&quot; title=&quot;表达式和运算符&quot;&gt;&lt;/a&gt;表达式和运算符&lt;/h2&gt;&lt;h3 id=&quot;算术运算符&quot;&gt;&lt;a href=&quot;#算术运算符&quot; class=&quot;headerlink&quot; ti
+    
+    </summary>
+    
+      <category term="JavaScript学习笔记" scheme="https://caixueyuan.github.io/categories/JavaScript%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+    
+      <category term="JavaScript基础" scheme="https://caixueyuan.github.io/tags/JavaScript%E5%9F%BA%E7%A1%80/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>JavaScript学习笔记（一）</title>
+    <link href="https://caixueyuan.github.io/2018/03/19/JavaScript%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/"/>
+    <id>https://caixueyuan.github.io/2018/03/19/JavaScript学习笔记（一）/</id>
     <published>2018-03-19T08:49:19.000Z</published>
-    <updated>2018-03-19T12:54:30.476Z</updated>
+    <updated>2018-03-25T13:17:54.829Z</updated>
     
     <content type="html"><![CDATA[<h2 id="类型、值和变量"><a href="#类型、值和变量" class="headerlink" title="类型、值和变量"></a>类型、值和变量</h2><h3 id="包装对象"><a href="#包装对象" class="headerlink" title="包装对象"></a>包装对象</h3><blockquote>
 <ul>
@@ -1002,118 +1094,6 @@
     
     
       <category term="Java学习笔记" scheme="https://caixueyuan.github.io/tags/Java%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Java集合</title>
-    <link href="https://caixueyuan.github.io/2017/07/23/Java%E9%9B%86%E5%90%88/"/>
-    <id>https://caixueyuan.github.io/2017/07/23/Java集合/</id>
-    <published>2017-07-23T08:10:23.000Z</published>
-    <updated>2017-07-23T14:53:18.196Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="Java集合"><a href="#Java集合" class="headerlink" title="Java集合"></a>Java集合</h2><h3 id="Java中集合的接口的继承关系图"><a href="#Java中集合的接口的继承关系图" class="headerlink" title="Java中集合的接口的继承关系图"></a>Java中集合的接口的继承关系图</h3><p><img src="http://images.cnitblog.com/blog/490648/201308/18174126-653273ab5abe491bb9724353360ed252.png" alt="Java集合"></p>
-<p>1,<strong><code>Set</code></strong>:</p>
-<p><strong>TreeSet</strong>：在这里是要进行排序的，</p>
-<blockquote>
-<ul>
-<li>自然排序（Comparable）：<br>TreeSet类的add会对对象实例的compareTo()方法和集合中的对象进行比较，根据比较的结果来进行排序</li>
-<li>比较器顺序（Comparator）：<br>在外部创建一个比较器来进行比较对象的大小</li>
-</ul>
-</blockquote>
-<p><strong>HashSet</strong>：这是一个实现类</p>
-<blockquote>
-<ul>
-<li>不能够保证元素的排列顺序</li>
-</ul>
-</blockquote>
-<p><strong>LinkedHashSet</strong>：集成于HashSet</p>
-<blockquote>
-<ul>
-<li>能够进行排序（根据hashcode来决定元素的存储位置，同时使用链表维护元素的次序</li>
-</ul>
-</blockquote>
-<p><strong>EnumSet</strong>:专门为枚举类设计，能够枚举各个属性</p>
-<p><strong>List接口</strong></p>
-<blockquote>
-<ul>
-<li><strong>ArrayList</strong>:数组（适合随机的set和get）</li>
-<li><strong>Vector</strong>：数组，线程安全，但是效率较低</li>
-<li><strong>LinkedList</strong>：链表（适合更多的新增或者删除）（是一个双向链表）</li>
-</ul>
-</blockquote>
-<p><strong>Queue</strong>:队列，先进先出</p>
-<blockquote>
-<ul>
-<li>Deque:双端队列，能够在双端中增加或者删除，使用Stack</li>
-<li>PriorityQueue:能够进行排序，也是先进先出的。</li>
-</ul>
-</blockquote>
-<p><strong>HashMap</strong>：<br><strong>Hashtable</strong>：</p>
-<blockquote>
-<ul>
-<li>Hashtable在遇到null时，会抛出NullPointException异常</li>
-<li>线程安全</li>
-<li>通过Initial Capacity和Load Factor两个参数来调整性能，通常来说Load Factor为0.75，较好地实现时间和空间的均衡，增大Load Factor可以节省空间但相应的查找时间会增加<br><strong>HashMap</strong>：</li>
-<li>HashMap是支持null键和null值的</li>
-<li>线程不安全</li>
-<li>将Key做Hash算法，然后将Hash值映射到内存地址，直接取得Key对应的数据</li>
-</ul>
-</blockquote>
-<p><strong>TreeMap</strong>:</p>
-<blockquote>
-<ul>
-<li>按照顺序进行排列（红黑树）</li>
-<li>插入和删除比HashMap的效率低一些，但是呢，有序</li>
-</ul>
-</blockquote>
-<p><strong>WeakhashMap</strong>:是一种弄改进的HashMap，对Key实现“弱引用”,如果一个Key不再被外部引用，那么该Key可能被GC回收。如果Key没有其他的引用，那么Map会自动丢弃该值。</p>
-<blockquote>
-<ul>
-<li>特别之处在于WeakHashMap里的Entry可能会被GC自动删除，即使程序员没有调用remove或者clear方法</li>
-</ul>
-<ul>
-<li>可能会出现以下的现象：</li>
-</ul>
-<p>调用两次size()方法返回不同的值；<br>两次调用isEmpty()方法，第一次返回false，第二次返回true；<br>两次调用containsKey()方法，第一次返回true，第二次返回false，尽管两次使用的是同一个key；<br>两次调用get()方法，第一次返回一个value，第二次返回null，尽管两次使用的是同一个对象。</p>
-</blockquote>
-<p>弱引用（WeakReference）：通过GC自动管理，GC会在程序运行过程中自动判断哪些对象是可以被回收的，并在合适的时机进行内存释放。GC判断某个对象是否可被回收的依据是，是否有有效的引用指向该对象。这里的“有效引用”并不包括弱引用。也就是说，虽然弱引用可以用来访问对象，但进行垃圾回收时弱引用并不会被考虑在内，仅有弱引用指向的对象仍然会被GC回收</p>
-<p><strong>LinkedHashMap</strong>:根据元素增加或者访问的先后顺序进行排序，而TreeMap根据元素的Key的大小来进行排序</p>
-<h3 id="Java的四种引用："><a href="#Java的四种引用：" class="headerlink" title="Java的四种引用："></a>Java的四种引用：</h3><blockquote>
-<ul>
-<li>强引用：垃圾收集机制绝不会回收它，当内存空间出现不足，Java虚拟机抛出OutOfMemoryError错误，使得程序异常终止</li>
-<li>软引用：内存空间足够，不会回收；内存空间不足，回收</li>
-<li>弱引用：只具有弱引用的对象拥有更短暂的生命周期。在垃圾回收器线程扫描它 所管辖的内存区域的过程中，一旦发现了只具有弱引用的对象，不管当前内存空间足够与否，都会回收它的内存</li>
-<li>虚引用：如果一个对象仅持有虚引用，那么它就和没有任何引用一样，在任何时候都可能被垃圾回收。虚引用主要用来跟踪对象被垃圾回收的活动。虚引用与软引用和弱引用的一个区别在于：虚引用必须和引用队列（ReferenceQueue）联合使用。当垃圾回收器准备回收一个对象时，如果发现它还有虚引用，就会在回收对象的内存之前，把这个虚引用加入到与之 关联的引用队列中</li>
-</ul>
-</blockquote>
-<h3 id="WeakHashMap"><a href="#WeakHashMap" class="headerlink" title="WeakHashMap"></a>WeakHashMap</h3><blockquote>
-<ul>
-<li><code>expungeStaleEntries</code>:会在大部分共有方法中被调用，将ReferenceQueue中所有的失效的引用从Map中去除</li>
-<li>WeakHashMap的Key是弱引用，Value不是。WeakHashMap不会自动释放失效的弱引用，仅当包含了expungeStaleEntries（）的公有方法被调用的时候才会释放</li>
-</ul>
-</blockquote>
-<h3 id="用弱引用堵住内存泄露"><a href="#用弱引用堵住内存泄露" class="headerlink" title="用弱引用堵住内存泄露"></a>用弱引用堵住内存泄露</h3><p>要让垃圾收集（GC）回收程序不再使用的对象，对象的逻辑 生命周期（应用程序使用它的时间）和对该对象拥有的引用的实际 生命周期必须是相同的</p>
-<figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">public class SocketManager &#123;</div><div class="line">    private Map&lt;Socket,User&gt; m = new HashMap&lt;Socket,User&gt;();</div><div class="line">     </div><div class="line">    public void setUser(Socket s,<span class="built_in"> User </span>u) &#123;</div><div class="line">        m.put(s, u);</div><div class="line">    &#125;</div><div class="line">    public<span class="built_in"> User </span>getUser(Socket s) &#123;</div><div class="line">        return m.<span class="builtin-name">get</span>(s);</div><div class="line">    &#125;</div><div class="line">    public void removeUser(Socket s) &#123;</div><div class="line">        m.<span class="builtin-name">remove</span>(s);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">SocketManager socketManager;</div><div class="line">socketManager.setUser(socket, user);</div></pre></td></tr></table></figure>
-<p>如果没有显性的删除和增加，那么Socket和User对象都会一直存在于内存中，可能会出现OutOfMemoryError</p>
-<p>对于大多数程序来说，可以将内存使用分为两部分：baseline 使用和 current load 使用。对于服务器应用程序，baseline 使用就是应用程序在没有任何负荷、但是已经准备好接受请求时的内存使用，current load 使用是在处理请求过程中使用的、但是在请求处理完成后会释放的内存。只要负荷大体上是恒定的，应用程序通常会很快达到一个稳定的内存使用水平。如果在应用程序已经完成了其初始化并且负荷没有增加的情况下，内存使用持续增加，那么程序就可能在处理前面的请求时保留了生成的对象。</p>
-<p>SocketManager 的问题是 Socket-User 映射的生命周期应当与 Socket 的生命周期相匹配。弱引用是对一个对象（称为 referent）的引用的持有者。使用弱引用后，可以维持对 referent 的引用，而不会阻止它被垃圾收集。当垃圾收集器跟踪堆的时候，如果对一个对象的引用只有弱引用，那么这个 referent 就会成为垃圾收集的候选对象，就像没有任何剩余的引用一样，而且所有剩余的弱引用都被清除。（只有弱引用的对象称为弱可及（weakly reachable）。）</p>
-<figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">public class SocketManager &#123;</div><div class="line">    private Map&lt;Socket,User&gt; m = new WeakHashMap&lt;Socket,User&gt;();</div><div class="line">     </div><div class="line">    public void setUser(Socket s,<span class="built_in"> User </span>u) &#123;</div><div class="line">        m.put(s, u);</div><div class="line">    &#125;</div><div class="line">    public<span class="built_in"> User </span>getUser(Socket s) &#123;</div><div class="line">        return m.<span class="builtin-name">get</span>(s);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>WeakReference.get() 是否返回 null 来区分死的映射和活的映射.可以通过周期性地扫描 Map，对每一个弱引用调用 get()，并在 get() 返回 null 时删除那个映射而消除死映射</p>
-<p>WeakHashMap 有一个名为 expungeStaleEntries() 的私有方法，大多数 Map 操作中会调用它，它去掉引用队列中所有失效的引用，并删除关联的映射.用引用队列代替定期扫描内容的方法来清理 Map 更有效，因为清理过程不会触及活的项，只有在有实际加入队列的引用时它才工作<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> <span class="keyword">void</span> expungeStaleEntries() &#123;</div><div class="line">Entry&lt;K,V&gt; e;</div><div class="line">    <span class="keyword">while</span> ( (e = (Entry&lt;K,V&gt;) queue.poll()) != <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">int</span> hash = e.hash;</div><div class="line">        Entry&lt;K,V&gt; prev = getChain(hash);</div><div class="line">        Entry&lt;K,V&gt; cur = prev;</div><div class="line">        <span class="keyword">while</span> (cur != <span class="keyword">null</span>) &#123;</div><div class="line">            Entry&lt;K,V&gt; <span class="keyword">next</span> = cur.<span class="keyword">next</span>;</div><div class="line">            <span class="keyword">if</span> (cur == e) &#123;</div><div class="line">                <span class="keyword">if</span> (prev == e)</div><div class="line">                    setChain(hash, <span class="keyword">next</span>);</div><div class="line">                <span class="keyword">else</span></div><div class="line">                    prev.<span class="keyword">next</span> = <span class="keyword">next</span>;</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">            &#125;</div><div class="line">            prev = cur;</div><div class="line">            cur = <span class="keyword">next</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p><a href="https://www.ibm.com/developerworks/cn/java/j-jtp11225/index.html" target="_blank" rel="external">具体的链接如下：</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;Java集合&quot;&gt;&lt;a href=&quot;#Java集合&quot; class=&quot;headerlink&quot; title=&quot;Java集合&quot;&gt;&lt;/a&gt;Java集合&lt;/h2&gt;&lt;h3 id=&quot;Java中集合的接口的继承关系图&quot;&gt;&lt;a href=&quot;#Java中集合的接口的继承关系图&quot; cla
-    
-    </summary>
-    
-      <category term="学习笔记" scheme="https://caixueyuan.github.io/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
-    
-    
-      <category term="Java基础" scheme="https://caixueyuan.github.io/tags/Java%E5%9F%BA%E7%A1%80/"/>
     
   </entry>
   
