@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://caixueyuan.github.io/"/>
-  <updated>2018-04-02T07:06:51.360Z</updated>
+  <updated>2018-04-02T08:36:55.831Z</updated>
   <id>https://caixueyuan.github.io/</id>
   
   <author>
@@ -14,6 +14,45 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>客户端存储</title>
+    <link href="https://caixueyuan.github.io/2018/04/02/%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%AD%98%E5%82%A8/"/>
+    <id>https://caixueyuan.github.io/2018/04/02/客户端存储/</id>
+    <published>2018-04-02T07:09:36.000Z</published>
+    <updated>2018-04-02T08:36:55.831Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="客户端存储"><a href="#客户端存储" class="headerlink" title="客户端存储"></a>客户端存储</h2><p>客户端存储遵循“同源策略”，不同站点的页面是无法互相读取对方存储的数据，而同一个站点的不同页面之间是可以互相存储数据的，它为我们提供了一种通信机制。</p>
+<p>所有的数据都是以字符串的形式来存储的<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">localStorage.x =<span class="number">10</span>;</div><div class="line"><span class="keyword">var</span> x= <span class="built_in">parseInt</span>(localStorage.x);</div><div class="line"></div><div class="line">localStorage.lastRead = (<span class="keyword">new</span> <span class="built_in">Date</span>()).toUTCString();</div><div class="line"><span class="keyword">var</span> lastRead = <span class="keyword">new</span> <span class="built_in">Date</span>(<span class="built_in">Date</span>.parse(localStorage.lastRead));</div><div class="line"></div><div class="line">localStorage.data = <span class="built_in">JSON</span>.stringify(data);</div><div class="line"><span class="keyword">var</span> data = <span class="built_in">JSON</span>.parse(localStorage.data);</div></pre></td></tr></table></figure></p>
+<h3 id="localStorage和sessionStorage"><a href="#localStorage和sessionStorage" class="headerlink" title="localStorage和sessionStorage"></a>localStorage和sessionStorage</h3><blockquote>
+<ul>
+<li>localStorage:存储的数据是永久的，限定在文档源，同源的文档同享同样的localStorage数据，都是采用广播机制的，浏览器会对目前正在访问同样站点的所有的窗口发送消息</li>
+<li>sessionStorage:有效期和存储数据的脚本所在的最顶层的窗口或者浏览器标签页是一样的，一旦窗口被关闭或者标签页被永远关闭，就删除数据，限定在文档源的级别，sessionStorage的改变只有相牵连的窗口的时候才会触发存储时间</li>
+</ul>
+</blockquote>
+<p><strong>Cookie</strong><br>在JavaScript中，cookie用于保存状态以及能够为Web浏览器提供一种身份识别机制</p>
+<blockquote>
+<ul>
+<li>检测Cookie是否启用：<code>navigator.cookieEnabled</code></li>
+<li>Cookie属性：只能够持续到Web浏览器的会话期间，一旦用户关闭浏览器，Cookie保存的数据就会丢失Cookie的作用期并不是局限在浏览器的单个窗口，它的有效期和整个浏览器进程而不是单个浏览器窗口（sessionStorage）</li>
+<li>JavaScript核心的全局函数encodeURIComponent()对值进行编码，读取cookie值的时候需要采用decodeURIComponent()函数解码</li>
+</ul>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getCookie</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> cookie = &#123;&#125;;</div><div class="line">    <span class="keyword">var</span> all = <span class="built_in">document</span>.cookie;</div><div class="line">    <span class="keyword">if</span>(all === <span class="string">''</span>)</div><div class="line">        <span class="keyword">return</span> cookie;</div><div class="line">    <span class="keyword">var</span> list = all.split(<span class="string">"; "</span>);</div><div class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>;i&lt;list.length;i++)&#123;</div><div class="line">        <span class="keyword">var</span> cookie = list[i];</div><div class="line">        <span class="keyword">var</span> p = cookie.indexOf(<span class="string">"="</span>);</div><div class="line">        <span class="keyword">var</span> p = cookie.substring(<span class="number">0</span>,p):</div><div class="line">        <span class="keyword">var</span> value = cookie.substring(p+<span class="number">1</span>);</div><div class="line">        value = <span class="built_in">decodeURIComponent</span>(value);</div><div class="line">        cookie[name] = value;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> cookie;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;客户端存储&quot;&gt;&lt;a href=&quot;#客户端存储&quot; class=&quot;headerlink&quot; title=&quot;客户端存储&quot;&gt;&lt;/a&gt;客户端存储&lt;/h2&gt;&lt;p&gt;客户端存储遵循“同源策略”，不同站点的页面是无法互相读取对方存储的数据，而同一个站点的不同页面之间是可以互相存储数据
+    
+    </summary>
+    
+      <category term="JavaScript学习笔记" scheme="https://caixueyuan.github.io/categories/JavaScript%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+    
+      <category term="JavaScript学习笔记" scheme="https://caixueyuan.github.io/tags/JavaScript%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+  </entry>
   
   <entry>
     <title>客户端JavaScript</title>
@@ -1217,61 +1256,6 @@
     
     
       <category term="线程池" scheme="https://caixueyuan.github.io/tags/%E7%BA%BF%E7%A8%8B%E6%B1%A0/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Java多线程基础</title>
-    <link href="https://caixueyuan.github.io/2017/07/25/Java%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%9F%BA%E7%A1%80/"/>
-    <id>https://caixueyuan.github.io/2017/07/25/Java多线程基础/</id>
-    <published>2017-07-25T14:26:28.000Z</published>
-    <updated>2017-07-25T16:13:34.089Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="Volatile"><a href="#Volatile" class="headerlink" title="Volatile"></a>Volatile</h2><blockquote>
-<p>1,Volatile变量具有synchronized的可见性特性，但是不具备原子特性。</p>
-</blockquote>
-<h3 id="原理："><a href="#原理：" class="headerlink" title="原理："></a><strong>原理</strong>：</h3><p>处理器为了提高处理速度，不直接和内存进行通讯，而是将系统内存的数据独到内部缓存后再进行操作，但操作完后不知什么时候会写到内存。</p>
-<p>如果对声明了volatile变量进行写操作时，JVM会向处理器发送一条Lock前缀的指令，将这个变量所在缓存行的数据写会到系统内存。 这一步确保了如果有其他线程对声明了volatile变量进行修改，则立即更新主内存中数据。</p>
-<p>但这时候其他处理器的缓存还是旧的，所以在多处理器环境下，为了保证各个处理器缓存一致，每个处理会通过嗅探在总线上传播的数据来检查 自己的缓存是否过期，当处理器发现自己缓存行对应的内存地址被修改了，就会将当前处理器的缓存行设置成无效状态，当处理器要对这个数据进行修改操作时，会强制重新从系统内存把数据读到处理器缓存里。 这一步确保了其他线程获得的声明了volatile变量都是从主内存中获取最新的。</p>
-<p>多个变量之间或者某个变量的当前值与修改后值之间没有约束。<br>对于x++等递增操作，要保证是原子操作，然后不能够只是使用volatile<br>但是呢，volatile的性能比较好。</p>
-<h3 id="2-保证有序性"><a href="#2-保证有序性" class="headerlink" title="2,保证有序性"></a>2,保证有序性</h3><p>Lock前缀指令实际上相当于一个内存屏障（也成内存栅栏），它确保指令重排序时不会把其后面的指令排到内存屏障之前的位置，也不会把前面的指令排到内存屏障的后面；即在执行到内存屏障这句指令时，在它前面的操作已经全部完成。</p>
-<h3 id="正确使用的方法："><a href="#正确使用的方法：" class="headerlink" title="正确使用的方法："></a>正确使用的方法：</h3><blockquote>
-<ul>
-<li>状态标志<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">volatile</span> <span class="keyword">boolean</span> shutdownRequested;</div><div class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">shutdown</span><span class="params">()</span></span>&#123;</div><div class="line">    shutdownRequested=<span class="keyword">true</span>;</div><div class="line">&#125;</div><div class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">doWork</span><span class="params">()</span></span>&#123;</div><div class="line">    <span class="keyword">while</span>(!shutdownRequested)&#123;</div><div class="line">        <span class="comment">//do stuff</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>一次性安全发布</p>
-</blockquote>
-<p>被发布的对象必须是线程安全的，或者是有效的不可变对象（有效不可变意味着对象的状态在发布之后永远不会被修改）。volatile 类型的引用可以确保对象的发布形式的可见性，但是如果对象的状态在发布后将发生更改，那么就需要额外的同步。</p>
-<blockquote>
-<p>独立观察：</p>
-</blockquote>
-<figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">public class UserManager &#123;</div><div class="line">    public volatile String lastUser;</div><div class="line"> </div><div class="line">    public boolean authenticate(String user, String password) &#123;</div><div class="line">        boolean valid = passwordIsValid(user, password);</div><div class="line">        <span class="keyword">if</span> (valid) &#123;</div><div class="line">           <span class="built_in"> User </span>u = new User();</div><div class="line">            activeUsers.<span class="builtin-name">add</span>(u);</div><div class="line">            lastUser =<span class="built_in"> user;</span></div><div class="line">        &#125;</div><div class="line">        return valid;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>将某个值发布以在程序内的其他地方使用，但是与一次性事件的发布不同，这是一系列独立事件。这个模式要求被发布的值是有效不可变的 —— 即值的状态在发布后不会更改</p>
-<blockquote>
-<p>开销很低的读-写策略<br><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">@ThreadSafe</div><div class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">CheesyCounter</span> &#123;</div><div class="line">    <span class="comment">// Employs the cheap read-write lock trick</span></div><div class="line">    <span class="comment">// All mutative operations MUST be done with the 'this' lock held</span></div><div class="line">    @GuardedBy(<span class="string">"this"</span>) <span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">int</span> <span class="keyword">value</span>;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getValue</span>(<span class="params"></span>) </span>&#123; <span class="keyword">return</span> <span class="keyword">value</span>; &#125; </div><div class="line">    <span class="function"><span class="keyword">public</span> synchronized <span class="keyword">int</span> <span class="title">increment</span>(<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">value</span>++;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-</blockquote>
-<h2 id="ThreadLocal（线程局部变量（thread-local-variable"><a href="#ThreadLocal（线程局部变量（thread-local-variable" class="headerlink" title="ThreadLocal（线程局部变量（thread-local  variable)"></a>ThreadLocal（线程局部变量（thread-local  variable)</h2><h3 id="作用：用来存储线程中的局部变量"><a href="#作用：用来存储线程中的局部变量" class="headerlink" title="作用：用来存储线程中的局部变量"></a><strong>作用</strong>：用来存储线程中的局部变量</h3><p>因为ThreadLocal在每个线程中对该变量会创建一个副本，即每个线程内部都会有一个该变量，且是在线程内部任何地方都可以使用，线程之间互不影响，这样就不会存在线程安全问题，也不会严重影响程序执行性能，考虑它对资源的消耗，比如内存的占用会比不使用ThreadLocal要大。</p>
-<h3 id="深入解析ThreadLocal类"><a href="#深入解析ThreadLocal类" class="headerlink" title="深入解析ThreadLocal类"></a>深入解析ThreadLocal类</h3><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> T <span class="title">get</span>(<span class="params"></span>) </span>&#123; &#125;<span class="comment">//获取在当前线程中保存的变量副本</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">set</span>(<span class="params">T <span class="keyword">value</span></span>) </span>&#123; &#125;<span class="comment">//设置当前线程中变量的副本</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">remove</span>(<span class="params"></span>) </span>&#123; &#125;<span class="comment">//移除当前线程中的变量的副本</span></div><div class="line"><span class="function"><span class="keyword">protected</span> T <span class="title">initialValue</span>(<span class="params"></span>) </span>&#123; &#125;<span class="comment">//延迟加载</span></div></pre></td></tr></table></figure>
-<p>首先的话，在每个线程Thread内部有一个ThreadLocal.ThreadLocalMap类型的变量的threadLocals,这个threadLocals就是用来存储实际的变量的副本的，键值为当前的ThreadLocal变量，value为变量的副本。</p>
-<p>初始时，在Thread里面，threadLocals为空，当通过ThreadLocal变量调用get()方法或者set()方法，就会对Thread类中的threadLocals进行初始化，并且以当前ThreadLocal变量为键值，以ThreadLocal要保存的副本变量为value，存到threadLocals。</p>
-<p>在进行get之前，必须先set，否则会报空指针异常；</p>
-<h3 id="例子"><a href="#例子" class="headerlink" title="例子"></a><strong>例子</strong></h3><figure class="highlight lasso"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="literal">void</span> <span class="built_in">set</span>(T value) &#123;</div><div class="line">    <span class="keyword">Thread</span> t = <span class="keyword">Thread</span>.currentThread();</div><div class="line">    ThreadLocalMap <span class="built_in">map</span> = getMap(t);</div><div class="line">    <span class="keyword">if</span> (<span class="built_in">map</span> != <span class="built_in">null</span>)</div><div class="line">        <span class="built_in">map</span>.<span class="built_in">set</span>(this, value);</div><div class="line">    <span class="keyword">else</span></div><div class="line">        createMap(t, value);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>首先通过getMap(Thread t)方法获取一个和当前线程相关的ThreadLocalMap，然后将变量的值设置到这个ThreadLocalMap对象中，当然如果获取到的ThreadLocalMap对象为空，就通过createMap方法创建。</p>
-<p>线程隔离的秘密，就在于ThreadLocalMap这个类。ThreadLocalMap是ThreadLocal类的一个静态内部类，它实现了键值对的设置和获取（对比Map对象来理解），每个线程中都有一个独立的ThreadLocalMap副本，它所存储的值，只能被当前线程读取和修改。ThreadLocal类通过操作每一个线程特有的ThreadLocalMap副本，从而实现了变量访问在不同线程中的隔离。因为每个线程的变量都是自己特有的，完全不会有并发错误。还有一点就是，ThreadLocalMap存储的键值对中的键是this对象指向的ThreadLocal对象，而值就是你所设置的对象了</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;Volatile&quot;&gt;&lt;a href=&quot;#Volatile&quot; class=&quot;headerlink&quot; title=&quot;Volatile&quot;&gt;&lt;/a&gt;Volatile&lt;/h2&gt;&lt;blockquote&gt;
-&lt;p&gt;1,Volatile变量具有synchronized的可见性特性，
-    
-    </summary>
-    
-      <category term="Java学习笔记" scheme="https://caixueyuan.github.io/categories/Java%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
-    
-    
-      <category term="Java多线程基础" scheme="https://caixueyuan.github.io/tags/Java%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%9F%BA%E7%A1%80/"/>
     
   </entry>
   
