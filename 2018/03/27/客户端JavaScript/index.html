@@ -1,0 +1,945 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="JavaScript学习笔记," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="caixueyuan" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="web浏览器中的JavaScript在HTML中嵌入JavaScript如果使用XHTML，最好把所有的JavaScript代码放入到一个CDATA部分里123&amp;lt;script&amp;gt;&amp;lt;![CDATA[    //这里是你的JavaScript代码]]&amp;gt;&amp;lt;/script&amp;gt; 同步、异步和延迟的脚本  脚本的执行只在默认情况下是同步和阻塞的 defer和async属性都像是">
+<meta name="keywords" content="JavaScript学习笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="客户端JavaScript">
+<meta property="og:url" content="https://caixueyuan.github.io/2018/03/27/客户端JavaScript/index.html">
+<meta property="og:site_name" content="caixueyuan">
+<meta property="og:description" content="web浏览器中的JavaScript在HTML中嵌入JavaScript如果使用XHTML，最好把所有的JavaScript代码放入到一个CDATA部分里123&amp;lt;script&amp;gt;&amp;lt;![CDATA[    //这里是你的JavaScript代码]]&amp;gt;&amp;lt;/script&amp;gt; 同步、异步和延迟的脚本  脚本的执行只在默认情况下是同步和阻塞的 defer和async属性都像是">
+<meta property="og:updated_time" content="2018-04-02T07:06:51.360Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="客户端JavaScript">
+<meta name="twitter:description" content="web浏览器中的JavaScript在HTML中嵌入JavaScript如果使用XHTML，最好把所有的JavaScript代码放入到一个CDATA部分里123&amp;lt;script&amp;gt;&amp;lt;![CDATA[    //这里是你的JavaScript代码]]&amp;gt;&amp;lt;/script&amp;gt; 同步、异步和延迟的脚本  脚本的执行只在默认情况下是同步和阻塞的 defer和async属性都像是">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://caixueyuan.github.io/2018/03/27/客户端JavaScript/"/>
+
+
+
+
+
+  <title>客户端JavaScript | caixueyuan</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">caixueyuan</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">SCUT</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://caixueyuan.github.io/2018/03/27/客户端JavaScript/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="caixueyuan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="caixueyuan">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">客户端JavaScript</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-27T20:29:49+08:00">
+                2018-03-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript学习笔记/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaScript学习笔记</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="web浏览器中的JavaScript"><a href="#web浏览器中的JavaScript" class="headerlink" title="web浏览器中的JavaScript"></a>web浏览器中的JavaScript</h2><h3 id="在HTML中嵌入JavaScript"><a href="#在HTML中嵌入JavaScript" class="headerlink" title="在HTML中嵌入JavaScript"></a>在HTML中嵌入JavaScript</h3><p>如果使用XHTML，最好把所有的JavaScript代码放入到一个CDATA部分里<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="handlebars"><span class="xml">&lt;![CDATA[</span></span></div><div class="line">    //这里是你的JavaScript代码</div><div class="line">]]&gt;<span class="tag">&lt;/<span class="name">script</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<h3 id="同步、异步和延迟的脚本"><a href="#同步、异步和延迟的脚本" class="headerlink" title="同步、异步和延迟的脚本"></a>同步、异步和延迟的脚本</h3><blockquote>
+<ul>
+<li>脚本的执行只在默认情况下是同步和阻塞的</li>
+<li>defer和async属性都像是在告诉浏览器链接近来的脚本不会使用document.write()，也不会生成文档内容，因此浏览器可以在下载脚本时候继续解析和渲染文档</li>
+<li>defer 使得浏览器延迟脚本的执行，直到文档的载入和解析完成，并可以操作</li>
+<li>async属性使得浏览器可以尽快地执行脚本，不用在下载脚本时阻塞文档解析<br><strong>异步载入并执行一个指定URL中的脚本</strong><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">loadasync</span>(<span class="params">url</span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> head = <span class="built_in">document</span>.getElementsByTagName(<span class="string">"head"</span>)[<span class="number">0</span>];</div><div class="line">    <span class="keyword">var</span> s = <span class="built_in">document</span>.createElement(<span class="string">"script"</span>);</div><div class="line">    s.src = url;</div><div class="line">    head.appendChild(s);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</blockquote>
+<h3 id="客户端JavaScript线程模型"><a href="#客户端JavaScript线程模型" class="headerlink" title="客户端JavaScript线程模型"></a>客户端JavaScript线程模型</h3><p><strong>JavaScript语言核心并不包含任何线程机制，并且客户端JavaScript传统上也没有定义任何线程机制，所有JavaScript中的执行都是单线程</strong></p>
+<blockquote>
+<p>HTML5定义了一个并发的控制方式，叫做”Web worker”.Web worker是一个用来自计算密集任务而不冻结用户界面的后台线程。运行在Web Worker线程中的代码不能够访问文档内容，不能和主线程或其他worker共享状态，只可以和主线程和其他worker通过异步事件进行通信，所以主线程不能够检测并发性。</p>
+</blockquote>
+<p><strong>客户端JavaScript时间线</strong></p>
+<blockquote>
+<ul>
+<li>Web浏览器创建Document对象，并开始解析Web页面，解析HTML元素和它的文本内容后添加Element对象和Text对象节点到文档中。document.readystate = loading;</li>
+<li>当HTML解析器遇到没有async和defer属性的<code>&lt;script&gt;</code>元素时，把这些元素添加到文档中，然后执行内或者外部脚本。这些脚本就可以用document.write()来把文本插入到输入流中。解析器恢复时这些文本会成为文档中的一部分。同步脚本经常简单定义函数和注册后面使用的注册事件处理程序，但她们可以遍历和操作文档树，</li>
+<li>当解析器遇见设置async属性的<code>&lt;script&gt;</code>元素时，开始下载脚本文本，并继续解析文档。脚本会在它下载完成后尽快执行，但解析器没有停下来等他下载，异步脚本禁止使用document.write()方法。他们可以看到自己的<code>&lt;script&gt;</code>元素和之前所有的文档元素，并且可能或干脆不可能访问其他的内容</li>
+<li>当文档完成解析，document.readystate = interactive;</li>
+<li>所有有defer属性的脚本，会按它们在文档出现的顺序执行。异步脚本可能也会在这个时间执行。延迟脚本能访问完整的文档树，禁止使用document.write()方法</li>
+<li>浏览器在Document对象上触发DOMContentLoaded事件。这标志着程序执行从同步脚本执行阶段转换到异步事件驱动阶段。</li>
+<li>文档解析完成，但是浏览器可能还在等待其他内容载入，当所有这些内容完成载入，并且所有异步脚本完成载入和执行，document.readystate = complete，Web浏览器触发Window对象上的load对象</li>
+<li>调用异步事件</li>
+</ul>
+</blockquote>
+<h3 id="同源策略"><a href="#同源策略" class="headerlink" title="同源策略"></a>同源策略</h3><p>文档的来源包含协议、主机以及载入文档的URL端口。从不同Web服务器载入的文档具有不同的来源，通过同一个主机的不同端口载入的文档具有不同的来源。</p>
+<h2 id="Window对象"><a href="#Window对象" class="headerlink" title="Window对象"></a>Window对象</h2><h3 id="计时器"><a href="#计时器" class="headerlink" title="计时器"></a>计时器</h3><p><code>setTimeout()</code>实现一个函数在指定的毫秒数之后再行<br><code>setInterval()</code>会在指定毫秒数的间隔里重复调用</p>
+<h3 id="浏览器定位和导航"><a href="#浏览器定位和导航" class="headerlink" title="浏览器定位和导航"></a>浏览器定位和导航</h3><p><code>window.location === document.location&#39;总是返回true</code>location.assign()<code>使得窗口载入并显示你指定的URL中的文档</code>location.replace()<code>在载入新文档之前会从浏览历史中把当前文档删除</code>location.reload()`让浏览器重新载入当前文档</p>
+<h3 id="浏览历史"><a href="#浏览历史" class="headerlink" title="浏览历史"></a>浏览历史</h3><p>History对象是用来把窗口的浏览历史用文档和文档状态列表的形式表示的，History对象的<br><figure class="highlight gcode"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">history.go<span class="comment">(-2)</span><span class="comment">//后退两个历史记录，相当于单击‘后退’按钮两次</span></div></pre></td></tr></table></figure></p>
+<h3 id="浏览器和屏幕信息"><a href="#浏览器和屏幕信息" class="headerlink" title="浏览器和屏幕信息"></a>浏览器和屏幕信息</h3><p>Window对象的navigator属性引用的是包含浏览器厂商和版本信息的Navigator对象<br>Window对象的screen属性提供有关窗口显示的大小和可用的颜色数量的信息。</p>
+<h3 id="对话框"><a href="#对话框" class="headerlink" title="对话框"></a>对话框</h3><p><code>alert()</code>向用户显示一条消息并等待用户关闭对话框<br><code>confirm()</code>显示一条消息，要求用户单击“确定”或“取消”按钮，并返回一个布尔值<br><code>prompt()</code>显示一条消息，等待用户输入字符串，并返回那个字符串<br><code>showModalDialog()</code>显示一个包含HTML格式的“模式对话框”，可以给它传入参数，以及从对话框里返回值</p>
+<h3 id="多窗口"><a href="#多窗口" class="headerlink" title="多窗口"></a>多窗口</h3><p>一个Web浏览器窗口可能在桌面上包含多个标签页，每一个标签页都是独立的“浏览器上下文”，每一个上下文都有独立的Window对象，而且相互之间不干扰。每一个上下文都有一个独立的Window对象。例如<iframe></iframe></p>
+<p><code>window.open()</code>载入指定的URL到新的或者已存在的窗口中，并返回代表那个窗口的Window对象<br>window.open(网址，窗口的名字，大小和各种属性，boolean);<br>boolean:<code>true</code>声明了由第一个参数指定的URL是应用替换掉窗口浏览实例的当前条目<br><code>false</code>在窗口浏览历史中创建一个新的条目，后者是默认的啊</p>
+<p><strong>Window.open()</strong>:只有当用户手动单击按钮或者链接的时候才会调用。JavaScript代码尝试在浏览器初次载入时开启一个弹出窗口，通常会被禁止。</p>
+<p>只有在嵌套的窗口才能够相互引用，parent和top属性允许脚本引用它的窗体的祖先。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> elt = <span class="built_in">document</span>.getElementById(<span class="string">"f1"</span>);</div><div class="line"><span class="keyword">var</span> win = elt.contentWindow;</div><div class="line">win.frameElement === elt;<span class="comment">//true</span></div></pre></td></tr></table></figure>
+<p>每个Window对象都有一个frames属性，它引用自身包含的窗口或者窗体的子窗体。frames属性引用的是类数组对象</p>
+<p>JavaScript保证交互窗口的信息交流：</p>
+<blockquote>
+<ul>
+<li>可以通过parent,top来引用窗口的全局变量</li>
+<li>内置类都会在所有的窗口中自行预定义，每个Window都有自己的原型对象，意味着instanceof操作符不能够跨窗口工作</li>
+</ul>
+</blockquote>
+<h2 id="脚本化文档"><a href="#脚本化文档" class="headerlink" title="脚本化文档"></a>脚本化文档</h2><h3 id="选取文档元素"><a href="#选取文档元素" class="headerlink" title="选取文档元素"></a>选取文档元素</h3><p><code>document.getElementById(&#39;section1&#39;);</code>选取一个基于唯一ID的元素<br><code>document.getElementsByName(&#39;section1&#39;)</code>查找命名的元素<br><code>document.getElementsByTagName(&quot;span&quot;);</code>从文档中获取所有<span>元素的只读的类数组对象，不区分大小写<br><code>document.getElementsByClassName()</code>基于其class属性值中的标识符来选取成组成的文档元素<br><code>document.all[]</code>表示所有文档中的元素</span></p>
+<h3 id="文档结构和遍历"><a href="#文档结构和遍历" class="headerlink" title="文档结构和遍历"></a>文档结构和遍历</h3><p><strong>parentNode</strong>:父节点<br><strong>childNodes</strong>：只读的类数组对象<br><strong>nextSubling</strong>,<strong>previousSubling</strong>:兄弟节点的前后一个啊<br><strong>nodeType</strong>:该节点的类型<br><strong>nodeValue</strong>:Text节点或者Comment节点的文本内容<br><strong>nodeName</strong>:元素的标签名</p>
+<p><strong>firstElementChild</strong>,<strong>lastElementChild*:代表子Element
+</strong>nextElementSibling<strong>,</strong>previousElementSubling<strong>：兄弟Element
+</strong>childElementCount**:子元素的数量</p>
+<p><strong>HTMLElement</strong>：定义了通用的HTTP属性（如id，标题lang和dir）的属性，以及事件处理程序属性<br><strong>element.getAttribute(“WIDTH”)</strong>:查询和设置非标准的HTML属性<br><strong>hasAttribute()</strong>,<strong>removeAttribute()</strong>:检测命名属性是否存在和完全删除属性<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span> = <span class="string">"sparkline"</span> <span class="attr">data-ymin</span> = <span class="string">"0"</span> <span class="attr">data-ymax</span> = <span class="string">"10"</span>&gt;</span></div><div class="line">1 2 4 4 5    3 3  2 </div><div class="line"><span class="tag">&lt;/<span class="name">span</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> sparklines = <span class="built_in">document</span>.getElementsByClassName(<span class="string">"sparkline"</span>);</div><div class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i =<span class="number">0</span>; i&lt; sparklines.length; i++)&#123;</div><div class="line">    <span class="keyword">var</span> dataset = sparklines[i].dataset;</div><div class="line">    <span class="keyword">var</span> ymin = <span class="built_in">parseFloat</span>(dataset.ymin);</div><div class="line">    <span class="keyword">var</span> ymax = <span class="built_in">parseFloat</span>(dataset.ymax);</div><div class="line">    <span class="keyword">var</span> data = sparklines[i].textContent.split(<span class="string">""</span>).map(<span class="built_in">parseFloat</span>);</div><div class="line">    drawSparkline(sparklines[i],ymin,ymax,data);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>element.attributes</strong>:代表元素的所有属性</p>
+<h3 id="元素的内容"><a href="#元素的内容" class="headerlink" title="元素的内容"></a>元素的内容</h3><p><strong>element.innerHTML</strong>:作为字符串标记返回那些元素的内容<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> para = <span class="built_in">document</span>.getElementsByTagName(<span class="string">"p"</span>)[<span class="number">0</span>];</div><div class="line"><span class="keyword">var</span> text = para.textContent;</div><div class="line">para.textContent = <span class="string">"HEllOWORLD"</span>;</div></pre></td></tr></table></figure></p>
+<p><strong>textContent</strong>:需要查询纯文本形式的元素内容，或者在文档中插入纯文本<br><strong>HTML文档来说改名字不区分大小写，对于XML文档则区分大小写</strong></p>
+<p><strong>创建节点</strong>:<code>var newNode = document.createTextNode(&quot;text node content&quot;);</code></p>
+<p><strong>插入节点</strong>:<code>parent.insertBefore(待插入的节点，插入的位置的节点)</code></p>
+<p><strong>删除和替换节点</strong>：<code>parentNode.removeChild(childNode)</code>,<code>parentNode.replaceChild(独立的节点，要替换的节点)</code></p>
+<p><strong>DocumentFragment</strong>:将一组节点当做一个节点来看待，如果使用appendChild(),insertBefore()是将一组节点进行操作</p>
+<h3 id="文档和元素的几何状态和滚动"><a href="#文档和元素的几何状态和滚动" class="headerlink" title="文档和元素的几何状态和滚动"></a>文档和元素的几何状态和滚动</h3><p>在用浏览器打开一个网页的这个情况下，视口坐标就是指浏览器窗口的坐标，而文档坐标就是我们网页的坐标。在页面没有滚动的情况下，这两个坐标的原点是重合的，也就是二者的左上角（0， 0）重合，然后这两个坐标系的X轴和Y轴分别朝右和朝下延伸。</p>
+<blockquote>
+<p>文档坐标系坐标 ＝ 视口坐标系坐标 ＋ 滚动条的偏移量</p>
+</blockquote>
+<p><strong>document.documentElement.scrollLeft</strong>:视口的左上角的x坐标<br><strong>document.documentElement.scrollTop</strong>:视口的左上角的y坐标<br><strong>document.documentElement.clientWidth</strong>:窗口的位置<br><strong>document.documentElement.clientHeight</strong>:窗口的位置</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> box = e.getBoundingClientRect();</div><div class="line"><span class="keyword">var</span> offsets = getScrollOffsets();</div><div class="line"><span class="keyword">var</span> x = box.left + offsets.x;</div><div class="line"><span class="keyword">var</span> y = box.top + offsets.y;</div></pre></td></tr></table></figure>
+<p><code>e.getBoundingClientRect()</code>中，left和top属性表示元素的左上角的X和Y坐标，right和bottom属性表示元素的右下角的X和Y坐标<br><code>document.elementFromPoint()</code>传递X和Y坐标，返回在指定位置的一个元素</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//获得文档和视口的高度，offsetHeight会在下面解释</span></div><div class="line"><span class="keyword">var</span> documentHeight = <span class="built_in">document</span>.documentElement.offsetHeight;</div><div class="line"><span class="keyword">var</span> viewportHeight = <span class="built_in">window</span>.innerHeight;</div><div class="line"><span class="comment">//滚动让最后一页在视口可见</span></div><div class="line"><span class="built_in">window</span>.scroll(<span class="number">0</span>,documentHeight - viewportHeight)</div></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//每200毫秒向下滚动10像素，注意，无法关闭</span></div><div class="line">javascript:<span class="keyword">void</span> setInterval(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;scrollBy(<span class="number">0</span>,<span class="number">10</span>)&#125;,<span class="number">200</span>);</div></pre></td></tr></table></figure>
+<p><code>getBoundingClientRect()</code>计算元素的位置，并转换为文档坐标，通过<code>scrollTo()</code>方法达到目的<br><code>scrollIntoView()</code>保证了元素能在视口中可见，默认情况下，它试图将元素的上边缘放在或者尽量接近视口的上边缘，如果只传递false作为参数，它将试图将元素的下边缘放在接近视口的下边缘</p>
+<h3 id="其他文档特性"><a href="#其他文档特性" class="headerlink" title="其他文档特性"></a>其他文档特性</h3><p><code>document.referrer</code>如果有，它表示浏览器导航到当前链接的上一个文档</p>
+<p><strong>判定用户在文档中选取了哪些文本</strong><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getSelectedText</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">if</span>(<span class="built_in">window</span>.getSelection)</div><div class="line">        <span class="keyword">return</span> <span class="built_in">window</span>.getSelection().toString();</div><div class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(<span class="built_in">document</span>.selection)</div><div class="line">        <span class="keyword">return</span> <span class="built_in">document</span>.selection.createRange().text;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>可编辑的内容</strong>:嵌入一个富文本编辑器，包含了一个有一系列按钮的工具栏来设置排版样式<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span> = <span class="string">"editor"</span> <span class="attr">contenteditable</span>&gt;</span></div><div class="line">    Click to edit</div><div class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<h2 id="脚本化CSS"><a href="#脚本化CSS" class="headerlink" title="脚本化CSS"></a>脚本化CSS</h2><h3 id="CSS概览"><a href="#CSS概览" class="headerlink" title="CSS概览"></a>CSS概览</h3><p>border、margin和padding属性是为元素的每个边都设置边框、外边框和内边框的复合属性<br>border-left,border-right,border-top,border-bottom属性用来设置边框的每条边</p>
+<blockquote>
+<p>根据浏览器的类型选择不同的style<br><figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="selector-class">.radius10</span>&#123;</div><div class="line">    <span class="attribute">border-radius </span>: <span class="number">10px</span>;</div><div class="line">    <span class="attribute">-moz-border-radius </span>: <span class="number">10px</span>;</div><div class="line">    <span class="attribute">-webkit-border-radius </span>: <span class="number">10px</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+</blockquote>
+<h3 id="重要CSS元素"><a href="#重要CSS元素" class="headerlink" title="重要CSS元素"></a>重要CSS元素</h3><blockquote>
+<ul>
+<li>z-index属性定义了第三个维度，它允许指定元素的堆叠次序，并指示两个或者多个重叠中的哪一个应该绘制到其他的上面</li>
+<li>test-shadow属性在沈本下产生阴影效果，可以将z-index 属性设置为负数以确保阴影在其文本的下面</li>
+<li>CSS允许指定元素周围的边框、外边框和内边框。border:solid black 1px;</li>
+<li>margin指定边框外面——边框和相邻元素之间的空间，padding指定边框之内——边框和元素内容之间的空间</li>
+<li>CSS盒模型，box-sizing<div style="box-sizing:border-box;width:50%;padding:10px,border:solid black 2px;"></div></li>
+<li>visibility，display设置元素可不可见</li>
+<li>background-color指定任何元素的背景颜色</li>
+<li>opacity:该属性是0~1之间的数字，1代表100%不透明，0代表0%不透明</li>
+<li>overflow属性允许指定当内容超出元素边框时该如何显示</li>
+<li>clip:指定了应该显示元素的哪个部分<code>style=&quot;clip: rect(0px 100px 100px 0px)</code></li>
+<li>.fadeable{transition:opacity .5s ease-in}指定在任何时刻”fadeable”元素的opacity属性会变化，该变化会在半秒内用非线性缓动函数的动画来过渡</li>
+<li>getComputedStyle()方法来获得一个元素的计算样式<br><strong>visibility</strong>,<strong>display</strong>:<br>visibility属性设置为visible时，元素显示；设置为hidden时，元素不显示。<br>display属性设置为none，受影响的元素将不显示<br>区别：使用visibility设置为hidden时，在文档布局中仍保留了它的空间，而display设置为none，在文档布局中不再分配空间</li>
+</ul>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//两者都可以设置e的样式属性为字符串s</span></div><div class="line">e.setAttribute(<span class="string">"style"</span>,s);</div><div class="line">e.style.cssText = s;</div><div class="line"></div><div class="line"><span class="comment">//两者都可以查询元素的内联样式</span></div><div class="line">s = e.getAttribute(<span class="string">"style"</span>);</div><div class="line">s = e.style.cssText;</div></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//获得一个元素的计算样式</span></div><div class="line"><span class="keyword">var</span> title = <span class="built_in">document</span>.getElementById(<span class="string">"section1title"</span>);</div><div class="line"><span class="keyword">var</span> titlestyle = <span class="built_in">window</span>.getComputedStyle(element,<span class="literal">null</span>);</div></pre></td></tr></table></figure>
+<h2 id="事件处理"><a href="#事件处理" class="headerlink" title="事件处理"></a>事件处理</h2><h3 id="注册事件处理程序"><a href="#注册事件处理程序" class="headerlink" title="注册事件处理程序"></a>注册事件处理程序</h3><blockquote>
+<ul>
+<li>注册事件处理程序最简单的方式就是通过设置事件目标的属性为所需事件处理程序函数<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">window</span>.onload = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> elt = <span class="built_in">document</span>.getElementById(<span class="string">"shipping_address"</span>);</div><div class="line">    elt.onsubmit = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">        <span class="keyword">return</span> validate(<span class="keyword">this</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</blockquote>
+<p>缺点：其设计都是围绕着假设每个事件目标对于每种事件类型最多只有一个处理程序</p>
+<blockquote>
+<ul>
+<li>设置HTML标签属性为事件处理程序<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">onclick</span> = <span class="string">"alert("</span><span class="attr">Thank</span> <span class="attr">you</span>");"&gt;</span>点击这里<span class="tag">&lt;/<span class="name">button</span>&gt;</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+</blockquote>
+<p>缺点：属性直接混合了JavaScript和HTML</p>
+<blockquote>
+<ul>
+<li>addEventListener()<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span> = <span class="string">"My button"</span>&gt;</span>click me<span class="tag">&lt;/<span class="name">button</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="javascript"></span></div><div class="line">    <span class="keyword">var</span> b = <span class="built_in">document</span>.getElementById(<span class="string">"My button"</span>);</div><div class="line">    b.onclick = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">        alert(<span class="string">"Thanks for clicking me!"</span>);</div><div class="line">    &#125;;</div><div class="line">    b.addEventListener(<span class="string">"click"</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;alert(<span class="string">"Thanks again!"</span>);&#125;,<span class="literal">false</span>);</div><div class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+</blockquote>
+<p>重复给该元素注册事件时，会根据注册事件的顺序触发事件的执行</p>
+<h3 id="事件处理程序的调用"><a href="#事件处理程序的调用" class="headerlink" title="事件处理程序的调用"></a>事件处理程序的调用</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">addEvent</span>(<span class="params">target,type,handler</span>)</span>&#123;</div><div class="line">    <span class="keyword">if</span>(target.addEventListener)</div><div class="line">        target.addEventListener(type,handle,<span class="literal">false</span>);</div><div class="line">    <span class="keyword">else</span></div><div class="line">        target.attachEvent(<span class="string">"on"</span>+type,<span class="function"><span class="keyword">function</span>(<span class="params">event</span>)</span>&#123;</div><div class="line">            <span class="keyword">return</span> handler.call(target,event);</div><div class="line">        &#125;);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>调用顺序：</p>
+<blockquote>
+<ul>
+<li>通过设置对象属性或者HTML属性注册的处理程序一直优先调用</li>
+<li>使用addEventListener()注册的处理程序按照他们的注册顺序调用</li>
+<li>使用attachEvent()注册的处理程序可能按照任何顺序调用</li>
+</ul>
+</blockquote>
+<h3 id="文本事件"><a href="#文本事件" class="headerlink" title="文本事件"></a>文本事件</h3><p><strong>事件对象以数字Unicode编码的形式指定字符，所以必须用String.fromCharCode()把它转换为字符串</strong></p>
+<h2 id="脚本化HTTP"><a href="#脚本化HTTP" class="headerlink" title="脚本化HTTP"></a>脚本化HTTP</h2><p>在Ajax中，客户端从服务端“拉“数据，而在Comet中，服务端从客户端”推“数据</p>
+<h3 id="使用XMLHttpRequest"><a href="#使用XMLHttpRequest" class="headerlink" title="使用XMLHttpRequest"></a>使用XMLHttpRequest</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> request = <span class="keyword">new</span> XMLHttpRequest();</div><div class="line">request.open(<span class="string">"GET"</span>,<span class="string">'data.csv'</span>);<span class="comment">//开始一个请求，请求的内容</span></div><div class="line">request.setRequestHeader(<span class="string">"Content-Type"</span>,<span class="string">"text/plain"</span>);<span class="comment">//设置请求的头部</span></div><div class="line">request.send(<span class="literal">null</span>);</div></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//用POST方法发送纯文本给服务器</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">postMessage</span>(<span class="params">msg</span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> request = <span class="keyword">new</span> XMLHttpRequest();</div><div class="line">    request.open(<span class="string">"POST"</span>,<span class="string">"/log.php"</span>);</div><div class="line">    request.setRequestHeader(<span class="string">"Content-Type"</span>,<span class="string">"text/plain;charset=UTF-8"</span>);</div><div class="line">    request.send(msg);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getText</span>(<span class="params">url,callback</span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> request = <span class="keyword">new</span> XMLHttpRequest();</div><div class="line">    request.open(<span class="string">"GET"</span>,url);</div><div class="line">    request.onreadystatechange = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">        <span class="keyword">if</span>(request.readyState === <span class="number">4</span> &amp;&amp; request.status === <span class="number">200</span>)&#123;</div><div class="line">            <span class="keyword">var</span> type = request.getResponseHeader(<span class="string">"Content-Type"</span>);</div><div class="line">            <span class="keyword">if</span>(type.match(<span class="regexp">/^text/</span>))</div><div class="line">            callback(request.responseText);</div><div class="line">        &#125;</div><div class="line">    &#125;;</div><div class="line">    request.send(<span class="literal">null</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>JSON编码的请求</strong><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">postJSON</span>(<span class="params">url,data,callback</span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> request = <span class="keyword">new</span> XMLHttpRequest();</div><div class="line">    request.open(<span class="string">"POST"</span>,url);</div><div class="line">    request.onreadystatechange = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">        <span class="keyword">if</span>(request.readyStatus === <span class="number">4</span> &amp;&amp; callback)</div><div class="line">            callback(request);</div><div class="line">    &#125;;</div><div class="line">    request.setRequestHeader(<span class="string">"Content-Type"</span>,<span class="string">"application/json"</span>);</div><div class="line">    request.send(<span class="built_in">JSON</span>.stringify(data));</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>上传文件</strong><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">postFormData</span>(<span class="params">url,data,callback</span>)</span>&#123;</div><div class="line">    <span class="keyword">if</span>(<span class="keyword">typeof</span> FormData === <span class="string">'undefined'</span>)</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">"FormData is not implemented"</span>);</div><div class="line">    <span class="keyword">var</span> request = <span class="keyword">new</span> XMLHttpRequest();</div><div class="line">    request.onreadystatechange = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">        <span class="keyword">if</span>(request.readyStatus === <span class="number">4</span> &amp;&amp; callback)</div><div class="line">            callback(request);</div><div class="line">    &#125;;</div><div class="line">    <span class="keyword">var</span> formdata = <span class="keyword">new</span> FormData();</div><div class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> name is data)&#123;</div><div class="line">        <span class="keyword">if</span>(!data.hasOwnProperty(name))</div><div class="line">            <span class="keyword">continue</span>;</div><div class="line">        <span class="keyword">var</span> value = data[name];</div><div class="line">        <span class="keyword">if</span>(<span class="keyword">typeof</span> value === <span class="string">'function'</span>)</div><div class="line">            <span class="keyword">continue</span>;</div><div class="line">        formdata.append(name,value);</div><div class="line">    &#125;</div><div class="line">    request.send(formdata);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="基于服务器端推送事件的Comet技术"><a href="#基于服务器端推送事件的Comet技术" class="headerlink" title="基于服务器端推送事件的Comet技术"></a>基于服务器端推送事件的Comet技术</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="javascript"></span></div><div class="line"><span class="built_in">window</span>.onload = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> nick = prompt(<span class="string">"Enter your name"</span>);</div><div class="line">    <span class="keyword">var</span> input = <span class="built_in">document</span>.getElementById(<span class="string">"input"</span>);</div><div class="line">    input.focus();</div><div class="line"></div><div class="line">    <span class="comment">//通过EventSource注册新消息的通知</span></div><div class="line">    <span class="keyword">var</span> char = <span class="keyword">new</span> EventSource(<span class="string">"/chat"</span>);</div><div class="line">    <span class="comment">//onmessage事件处理程序接受从一个特定的服务器事件源发出的所有事件</span></div><div class="line">    chat.onmessage = <span class="function"><span class="keyword">function</span>(<span class="params">event</span>)</span>&#123;</div><div class="line">        <span class="keyword">var</span> msg = event.data;</div><div class="line">        <span class="keyword">var</span> node = <span class="built_in">document</span>.createTextNode(msg);</div><div class="line">        <span class="keyword">var</span> div = <span class="built_in">document</span>.createElement(<span class="string">"div"</span>);</div><div class="line">        div.appendChild(node);</div><div class="line">        <span class="built_in">document</span>.body.insertBefore(div,input);</div><div class="line">        input.scrollIntoView();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">//使用XMLHttpRequest把用户的消息发送给服务器</span></div><div class="line">    input.onchange = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">        <span class="keyword">var</span> msg = nick + <span class="string">": "</span> + input.value;</div><div class="line">        <span class="keyword">var</span> xhr = <span class="keyword">new</span> XMLHttpRequest();</div><div class="line">        xhr.open(<span class="string">"POST"</span>,<span class="string">"/chat"</span>);</div><div class="line">        xhr.setRequestHeader(<span class="string">"Content-Type"</span>,<span class="string">"text/plain;charset = UTF-8"</span>);</div><div class="line">        xhr.send(msg);</div><div class="line">        input.value =<span class="string">""</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="JQuery类库"><a href="#JQuery类库" class="headerlink" title="JQuery类库"></a>JQuery类库</h2><h3 id="JQuery基础"><a href="#JQuery基础" class="headerlink" title="JQuery基础"></a>JQuery基础</h3><p>JQuery()是工厂函数，不是构造函数，它返回一个新创建的对象，但并没有和new关键字一起使用</p>
+<p><strong>JQuery函数</strong>和<strong>JQuery方法</strong></p>
+<blockquote>
+<ul>
+<li>$.each(a,f);使用JQuery函数（静态方法），对数组a中的每一个元素都调用一次函数f</li>
+<li>$(“a”).each(f);使用JQuery方法（实例方法）</li>
+</ul>
+</blockquote>
+<h3 id="JQuery的getter和setter"><a href="#JQuery的getter和setter" class="headerlink" title="JQuery的getter和setter"></a>JQuery的getter和setter</h3><p>JQuery使用同一个方法既当getter用又可以做setter用</p>
+<blockquote>
+<ul>
+<li><code>attr()</code>方法是JQuery用于HTML属性的getter/setter</li>
+<li><code>css()</code>方法返是元素的当前样式的getter/setter</li>
+<li><code>addClass()</code> <code>removeClass()</code> <code>toggleClass()</code> 当元素还没有某些类时，给用户添加这些类 <code>hasClass()</code> </li>
+<li><code>val()</code>用来设置和获取HTML表单元素的value属性，复选框、单选框以及<select>元素的选中状态</select></li>
+<li><code>text()</code> 和 <code>html()</code> 用来获取和设置元素的纯文本或HTML内容</li>
+<li><code>offset()</code>获取或设置元素的绝对位置，用相对于文档的坐标来表示，而 <code>position()</code>则返回相对于元素的<code>offsetParent()</code>的偏移量</li>
+<li><code>data()</code> 和 <code>removeData()</code>可以设置和删除data </li>
+<li>clone()复制文档的一部分，不会复制事件处理程序和与元素关联的其他数据，如果想要复制这些额外的数据的话，请传入true参数</li>
+<li><code>wrap()</code>包装每一个选中的元素， ‘wrapInner()<code>包装每一个选中元素的内容</code>wrapAll()`将选中元素作为一组来包装</li>
+<li><code>remove()</code> 会移除所有事件处理程序以及可能绑定到被移除元素上的其他数据</li>
+<li><code>detach()</code>不会移除事件处理程序和数据</li>
+<li><code>unwrap()</code>对于每一个选中元素，它替换该元素的父节点为父节点的子节点</li>
+</ul>
+</blockquote>
+<p><strong>区别</strong></p>
+<blockquote>
+<ul>
+<li>width() 和 height() 方法返回基本的宽度和高度，不包含内边距、边框和外边距</li>
+<li>innerWidth() 和 innerHeight() 返回元素的宽度和高度，但是包含内边距的宽度和高度</li>
+<li>outerWidth() 和 outerHeight() 通常返回的是包含元素内边距和边框的尺寸</li>
+</ul>
+</blockquote>
+<h3 id="JQuery处理事件"><a href="#JQuery处理事件" class="headerlink" title="JQuery处理事件"></a>JQuery处理事件</h3><blockquote>
+<p>jQuery的事件触发方法会触发所有使用jQuery事件注册方法注册的处理程序，也会触发通过onsubmit等HTML属性或者Element属性定义的处理程序<br>JQuery的事件触发机制是同步的</p>
+</blockquote>
+<p><strong>手动触发事件</strong><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$(<span class="string">"#my_form"</span>).submit();<span class="comment">//跟用户单击提交按钮一样</span></div><div class="line">$(<span class="string">"my_form"</span>).trigger(<span class="string">"submit"</span>);<span class="comment">//跟用户单击提交按钮一样</span></div></pre></td></tr></table></figure></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//button1的单击处理程序触发button2上的相同事件</span></div><div class="line">$(<span class="string">"#button1"</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params">e</span>)</span>&#123;</div><div class="line">    $(<span class="string">"button2"</span>).trigger(e);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p><strong>自定义事件</strong><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$(<span class="string">"#logoff"</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    $.event.trigger(<span class="string">"logoff"</span>);<span class="comment">//广播一个事件</span></div><div class="line">    <span class="built_in">window</span>.location = <span class="string">"logoff.php"</span>;</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<p><strong>实时事件</strong><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$(<span class="built_in">document</span>).delegate(<span class="string">"a"</span>,<span class="string">"mouseover"</span>,linkHandler);</div></pre></td></tr></table></figure></p>
+<p>在要使用实时事件的时候使用，可以动态的对所有的链接添加上实时事件</p>
+<h3 id="JQuery动画"><a href="#JQuery动画" class="headerlink" title="JQuery动画"></a>JQuery动画</h3><blockquote>
+<ul>
+<li>fadeIn()显示，fadeOut()隐藏，fadeTo()将元素的当前的opacity值变成目标值</li>
+<li>show() == toggle(true), hide() == toggle(false)</li>
+<li>slideDown()使得隐藏的元素再次可见，slideUp()隐藏JQuery对象的元素，将高度变为0</li>
+</ul>
+</blockquote>
+<p><strong>自定义动画</strong></p>
+<hr>
+<p><code>animate()</code>方法的第一个参数必须是对象，该对象的属性必须是CSS属性名<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$(<span class="string">"img"</span>).animate(&#123;</div><div class="line">    <span class="attr">width</span>:<span class="string">"hide"</span>,</div><div class="line">    <span class="attr">borderLeft</span>:<span class="string">"hide"</span>,</div><div class="line">    <span class="attr">borderRight</span>:<span class="string">"hide"</span>,</div><div class="line">    <span class="attr">paddingLeft</span>:<span class="string">"hide"</span>,</div><div class="line">    <span class="attr">paddingRight</span>:<span class="string">"hide"</span></div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<p>第二个参数是可选的，该选项对象用来指定动画如何执行。在回调函数中，this指向正在连续变化的元素，第一个参数则是正在变化的属性的当前值</p>
+<blockquote>
+<ul>
+<li>duration属性指定动画持续的毫秒时间</li>
+<li>complete:指明在动画完成时的回调函数</li>
+<li>step:指定在动画每一步或每一帧调用的回调函数</li>
+<li>queue：指定动画是否需要队列化，是否需要等到所有尚未发生的动画都完成后再执行该动画</li>
+<li>easing:指定缓动函数名</li>
+</ul>
+</blockquote>
+<hr>
+<p><strong>动画的取消、延迟和队列</strong></p>
+<blockquote>
+<ul>
+<li>top()用来停止选中元素中的当前正在执行的任何动画</li>
+<li>top()接受两个可选的布尔值参数，第一个参数为true，会清除该选中元素中的动画队列：除了停止当前动画，还会取消任何等待执行的动画<br>第二个参数用来指定正在连续变化的CSS属性是否保留当前值，还是应该变化到最终目标值（true)</li>
+<li>delay()延迟</li>
+</ul>
+</blockquote>
+<h3 id="jQuery中的Ajax"><a href="#jQuery中的Ajax" class="headerlink" title="jQuery中的Ajax"></a>jQuery中的Ajax</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">setInternal(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)<span class="title">$</span>(<span class="params"><span class="string">'#status'</span></span>).<span class="title">load</span>(<span class="params"><span class="string">'status_report.html'</span></span>);&#125;,60000);</span></div><div class="line"><span class="title">$</span>(<span class="params"><span class="string">"temp"</span></span>).<span class="title">load</span>(<span class="params"><span class="string">"whether_report.html #temperature"</span></span>);</div><div class="line"><span class="title">$</span>(<span class="params"><span class="string">'temp'</span></span>).<span class="title">load</span>(<span class="params"><span class="string">'us_whether_report.html'</span>,<span class="string">"zipcode=02134"</span></span>);</div></pre></td></tr></table></figure>
+<p><strong>Ajax工具函数</strong><br><strong>jQuery.getScript</strong><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">jQuery.getScript(<span class="string">"https://example.com/js/widget.js"</span>);<span class="comment">//异步加载文件，加载完成后在全局作用域执行该代码</span></div><div class="line">jQuery.getScript(<span class="string">"js/jquery.my_plugin.js"</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    $(<span class="string">"div"</span>).my_plugin();<span class="comment">//加载一个类库，并在加载完成时立即使用它</span></div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<p><strong>jQuery.getJSON()</strong><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">$(<span class="string">"#submit_button"</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params">event</span>))</span>&#123;</div><div class="line">    $(<span class="keyword">this</span>.form).load(<span class="comment">//通过加载新内容来替换表单</span></div><div class="line">        <span class="keyword">this</span>.form.action,<span class="comment">//表单url</span></div><div class="line">        $(<span class="keyword">this</span>.form).serialize());<span class="comment">//将表单数据附加到表单URL后面</span></div><div class="line">    event.preventDefault();</div><div class="line">    <span class="keyword">this</span>.disabled = <span class="string">'disabled'</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line">jQuery.getJSON(<span class="string">"data.json"</span>,<span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</div><div class="line"><span class="comment">//data也就是data.json里面的数据</span></div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<p><strong>jQuery.get()</strong>和<strong>jQuery.post()</strong><br>jQuery.get(必须的URL,可选的数据字符串或者对象,一个技术上可选但实际上总会使用的回调函数)<br>回调函数传入三个参数，第一个是返回的数据，第二个是“success”字符串，第三个是XMLHTTPRequest对象</p>
+<p><strong>jQuery.ajax()</strong><br>只接受一个参数：一个选项对象<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">jQuery.ajax(&#123;</div><div class="line">    <span class="attr">type</span>:<span class="string">"GET"</span>,</div><div class="line">    <span class="attr">url</span>:url,</div><div class="line">    <span class="attr">data</span>:<span class="literal">null</span>,</div><div class="line">    <span class="attr">dataType</span>:<span class="string">"script"</span>,</div><div class="line">    <span class="attr">success</span>:callback</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//用来显示和隐藏，某些"加载中"动画或网络活动的图标</span></div><div class="line">$(<span class="string">"#loading_animation"</span>).bind(&#123;</div><div class="line">    <span class="attr">ajaxStart</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;$(<span class="keyword">this</span>).show();&#125;,</div><div class="line">    <span class="attr">ajaxStop</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;$(<span class="keyword">this</span>).hide();&#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JavaScript学习笔记/" rel="tag"># JavaScript学习笔记</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/26/JavaScript学习笔记（三）/" rel="next" title="JavaScript学习笔记（三）">
+                <i class="fa fa-chevron-left"></i> JavaScript学习笔记（三）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="caixueyuan" />
+          <p class="site-author-name" itemprop="name">caixueyuan</p>
+           
+              <p class="site-description motion-element" itemprop="description">Java后台开发程序员</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">29</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#web浏览器中的JavaScript"><span class="nav-number">1.</span> <span class="nav-text">web浏览器中的JavaScript</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#在HTML中嵌入JavaScript"><span class="nav-number">1.1.</span> <span class="nav-text">在HTML中嵌入JavaScript</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#同步、异步和延迟的脚本"><span class="nav-number">1.2.</span> <span class="nav-text">同步、异步和延迟的脚本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#客户端JavaScript线程模型"><span class="nav-number">1.3.</span> <span class="nav-text">客户端JavaScript线程模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#同源策略"><span class="nav-number">1.4.</span> <span class="nav-text">同源策略</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Window对象"><span class="nav-number">2.</span> <span class="nav-text">Window对象</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#计时器"><span class="nav-number">2.1.</span> <span class="nav-text">计时器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#浏览器定位和导航"><span class="nav-number">2.2.</span> <span class="nav-text">浏览器定位和导航</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#浏览历史"><span class="nav-number">2.3.</span> <span class="nav-text">浏览历史</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#浏览器和屏幕信息"><span class="nav-number">2.4.</span> <span class="nav-text">浏览器和屏幕信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对话框"><span class="nav-number">2.5.</span> <span class="nav-text">对话框</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多窗口"><span class="nav-number">2.6.</span> <span class="nav-text">多窗口</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#脚本化文档"><span class="nav-number">3.</span> <span class="nav-text">脚本化文档</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#选取文档元素"><span class="nav-number">3.1.</span> <span class="nav-text">选取文档元素</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文档结构和遍历"><span class="nav-number">3.2.</span> <span class="nav-text">文档结构和遍历</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#元素的内容"><span class="nav-number">3.3.</span> <span class="nav-text">元素的内容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文档和元素的几何状态和滚动"><span class="nav-number">3.4.</span> <span class="nav-text">文档和元素的几何状态和滚动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他文档特性"><span class="nav-number">3.5.</span> <span class="nav-text">其他文档特性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#脚本化CSS"><span class="nav-number">4.</span> <span class="nav-text">脚本化CSS</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CSS概览"><span class="nav-number">4.1.</span> <span class="nav-text">CSS概览</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重要CSS元素"><span class="nav-number">4.2.</span> <span class="nav-text">重要CSS元素</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#事件处理"><span class="nav-number">5.</span> <span class="nav-text">事件处理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#注册事件处理程序"><span class="nav-number">5.1.</span> <span class="nav-text">注册事件处理程序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#事件处理程序的调用"><span class="nav-number">5.2.</span> <span class="nav-text">事件处理程序的调用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文本事件"><span class="nav-number">5.3.</span> <span class="nav-text">文本事件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#脚本化HTTP"><span class="nav-number">6.</span> <span class="nav-text">脚本化HTTP</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用XMLHttpRequest"><span class="nav-number">6.1.</span> <span class="nav-text">使用XMLHttpRequest</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基于服务器端推送事件的Comet技术"><span class="nav-number">6.2.</span> <span class="nav-text">基于服务器端推送事件的Comet技术</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JQuery类库"><span class="nav-number">7.</span> <span class="nav-text">JQuery类库</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#JQuery基础"><span class="nav-number">7.1.</span> <span class="nav-text">JQuery基础</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JQuery的getter和setter"><span class="nav-number">7.2.</span> <span class="nav-text">JQuery的getter和setter</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JQuery处理事件"><span class="nav-number">7.3.</span> <span class="nav-text">JQuery处理事件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JQuery动画"><span class="nav-number">7.4.</span> <span class="nav-text">JQuery动画</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jQuery中的Ajax"><span class="nav-number">7.5.</span> <span class="nav-text">jQuery中的Ajax</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">caixueyuan</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
