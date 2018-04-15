@@ -95,17 +95,19 @@
 
 
 
-<meta name="description" content="SpringBoot Spring Security JWT 登陆原理">
+<meta name="description" content="SpringBoot Spring Security JWT 登陆原理 传统的登陆验证方式主要是Cookie认证机制，为解决HTTP无状态协议下服务器如何识别用户的问题，其原理是在用户登陆通过验证后，服务器将数据加密后保存到客户端浏览器的Cookie中，同时，服务器保留相应的Session，用户之后发起的请求都会携带Cookie信息，服务端根据Cookie寻回对应的session，完成验证。缺点：">
 <meta name="keywords" content="毕业设计">
 <meta property="og:type" content="article">
 <meta property="og:title" content="&#39;SpringBoot-Spring-Security-JWT-登陆&#39;">
 <meta property="og:url" content="https://caixueyuan.github.io/2018/04/14/SpringBoot-Spring-Security-JWT-登陆/index.html">
 <meta property="og:site_name" content="caixueyuan">
-<meta property="og:description" content="SpringBoot Spring Security JWT 登陆原理">
-<meta property="og:updated_time" content="2018-04-14T16:01:35.507Z">
+<meta property="og:description" content="SpringBoot Spring Security JWT 登陆原理 传统的登陆验证方式主要是Cookie认证机制，为解决HTTP无状态协议下服务器如何识别用户的问题，其原理是在用户登陆通过验证后，服务器将数据加密后保存到客户端浏览器的Cookie中，同时，服务器保留相应的Session，用户之后发起的请求都会携带Cookie信息，服务端根据Cookie寻回对应的session，完成验证。缺点：">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2409835-4798863c521de365.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/641">
+<meta property="og:updated_time" content="2018-04-15T12:45:45.876Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="&#39;SpringBoot-Spring-Security-JWT-登陆&#39;">
-<meta name="twitter:description" content="SpringBoot Spring Security JWT 登陆原理">
+<meta name="twitter:description" content="SpringBoot Spring Security JWT 登陆原理 传统的登陆验证方式主要是Cookie认证机制，为解决HTTP无状态协议下服务器如何识别用户的问题，其原理是在用户登陆通过验证后，服务器将数据加密后保存到客户端浏览器的Cookie中，同时，服务器保留相应的Session，用户之后发起的请求都会携带Cookie信息，服务端根据Cookie寻回对应的session，完成验证。缺点：">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/2409835-4798863c521de365.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/641">
 
 
 
@@ -364,7 +366,46 @@
       
 
       
-        <h2 id="SpringBoot-Spring-Security-JWT-登陆"><a href="#SpringBoot-Spring-Security-JWT-登陆" class="headerlink" title="SpringBoot Spring Security JWT 登陆"></a>SpringBoot Spring Security JWT 登陆</h2><h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3>
+        <h2 id="SpringBoot-Spring-Security-JWT-登陆"><a href="#SpringBoot-Spring-Security-JWT-登陆" class="headerlink" title="SpringBoot Spring Security JWT 登陆"></a>SpringBoot Spring Security JWT 登陆</h2><h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p><img src="https://upload-images.jianshu.io/upload_images/2409835-4798863c521de365.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/641" alt="JWT SpringBoot"></p>
+<p>传统的登陆验证方式主要是Cookie认证机制，为解决HTTP无状态协议下服务器如何识别用户的问题，其原理是在用户登陆通过验证后，服务器将数据加密后保存到客户端浏览器的Cookie中，同时，服务器保留相应的Session，用户之后发起的请求都会携带Cookie信息，服务端根据Cookie寻回对应的session，完成验证。<br>缺点：</p>
+<blockquote>
+<ul>
+<li>session保存到服务器内存中，每次请求都要携带Cookie，占据带宽，服务器开销明显增大</li>
+<li>扩展性：在分布式应用上，限制了负载均衡器的能力和扩展能力</li>
+<li>CSRF和XSS攻击：Cookie存放在客户端，Cookie很容易被获取，进行跨站请求伪造攻击</li>
+</ul>
+</blockquote>
+<p><strong>JWT Spring boot</strong><br>构成：</p>
+<blockquote>
+<ul>
+<li>header，声明类型，加密算法</li>
+<li>playload(载荷）,标准注册声明，公共声明，私有声明</li>
+<li>signature：服务器端的私钥</li>
+</ul>
+</blockquote>
+<p>优点：</p>
+<blockquote>
+<ul>
+<li>使用JSON，可以进行跨语言支持</li>
+<li>便于传输，构成简单，字节占用很小</li>
+<li>不需要在服务器保存会话信息，易于应用扩展</li>
+<li>防止XSS攻击</li>
+<li>保证前后端分离</li>
+</ul>
+</blockquote>
+<p>过程：</p>
+<blockquote>
+<ul>
+<li>客户通过将其凭据发送给身份提供者进行登录。</li>
+<li>身份提供者验证凭证; 如果一切正常，它将检索用户数据，生成一个包含将用于访问服务的用户详细信息和权限的JWT，并且还会在JWT（可能不受限制）上设置到期日期。</li>
+<li>身份提供商签名，并在需要时加密JWT，并将其作为初始请求的凭据响应发送给客户端。</li>
+<li>客户根据身份提供商设置的有效期限将JWT存储有限或无限的时间。</li>
+<li>客户端将每个请求的授权标头中存储的JWT发送给服务提供商。</li>
+<li>对于每个请求，服务提供者都从Authorization头部获取JWT 并对其进行解密（如果需要），验证签名，如果一切正常，则提取用户数据和权限。仅根据这些数据，再次查看数据库中的进一步细节或联系身份提供者，它可以接受或拒绝客户端请求。唯一的要求是身份和服务提供商就加密达成一致，以便服务可以验证签名或甚至解密哪个身份已加密。</li>
+</ul>
+</blockquote>
+<p><a href="https://www.jianshu.com/p/ec9b7bc47de9" target="_blank" rel="external">查看博客</a></p>
+
       
     </div>
 
