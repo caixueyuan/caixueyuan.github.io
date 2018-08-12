@@ -1,0 +1,766 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="MySQL," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="caixueyuan" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="索引组织表索引组织表：在InnoDB存储引擎中，表都是根据主键顺序组织存放的，每个表都是有主键_rowid可以显示表的主键，只能够查看单个列为主键的情况，并且为非空唯一索引。 InnoDB逻辑存储结构表空间（tablespace)–&amp;gt;端（segment)—&amp;gt;区（extent)—&amp;gt;页（page)—&amp;gt;块（block) 表空间表空间是InnoDB存储引擎逻辑结构的最高层，所有的数">
+<meta name="keywords" content="MySQL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL表">
+<meta property="og:url" content="https://caixueyuan.github.io/2018/08/12/MySQL表/index.html">
+<meta property="og:site_name" content="caixueyuan">
+<meta property="og:description" content="索引组织表索引组织表：在InnoDB存储引擎中，表都是根据主键顺序组织存放的，每个表都是有主键_rowid可以显示表的主键，只能够查看单个列为主键的情况，并且为非空唯一索引。 InnoDB逻辑存储结构表空间（tablespace)–&amp;gt;端（segment)—&amp;gt;区（extent)—&amp;gt;页（page)—&amp;gt;块（block) 表空间表空间是InnoDB存储引擎逻辑结构的最高层，所有的数">
+<meta property="og:updated_time" content="2018-08-12T16:14:02.018Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MySQL表">
+<meta name="twitter:description" content="索引组织表索引组织表：在InnoDB存储引擎中，表都是根据主键顺序组织存放的，每个表都是有主键_rowid可以显示表的主键，只能够查看单个列为主键的情况，并且为非空唯一索引。 InnoDB逻辑存储结构表空间（tablespace)–&amp;gt;端（segment)—&amp;gt;区（extent)—&amp;gt;页（page)—&amp;gt;块（block) 表空间表空间是InnoDB存储引擎逻辑结构的最高层，所有的数">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://caixueyuan.github.io/2018/08/12/MySQL表/"/>
+
+
+
+
+
+  <title>MySQL表 | caixueyuan</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">caixueyuan</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">SCUT</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://caixueyuan.github.io/2018/08/12/MySQL表/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="caixueyuan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="caixueyuan">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">MySQL表</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-12T23:36:07+08:00">
+                2018-08-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/数据库/" itemprop="url" rel="index">
+                    <span itemprop="name">数据库</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="索引组织表"><a href="#索引组织表" class="headerlink" title="索引组织表"></a>索引组织表</h2><p><strong>索引组织表</strong>：在InnoDB存储引擎中，表都是根据主键顺序组织存放的，每个表都是有主键<br><code>_rowid</code>可以显示表的主键，只能够查看单个列为主键的情况，并且为非空唯一索引。</p>
+<h2 id="InnoDB逻辑存储结构"><a href="#InnoDB逻辑存储结构" class="headerlink" title="InnoDB逻辑存储结构"></a>InnoDB逻辑存储结构</h2><p>表空间（tablespace)–&gt;端（segment)—&gt;区（extent)—&gt;页（page)—&gt;块（block)</p>
+<h3 id="表空间"><a href="#表空间" class="headerlink" title="表空间"></a>表空间</h3><p>表空间是InnoDB存储引擎逻辑结构的最高层，所有的数据都存放在表空间中。所有的数据都存放在这个表空间中。如果弃用了参数innodb_file_per_table，则每张表内的数据可以单独存放在一个表空间中。</p>
+<p>表空间只存放数据、索引和插入缓冲Bitmap页，其他的数据（如回滚信息，插入缓冲索引页，系统事务信息，二次写缓冲）还是存放在原来的共享表空间中。</p>
+<h3 id="段"><a href="#段" class="headerlink" title="段"></a>段</h3><p>常见的段有数据段、索引段、回滚段。数据段为B+树的叶子节点，而索引段为B+树的非索引节点</p>
+<h3 id="区"><a href="#区" class="headerlink" title="区"></a>区</h3><p>由连续页组成的空间，在任何情况下每个区的大小都是1MB，在默认情况下页的大小为16KB，即一个区中一共有64个连续的页。<br>可以通过参数innodb_page_size来设置默认页的大小</p>
+<h3 id="页"><a href="#页" class="headerlink" title="页"></a>页</h3><p>页是InnoDB磁盘管理的最小单位，默认每个页的大小为16KB。</p>
+<h3 id="行"><a href="#行" class="headerlink" title="行"></a>行</h3><p>InnoDB存储引擎是面向列的，数据都是按照行来进行存放的，最多允许存放16KB/2-200行的记录，也就是7992行</p>
+<h2 id="InnoDB行记录格式"><a href="#InnoDB行记录格式" class="headerlink" title="InnoDB行记录格式"></a>InnoDB行记录格式</h2><p>使用<code>show table status like &#39;table_name&#39;</code>来查看当前表使用的行格式。</p>
+<h3 id="Compact行记录格式"><a href="#Compact行记录格式" class="headerlink" title="Compact行记录格式"></a>Compact行记录格式</h3><p>MySQL5.0引入的，其设计的目的是高效地存储数据。<br>一个页中存放的行数据越多，其性能就越高。<br>在compact格式下，NULL值都不占用任何存储空间，不管是CHAR类型或者是VARCHAR类型</p>
+<h3 id="Redundant行记录格式"><a href="#Redundant行记录格式" class="headerlink" title="Redundant行记录格式"></a>Redundant行记录格式</h3><p>MySQL5.0之前的。</p>
+<h3 id="行溢出数据"><a href="#行溢出数据" class="headerlink" title="行溢出数据"></a>行溢出数据</h3><p>BLOB可以不将数据放在溢出页面中，而且即使是VARCHAR列数据类型，依然有可能被存放为行溢出数据。通过实际测试，VARCHAR的类型的最大长度为65532.VARCHAR类型最大支持65535字节。</p>
+<p>MySQL官方手册中定义的65535长度是指所有的VARCHAR列的长度总和，如果列的长度总和超过了这个长度，依然无法创建。</p>
+<p>InnoDB存储引擎的页为16KB，也就是16384字节，在一般情况下，InnoDB存储引擎的数据都是存放在页类型为B-tree node中。但是当发生行溢出时，数据存放在页类型为Uncompress BLOB页中。</p>
+<p>一个页存放数据，如果为两条数据的话，那么每条的最大的阈值为8098.</p>
+<h3 id="Compressed和Dynamic行记录格式"><a href="#Compressed和Dynamic行记录格式" class="headerlink" title="Compressed和Dynamic行记录格式"></a>Compressed和Dynamic行记录格式</h3><p>InnoDB1.0.x引入新的文件格式，Compressed和Dynamic<br>新的两种记录格式对于存放在BLOB中的数据采用完全的行溢出的方式。同时，存储在其中的行数据会以zlib的算法进行压缩，</p>
+<h3 id="CHAR的行结构存储"><a href="#CHAR的行结构存储" class="headerlink" title="CHAR的行结构存储"></a>CHAR的行结构存储</h3><p>对于多字节字符编码的CHAR数据类型的存储，InnoDB存储引擎在内部将其视为变长字符类型，在变长长度列表中会记录CHAR数据类型的长度</p>
+<p>CHAR(2)保存的是2个字符，不管是GBK，还是UTF-8，还是latin，都是2个字符，而不是2个字节。所以存储的字节是变化的。</p>
+<h2 id="InnoDB数据页结构"><a href="#InnoDB数据页结构" class="headerlink" title="InnoDB数据页结构"></a>InnoDB数据页结构</h2><p>包括7个部分：</p>
+<blockquote>
+<ul>
+<li>File Header(文件头)</li>
+<li>Page Header(页头)</li>
+<li>infimum和Supremum Records</li>
+<li>User Records（用户记录，即行记录）</li>
+<li>Free Space（空闲空间）</li>
+<li>Page Directory（页目录）</li>
+<li>File Trailer(文件结尾信息)</li>
+</ul>
+</blockquote>
+<h2 id="Named-File-Formats机制"><a href="#Named-File-Formats机制" class="headerlink" title="Named File Formats机制"></a>Named File Formats机制</h2>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/MySQL/" rel="tag"># MySQL</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/12/MySQL文件/" rel="next" title="MySQL文件">
+                <i class="fa fa-chevron-left"></i> MySQL文件
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="caixueyuan" />
+          <p class="site-author-name" itemprop="name">caixueyuan</p>
+           
+              <p class="site-description motion-element" itemprop="description">Java后台开发程序员</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">41</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">27</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#索引组织表"><span class="nav-number">1.</span> <span class="nav-text">索引组织表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#InnoDB逻辑存储结构"><span class="nav-number">2.</span> <span class="nav-text">InnoDB逻辑存储结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#表空间"><span class="nav-number">2.1.</span> <span class="nav-text">表空间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#段"><span class="nav-number">2.2.</span> <span class="nav-text">段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#区"><span class="nav-number">2.3.</span> <span class="nav-text">区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#页"><span class="nav-number">2.4.</span> <span class="nav-text">页</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#行"><span class="nav-number">2.5.</span> <span class="nav-text">行</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#InnoDB行记录格式"><span class="nav-number">3.</span> <span class="nav-text">InnoDB行记录格式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Compact行记录格式"><span class="nav-number">3.1.</span> <span class="nav-text">Compact行记录格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redundant行记录格式"><span class="nav-number">3.2.</span> <span class="nav-text">Redundant行记录格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#行溢出数据"><span class="nav-number">3.3.</span> <span class="nav-text">行溢出数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Compressed和Dynamic行记录格式"><span class="nav-number">3.4.</span> <span class="nav-text">Compressed和Dynamic行记录格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CHAR的行结构存储"><span class="nav-number">3.5.</span> <span class="nav-text">CHAR的行结构存储</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#InnoDB数据页结构"><span class="nav-number">4.</span> <span class="nav-text">InnoDB数据页结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Named-File-Formats机制"><span class="nav-number">5.</span> <span class="nav-text">Named File Formats机制</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">caixueyuan</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

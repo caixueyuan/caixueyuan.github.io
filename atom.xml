@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://caixueyuan.github.io/"/>
-  <updated>2018-08-06T16:05:52.918Z</updated>
+  <updated>2018-08-12T16:14:02.018Z</updated>
   <id>https://caixueyuan.github.io/</id>
   
   <author>
@@ -14,6 +14,150 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>MySQL表</title>
+    <link href="https://caixueyuan.github.io/2018/08/12/MySQL%E8%A1%A8/"/>
+    <id>https://caixueyuan.github.io/2018/08/12/MySQL表/</id>
+    <published>2018-08-12T15:36:07.000Z</published>
+    <updated>2018-08-12T16:14:02.018Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="索引组织表"><a href="#索引组织表" class="headerlink" title="索引组织表"></a>索引组织表</h2><p><strong>索引组织表</strong>：在InnoDB存储引擎中，表都是根据主键顺序组织存放的，每个表都是有主键<br><code>_rowid</code>可以显示表的主键，只能够查看单个列为主键的情况，并且为非空唯一索引。</p>
+<h2 id="InnoDB逻辑存储结构"><a href="#InnoDB逻辑存储结构" class="headerlink" title="InnoDB逻辑存储结构"></a>InnoDB逻辑存储结构</h2><p>表空间（tablespace)–&gt;端（segment)—&gt;区（extent)—&gt;页（page)—&gt;块（block)</p>
+<h3 id="表空间"><a href="#表空间" class="headerlink" title="表空间"></a>表空间</h3><p>表空间是InnoDB存储引擎逻辑结构的最高层，所有的数据都存放在表空间中。所有的数据都存放在这个表空间中。如果弃用了参数innodb_file_per_table，则每张表内的数据可以单独存放在一个表空间中。</p>
+<p>表空间只存放数据、索引和插入缓冲Bitmap页，其他的数据（如回滚信息，插入缓冲索引页，系统事务信息，二次写缓冲）还是存放在原来的共享表空间中。</p>
+<h3 id="段"><a href="#段" class="headerlink" title="段"></a>段</h3><p>常见的段有数据段、索引段、回滚段。数据段为B+树的叶子节点，而索引段为B+树的非索引节点</p>
+<h3 id="区"><a href="#区" class="headerlink" title="区"></a>区</h3><p>由连续页组成的空间，在任何情况下每个区的大小都是1MB，在默认情况下页的大小为16KB，即一个区中一共有64个连续的页。<br>可以通过参数innodb_page_size来设置默认页的大小</p>
+<h3 id="页"><a href="#页" class="headerlink" title="页"></a>页</h3><p>页是InnoDB磁盘管理的最小单位，默认每个页的大小为16KB。</p>
+<h3 id="行"><a href="#行" class="headerlink" title="行"></a>行</h3><p>InnoDB存储引擎是面向列的，数据都是按照行来进行存放的，最多允许存放16KB/2-200行的记录，也就是7992行</p>
+<h2 id="InnoDB行记录格式"><a href="#InnoDB行记录格式" class="headerlink" title="InnoDB行记录格式"></a>InnoDB行记录格式</h2><p>使用<code>show table status like &#39;table_name&#39;</code>来查看当前表使用的行格式。</p>
+<h3 id="Compact行记录格式"><a href="#Compact行记录格式" class="headerlink" title="Compact行记录格式"></a>Compact行记录格式</h3><p>MySQL5.0引入的，其设计的目的是高效地存储数据。<br>一个页中存放的行数据越多，其性能就越高。<br>在compact格式下，NULL值都不占用任何存储空间，不管是CHAR类型或者是VARCHAR类型</p>
+<h3 id="Redundant行记录格式"><a href="#Redundant行记录格式" class="headerlink" title="Redundant行记录格式"></a>Redundant行记录格式</h3><p>MySQL5.0之前的。</p>
+<h3 id="行溢出数据"><a href="#行溢出数据" class="headerlink" title="行溢出数据"></a>行溢出数据</h3><p>BLOB可以不将数据放在溢出页面中，而且即使是VARCHAR列数据类型，依然有可能被存放为行溢出数据。通过实际测试，VARCHAR的类型的最大长度为65532.VARCHAR类型最大支持65535字节。</p>
+<p>MySQL官方手册中定义的65535长度是指所有的VARCHAR列的长度总和，如果列的长度总和超过了这个长度，依然无法创建。</p>
+<p>InnoDB存储引擎的页为16KB，也就是16384字节，在一般情况下，InnoDB存储引擎的数据都是存放在页类型为B-tree node中。但是当发生行溢出时，数据存放在页类型为Uncompress BLOB页中。</p>
+<p>一个页存放数据，如果为两条数据的话，那么每条的最大的阈值为8098.</p>
+<h3 id="Compressed和Dynamic行记录格式"><a href="#Compressed和Dynamic行记录格式" class="headerlink" title="Compressed和Dynamic行记录格式"></a>Compressed和Dynamic行记录格式</h3><p>InnoDB1.0.x引入新的文件格式，Compressed和Dynamic<br>新的两种记录格式对于存放在BLOB中的数据采用完全的行溢出的方式。同时，存储在其中的行数据会以zlib的算法进行压缩，</p>
+<h3 id="CHAR的行结构存储"><a href="#CHAR的行结构存储" class="headerlink" title="CHAR的行结构存储"></a>CHAR的行结构存储</h3><p>对于多字节字符编码的CHAR数据类型的存储，InnoDB存储引擎在内部将其视为变长字符类型，在变长长度列表中会记录CHAR数据类型的长度</p>
+<p>CHAR(2)保存的是2个字符，不管是GBK，还是UTF-8，还是latin，都是2个字符，而不是2个字节。所以存储的字节是变化的。</p>
+<h2 id="InnoDB数据页结构"><a href="#InnoDB数据页结构" class="headerlink" title="InnoDB数据页结构"></a>InnoDB数据页结构</h2><p>包括7个部分：</p>
+<blockquote>
+<ul>
+<li>File Header(文件头)</li>
+<li>Page Header(页头)</li>
+<li>infimum和Supremum Records</li>
+<li>User Records（用户记录，即行记录）</li>
+<li>Free Space（空闲空间）</li>
+<li>Page Directory（页目录）</li>
+<li>File Trailer(文件结尾信息)</li>
+</ul>
+</blockquote>
+<h2 id="Named-File-Formats机制"><a href="#Named-File-Formats机制" class="headerlink" title="Named File Formats机制"></a>Named File Formats机制</h2>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;索引组织表&quot;&gt;&lt;a href=&quot;#索引组织表&quot; class=&quot;headerlink&quot; title=&quot;索引组织表&quot;&gt;&lt;/a&gt;索引组织表&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;索引组织表&lt;/strong&gt;：在InnoDB存储引擎中，表都是根据主键顺序组织存放的，每个表都是有主
+    
+    </summary>
+    
+      <category term="数据库" scheme="https://caixueyuan.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+    
+      <category term="MySQL" scheme="https://caixueyuan.github.io/tags/MySQL/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>MySQL文件</title>
+    <link href="https://caixueyuan.github.io/2018/08/12/MySQL%E6%96%87%E4%BB%B6/"/>
+    <id>https://caixueyuan.github.io/2018/08/12/MySQL文件/</id>
+    <published>2018-08-12T09:42:46.000Z</published>
+    <updated>2018-08-12T16:14:08.471Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="参数文件"><a href="#参数文件" class="headerlink" title="参数文件"></a>参数文件</h2><p>告诉MySQL实例启动时在哪里，指定初始化参数，定义某些内存结构的大小</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">show</span> <span class="keyword">variables</span> <span class="keyword">like</span> <span class="string">'innodb_buffer%'</span>;显示查询参数</div><div class="line"><span class="keyword">set</span> read_buffer_size = <span class="number">100100</span>;//设置查询参数</div><div class="line"><span class="keyword">select</span> @@session.read_buffer_size;</div></pre></td></tr></table></figure>
+<h2 id="日志文件"><a href="#日志文件" class="headerlink" title="日志文件"></a>日志文件</h2><p>记录影响MySQL数据库的各种类型活动</p>
+<blockquote>
+<ul>
+<li><strong>错误日志</strong>:对MySQL的启动、运动、关闭过程进行记录，<code>Show Variables like &#39;log_error&#39;</code></li>
+<li><strong>查询日志</strong>：记录了所有对MySQL数据库请求的信息。</li>
+<li><strong>二进制日志</strong>：记录对MySQL数据库执行更改的所有操作，不包括SELECT和SHOW等操作<code>SHOW MASTER STATUS</code></li>
+<li><strong>套接字</strong>：在Unix域套接字</li>
+<li>pid文件：将自己的进程ID写入到一个文件中</li>
+<li>表结构定义文件：MySQL数据的存储是根据表进行的，每个表都有与之对应的文件</li>
+<li>InnoDB存储引擎文件：</li>
+</ul>
+</blockquote>
+<p><strong>表空间文件</strong>：将存储的数据按照表空间进行存放的设计，在默认配置下为10M，多个文件可以组成一个表空间。<br>重做日志文件：当实例或者介质失败时，重做日志文件就有用，用来恢复数据</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;参数文件&quot;&gt;&lt;a href=&quot;#参数文件&quot; class=&quot;headerlink&quot; title=&quot;参数文件&quot;&gt;&lt;/a&gt;参数文件&lt;/h2&gt;&lt;p&gt;告诉MySQL实例启动时在哪里，指定初始化参数，定义某些内存结构的大小&lt;/p&gt;
+&lt;figure class=&quot;highlig
+    
+    </summary>
+    
+      <category term="数据库" scheme="https://caixueyuan.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+    
+      <category term="MySQL" scheme="https://caixueyuan.github.io/tags/MySQL/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>InnoDB存储引擎</title>
+    <link href="https://caixueyuan.github.io/2018/08/12/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/"/>
+    <id>https://caixueyuan.github.io/2018/08/12/InnoDB存储引擎/</id>
+    <published>2018-08-12T08:12:23.000Z</published>
+    <updated>2018-08-12T09:42:12.458Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="InnoDB体系结构"><a href="#InnoDB体系结构" class="headerlink" title="InnoDB体系结构"></a>InnoDB体系结构</h2><p><strong>后台线程</strong>：负责刷新内存池中的数据，保证缓冲池中的内存缓存的是最近的数据，将已修改的数据文件刷新到磁盘文件，同时保证在数据库发生异常的情况下InnoDB能恢复到正常运行状态</p>
+<h3 id="线程分类"><a href="#线程分类" class="headerlink" title="线程分类"></a>线程分类</h3><blockquote>
+<ul>
+<li>Master Thread<br>负责将缓冲池中的数据异步刷新到磁盘，保证数据的一致性，包括脏页的刷新、合并插入缓冲和UNDO页的回收</li>
+<li><p>IO Thread<br>负责异步IO请求的回调</p>
+</li>
+<li><p>Purge Thread<br>在事务被提交后，所使用的undolog可能不需要，负责来回收已经使用并分配的undo页。</p>
+</li>
+<li><p>Page Cleaner Thread<br>将之前版本中脏页的刷新操作都放入到单独的线程中来完成，减轻Master Thread的工作和对于用户查询线程的阻塞。</p>
+</li>
+</ul>
+</blockquote>
+<h3 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h3><blockquote>
+<ul>
+<li><p>缓冲池：使用CheckPoint的机制刷新内存页，缓存的数据包括：索引页、数据页、undo页、插入缓冲、自适应哈希索引、InnoDB存储的锁信息、数据字典信息。</p>
+</li>
+<li><p>LRU List、Free List和Flush List</p>
+</li>
+<li><p>重做日志缓冲</p>
+</li>
+</ul>
+</blockquote>
+<h3 id="InnoDB关键特性"><a href="#InnoDB关键特性" class="headerlink" title="InnoDB关键特性"></a>InnoDB关键特性</h3><blockquote>
+<ul>
+<li><p>插入缓冲：<br><strong>Insert Buffer</strong>：当索引是辅助索引，索引不是唯一的<br><strong>Change Buffer</strong>：对DML操作（INSERT,DELETE,UPDATE)进行缓冲<br><strong>Merge Insert Buffer</strong>：合并插入缓存到磁盘中</p>
+</li>
+<li><p>两次写：两次写入提高效率</p>
+</li>
+<li>自适应哈希索引：提高查询的效率，比B+树的查找更快</li>
+<li>异步IO：将多个IO合并为1个IO请求</li>
+</ul>
+</blockquote>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;InnoDB体系结构&quot;&gt;&lt;a href=&quot;#InnoDB体系结构&quot; class=&quot;headerlink&quot; title=&quot;InnoDB体系结构&quot;&gt;&lt;/a&gt;InnoDB体系结构&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;后台线程&lt;/strong&gt;：负责刷新内存池中的数据，保证缓冲
+    
+    </summary>
+    
+      <category term="数据库" scheme="https://caixueyuan.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+    
+      <category term="MySQL" scheme="https://caixueyuan.github.io/tags/MySQL/"/>
+    
+  </entry>
   
   <entry>
     <title>MySQL 学习笔记（一）</title>
@@ -1083,175 +1227,6 @@
     
     
       <category term="Java , 远程调试" scheme="https://caixueyuan.github.io/tags/Java-%E8%BF%9C%E7%A8%8B%E8%B0%83%E8%AF%95/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Linux进程</title>
-    <link href="https://caixueyuan.github.io/2017/08/07/Linux%E8%BF%9B%E7%A8%8B/"/>
-    <id>https://caixueyuan.github.io/2017/08/07/Linux进程/</id>
-    <published>2017-08-07T14:22:13.000Z</published>
-    <updated>2017-08-07T16:28:57.376Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="查看一个进程都有哪些内存段组成"><a href="#查看一个进程都有哪些内存段组成" class="headerlink" title="查看一个进程都有哪些内存段组成"></a>查看一个进程都有哪些内存段组成</h2><p>一个进程包括PCB，程序段和数据段</p>
-<h3 id="PCB"><a href="#PCB" class="headerlink" title="PCB"></a>PCB</h3><p>进程创建时，操作系统就新建一个PCB结构，它之后就常驻内存，任一时刻可以存取, 在进程结束时删除。PCB是进程实体的一部分，是进程存在的唯一标志。</p>
-<p><strong>进程描述信息</strong></p>
-<blockquote>
-<ul>
-<li>进程标识符：标志各个进程，每个进程都有一个并且是唯一的标识号。</li>
-<li>用户标识符：进程归属的用户，用户标识符主要为共享和保护服务。</li>
-</ul>
-</blockquote>
-<p><strong>进程控制和管理信息</strong></p>
-<blockquote>
-<ul>
-<li>进程当前状态：描述进程的状态信息，作为处理机分配调度的依据</li>
-<li>进程优先级：描述进程抢占处理机的优先级，优先级高的进程可以优先获得处理机</li>
-<li>代码运行入口地址</li>
-<li>程序的外存地址</li>
-<li>进入内存的时间</li>
-<li>处理机占用的时间</li>
-<li>信号量的使用</li>
-</ul>
-</blockquote>
-<p><strong>资源分配清单</strong>：用于说明有关内存地址空间或虚拟地址空间的状况；所打开文件的 列表和所使用的输入/输出设备信息。</p>
-<blockquote>
-<ul>
-<li>代码段指针</li>
-<li>数据段指针</li>
-<li>堆栈段指针</li>
-<li>文件描述符</li>
-</ul>
-</blockquote>
-<p><strong>处理机相关信息</strong>：</p>
-<blockquote>
-<ul>
-<li>通用寄存器值</li>
-<li>地址寄存器值</li>
-<li>控制寄存器值</li>
-<li>标志寄存器值</li>
-</ul>
-</blockquote>
-<p>主要指处理机中各寄存器值，当进程被切换时，处理机状态信息 都必须保存在相应的PCB中，以便在该进程重新执行时，能再从断点继续执行。</p>
-<h3 id="程序段"><a href="#程序段" class="headerlink" title="程序段"></a>程序段</h3><p>程序段就是能被进程调度程序调度到CPU执行的程序代码段。注意，程序可以被多个进程共享，就是说多个进程可以运行同一个程序。</p>
-<h3 id="数据段"><a href="#数据段" class="headerlink" title="数据段"></a>数据段</h3><p>一个进程的数据段，可以是进程对应的程序加工处理的原始数据，也可以是程序执行时产生的中间或最终结果</p>
-<p><a href="http://c.biancheng.net/cpp/html/2591.html" target="_blank" rel="external">引用该链接</a></p>
-<h2 id="mmap系统调用与malloc函数的区别"><a href="#mmap系统调用与malloc函数的区别" class="headerlink" title="mmap系统调用与malloc函数的区别"></a>mmap系统调用与malloc函数的区别</h2><h3 id="mmap"><a href="#mmap" class="headerlink" title="mmap"></a>mmap</h3><ol>
-<li>fork()产生的子进程是复制的进程表，但是PID不同</li>
-<li>exec()改变进程的进程地址空间（虚拟）,它的PID保持原来的PID</li>
-<li>malloc() 在PCB表结构中的堆中申请空间，若空间申请失败的话，即超过给定的堆的最大空间时，会调用brk()系统进行调用，将堆空间向未使用的区域扩展，brk()之后新增的堆空间不会自动清除，需使用相应的系统调用来清除； </li>
-<li>mmap：使得进程之间通过映射同一个普通文件实现共享内存。普通文件被映射到进程地址空间后，进程可以像访问普通内存一样对文件进行访问，不必再调用read()，write（）等操作。</li>
-</ol>
-<p><img src="https://vinoit.me/images/linux/linux-memory-alloc-0.jpg" alt="brk"></p>
-<ol>
-<li>在申请的文件小于128K的时候，一般都是都是用brk(),一般都是在_edata来申请空间</li>
-<li>但是呢，A这块空间现在还是没有物理页与之对应，等到进程第一次读写A这块内存的时候，发生缺页中断，这个时候，内核才分配A这块内存对应的物理页。等到进程第一次读写A这块内存的时候，发生缺页中断，这个时候，内核才分配A这块内存对应的物理页</li>
-</ol>
-<p><img src="https://vinoit.me/images/linux/linux-memory-alloc-2.jpg" alt="mmap"></p>
-<p>在&gt;128K的内存申请的时候，在heap和stack中申请一段内存<br><strong>原因</strong>：<br>brk分配的内存需要等到高地址内存释放以后才能释放（例如，在B释放之前，A是不可能释放的，这就是内存碎片产生的原因，什么时候紧缩看下面），而mmap分配的内存可以单独释放。</p>
-<h3 id="偷页"><a href="#偷页" class="headerlink" title="偷页"></a>偷页</h3><p>页淘汰（page replacent,page stealing,pageout)工作是由一个系统进程完成的，页淘汰的时机，当内存空间页数低于系统所配置的最小阈值，启动（唤醒）页淘汰进程，页淘汰进程被启动后就开始不停的选择和淘汰页面，直到内存的空闲页面达到系统所配置的最大阈值为止。</p>
-<p>页淘汰算法：FIFO，最近最少使用（LRU），最近未使用算法（NRU）</p>
-<h2 id="让一个进程向磁盘导出其内存中内容"><a href="#让一个进程向磁盘导出其内存中内容" class="headerlink" title="让一个进程向磁盘导出其内存中内容"></a>让一个进程向磁盘导出其内存中内容</h2><p><a href="http://www.cnblogs.com/biyeymyhjob/archive/2012/07/20/2601655.html" target="_blank" rel="external">参考链接</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;查看一个进程都有哪些内存段组成&quot;&gt;&lt;a href=&quot;#查看一个进程都有哪些内存段组成&quot; class=&quot;headerlink&quot; title=&quot;查看一个进程都有哪些内存段组成&quot;&gt;&lt;/a&gt;查看一个进程都有哪些内存段组成&lt;/h2&gt;&lt;p&gt;一个进程包括PCB，程序段和数据段&lt;
-    
-    </summary>
-    
-      <category term="Linux , 操作系统" scheme="https://caixueyuan.github.io/categories/Linux-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
-    
-    
-      <category term="进程 , Linux" scheme="https://caixueyuan.github.io/tags/%E8%BF%9B%E7%A8%8B-Linux/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>JVM垃圾收集机制</title>
-    <link href="https://caixueyuan.github.io/2017/08/06/JVM%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E6%9C%BA%E5%88%B6/"/>
-    <id>https://caixueyuan.github.io/2017/08/06/JVM垃圾收集机制/</id>
-    <published>2017-08-06T09:05:50.000Z</published>
-    <updated>2017-08-06T16:10:48.419Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="Java垃圾收集机制"><a href="#Java垃圾收集机制" class="headerlink" title="Java垃圾收集机制"></a>Java垃圾收集机制</h2><h3 id="可以作为GC-Root的对象"><a href="#可以作为GC-Root的对象" class="headerlink" title="可以作为GC Root的对象"></a>可以作为GC Root的对象</h3><ol>
-<li>虚拟机栈中引用的对象</li>
-<li>方法区中类的静态属性引用的对象</li>
-<li>方法区中常量引用的对象</li>
-<li>本地方法栈中引用的对象</li>
-</ol>
-<h3 id="无用的类的判定的方法"><a href="#无用的类的判定的方法" class="headerlink" title="无用的类的判定的方法"></a>无用的类的判定的方法</h3><ol>
-<li>该类的所有的实例都已经被回收，也就是Java堆中不存在该类的任何实例</li>
-<li>加载该类的ClassLoader已经被回收</li>
-<li>该类的对应的java.lang.Class对象没有在任何地方被引用们无法在任何地方通过反射访问该类的方法</li>
-</ol>
-<h3 id="枚举根节点"><a href="#枚举根节点" class="headerlink" title="枚举根节点"></a>枚举根节点</h3><blockquote>
-<ul>
-<li>OopMap</li>
-<li>安全点</li>
-<li>安全区域</li>
-</ul>
-</blockquote>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;Java垃圾收集机制&quot;&gt;&lt;a href=&quot;#Java垃圾收集机制&quot; class=&quot;headerlink&quot; title=&quot;Java垃圾收集机制&quot;&gt;&lt;/a&gt;Java垃圾收集机制&lt;/h2&gt;&lt;h3 id=&quot;可以作为GC-Root的对象&quot;&gt;&lt;a href=&quot;#可以作为GC-
-    
-    </summary>
-    
-      <category term="学习笔记" scheme="https://caixueyuan.github.io/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
-    
-    
-      <category term="JVM , 垃圾收集" scheme="https://caixueyuan.github.io/tags/JVM-%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Linux操作系统内存基础</title>
-    <link href="https://caixueyuan.github.io/2017/08/06/Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%86%85%E5%AD%98%E5%9F%BA%E7%A1%80/"/>
-    <id>https://caixueyuan.github.io/2017/08/06/Linux操作系统内存基础/</id>
-    <published>2017-08-06T06:03:28.000Z</published>
-    <updated>2017-08-06T07:26:48.194Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="Linux操作系统"><a href="#Linux操作系统" class="headerlink" title="Linux操作系统"></a>Linux操作系统</h2><p>首先，这篇文章是参考这两篇blog<a href="http://blog.csdn.net/yusiguyuan/article/details/45155035" target="_blank" rel="external">Linux进程地址空间 &amp;&amp; 进程内存布局</a>和<a href="https://my.oschina.net/u/1770090/blog/263326" target="_blank" rel="external">Linux虚拟地址空间概述</a>，如果想要详细了解Linux 内存管理，请查看这两篇博客</p>
-<h3 id="Linux程序运行的关系图"><a href="#Linux程序运行的关系图" class="headerlink" title="Linux程序运行的关系图"></a>Linux程序运行的关系图</h3><p><img src="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/system/figure2.jpg" alt="Linux用户空间和内核空间"><br><img src="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/system/figure1.gif" alt="Linux程序调用"></p>
-<p>从这两个图，我们可以知道应用程序都是在用户空间中进行使用的，通过调用libc来进行或者是直接调用System Call Interface进行到内核空间来，并且通过SCI来调用系统内核的功能，然后Kernel通过调用已经编译好的代码来进行系统级别的调用，并且通过设备驱动程序来操作硬件。</p>
-<h3 id="Linux内核的主要子系统"><a href="#Linux内核的主要子系统" class="headerlink" title="Linux内核的主要子系统"></a>Linux内核的主要子系统</h3><p><img src="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/system/figure3.jpg" alt="Linux内核"><br>系统调用接口：SCI提供某些机制执行从用户空间到内核的函数调用<br><strong>进程管理</strong>：线程调度（O（1））<br><strong>内存管理</strong>：内存是按照所谓的内存页进行管理<br><strong>虚拟文件系统</strong>：它为文件系统提供了一个通用的接口抽象<br><img src="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/system/figure4.jpg" alt="虚拟文件系统"></p>
-<h3 id="Linux进程地址空间"><a href="#Linux进程地址空间" class="headerlink" title="Linux进程地址空间"></a>Linux进程地址空间</h3><p><img src="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/system/Linux%E4%BC%A0%E7%BB%9F%E5%86%85%E5%AD%98%E7%A9%BA%E9%97%B4.png" alt="Linux传统内存空间"></p>
-<p>Linux进程虚拟地址空间是linux内存管理一个重要的部分，我们知道，在IA-32系统上地址空间的范围可达2的32次幂=4G，总的地址空间通常按3：1的比例划分，用户态占用了3G，内核占用了1G。</p>
-<p>各进程的用户态虚拟地址空间起始于地址0，延伸到TASK_SIZE -1的位置，其上是内核的地址空间。</p>
-<ol>
-<li>text:代码段，映射程序的二进制代码，该区域为私有区域。</li>
-<li>DATA:数据段，映射程序中已经初始化的全局变量。（已经初始化的全局变量）。数据段保存在源代码中已经初始化的静态变量的内容。数据段不是匿名的，它映射了一部分的程序二进制镜像，也就是源代码中指定了初始值的静态变量</li>
-<li>BSS:存放程序中未初始化的全局变量.在ELF文件中，该区域的变量仅仅是个符号，并不占用文件空间，但程序加载后，会占用内存空间，并初始化为0（没有初始化的全局变量）。区别在于BSS保存的是未被初始化的静态变量内容，他们的值不是直接在程序的源码中设定的</li>
-<li>HEAP:运行时的堆，在程序运行中使用malloc申请的内存区域.该区域的内存增长方式是由低地址向高地址增长。malloc()函数</li>
-<li>MMAP：共享库及匿名文件的映射区域；该区域中会包含共享库的代码段和数据段。在栈的下方是内存映射段，内核将文件的内容直接映射到内存，加载动态库</li>
-<li>STACK：用户进程栈.该区域起始地址也存在一个随机值，通过PF_RANDOMIZE来设置。栈的增长方向是由高地址向低地址增长，并且若设置了RLIMIT_STACK即规定了栈的大小。调用一个方法或函数会将一个新的栈帧（stack frame）压入到栈中，只需要一个简单的指针指向栈的顶端即可，因此压栈（pushing）和退栈（popping）过程非常迅速、准确</li>
-</ol>
-<h3 id="由物理地址到虚拟地址的转换"><a href="#由物理地址到虚拟地址的转换" class="headerlink" title="由物理地址到虚拟地址的转换"></a>由物理地址到虚拟地址的转换</h3><p>IA-32架构可以访问4G的地址空间，通常会将线性地址空间划分为3：1的两个部分：用户态使用3G，内核态使用1G，即内核空间从0xC0000000开始，每个虚拟地址x都对应于物理地址x-0xC0000000。这样的设计可以加快内核空间的寻址速度（简单的减法操作）。在进程切换的过程中，只有用户态对应的页表被切换，高地址空间会公用内核页表。</p>
-<h3 id="虚拟地址空间的访问权限"><a href="#虚拟地址空间的访问权限" class="headerlink" title="虚拟地址空间的访问权限"></a>虚拟地址空间的访问权限</h3><ol>
-<li><p>用户空间禁止访问内核空间。</p>
-</li>
-<li><p>用户态通过系统调用切换到内核空间后，该进程处于内核态上下文，可以访问用户空间的内存。</p>
-</li>
-<li><p>中断抢占进程后，处于中断上下文时，不能访问用户空间。</p>
-</li>
-<li><p>内核线程不能访问用户空间。</p>
-</li>
-</ol>
-<h3 id="内核空间和用户空间"><a href="#内核空间和用户空间" class="headerlink" title="内核空间和用户空间"></a>内核空间和用户空间</h3><p> Linux系统对自身进行了划分，一部分核心软件独立于普通应用程序，运行在较高的特权级别上，它们驻留在被保护的内存空间上，拥有访问硬件设备的所有权限，Linux将此称为内核空间。<br>        相对地，应用程序则是在“用户空间”中运行。运行在用户空间的应用程序只能看到允许它们使用的部分系统资源，并且不能使用某些特定的系统功能，也不能直接访问内核空间和硬件设备，以及其他一些具体的使用限制。<br>        将用户空间和内核空间置于这种非对称访问机制下有很好的安全性，能有效抵御恶意用户的窥探，也能防止质量低劣的用户程序的侵害，从而使系统运行得更稳定可靠。<br>        内核空间在页表中拥有较高的特权级（ring2或以下），因此只要用户态的程序试图访问这些页，就会导致一个页错误（page fault）。在Linux中，内核空间是持续存在的，并且在所有进程中都映射到同样的物理内存，内核代码和数据总是可寻址的，随时准备处理中断和系统调用</p>
-<h3 id="栈和堆的区别"><a href="#栈和堆的区别" class="headerlink" title="栈和堆的区别"></a>栈和堆的区别</h3><p><img src="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/system/%E6%A0%88%E4%B8%8E%E5%A0%86%E7%9A%84%E5%8C%BA%E5%88%AB.png" alt="栈和堆的区别"></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;Linux操作系统&quot;&gt;&lt;a href=&quot;#Linux操作系统&quot; class=&quot;headerlink&quot; title=&quot;Linux操作系统&quot;&gt;&lt;/a&gt;Linux操作系统&lt;/h2&gt;&lt;p&gt;首先，这篇文章是参考这两篇blog&lt;a href=&quot;http://blog.csdn
-    
-    </summary>
-    
-    
-      <category term="Linux,内存管理" scheme="https://caixueyuan.github.io/tags/Linux-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/"/>
     
   </entry>
   
