@@ -1,0 +1,755 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="C++基础," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="caixueyuan" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="概念引用为对象起了另外一个名字，引用类型引用另外一种类型，引用类型的初始值必须是一个对象。int &amp;amp;refVal4 = 10这种引用类型不是一个对象。 指针本身是一个对象，允许对指针赋值和拷贝，而且在指针的生命周期内可以先后指向几个不同的对象。其二,指针无需在定义时赋初值。12345int ival = 42;int *p = &amp;amp;ival;//&amp;amp;是取地址符，存放变量ival">
+<meta name="keywords" content="C++基础">
+<meta property="og:type" content="article">
+<meta property="og:title" content="指针与引用">
+<meta property="og:url" content="https://caixueyuan.github.io/2018/09/11/指针与引用/index.html">
+<meta property="og:site_name" content="caixueyuan">
+<meta property="og:description" content="概念引用为对象起了另外一个名字，引用类型引用另外一种类型，引用类型的初始值必须是一个对象。int &amp;amp;refVal4 = 10这种引用类型不是一个对象。 指针本身是一个对象，允许对指针赋值和拷贝，而且在指针的生命周期内可以先后指向几个不同的对象。其二,指针无需在定义时赋初值。12345int ival = 42;int *p = &amp;amp;ival;//&amp;amp;是取地址符，存放变量ival">
+<meta property="og:updated_time" content="2018-09-23T07:57:16.027Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="指针与引用">
+<meta name="twitter:description" content="概念引用为对象起了另外一个名字，引用类型引用另外一种类型，引用类型的初始值必须是一个对象。int &amp;amp;refVal4 = 10这种引用类型不是一个对象。 指针本身是一个对象，允许对指针赋值和拷贝，而且在指针的生命周期内可以先后指向几个不同的对象。其二,指针无需在定义时赋初值。12345int ival = 42;int *p = &amp;amp;ival;//&amp;amp;是取地址符，存放变量ival">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://caixueyuan.github.io/2018/09/11/指针与引用/"/>
+
+
+
+
+
+  <title>指针与引用 | caixueyuan</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">caixueyuan</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">SCUT</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://caixueyuan.github.io/2018/09/11/指针与引用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="caixueyuan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="caixueyuan">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">指针与引用</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-11T22:07:02+08:00">
+                2018-09-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/C/" itemprop="url" rel="index">
+                    <span itemprop="name">C++</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>引用为对象起了另外一个名字，引用类型引用另外一种类型，引用类型的初始值必须是一个对象。<br><code>int &amp;refVal4 = 10</code>这种引用类型不是一个对象。</p>
+<p>指针本身是一个对象，允许对指针赋值和拷贝，而且在指针的生命周期内可以先后指向几个不同的对象。其二,指针无需在定义时赋初值。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> ival = <span class="number">42</span>;</div><div class="line"><span class="keyword">int</span> *p = &amp;ival;<span class="comment">//&amp;是取地址符，存放变量ival的地址，或者说p是指向变量ival的指针。</span></div><div class="line"><span class="comment">//第二条语句把p定义为一个指向int的指针，随后初始化p让其指向名为ival的int对象。</span></div><div class="line"><span class="keyword">int</span> *p;</div><div class="line">p = &amp;ival;</div></pre></td></tr></table></figure></p>
+<p>在constexpr声明中，如果定义了一个指针，限定符constexpr仅仅对指针有效，与指针所指的对象无关。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> *p = <span class="literal">nullptr</span>;<span class="comment">//p是一个指向整形常量的指针</span></div><div class="line"><span class="keyword">constexpr</span> <span class="keyword">int</span> *q = <span class="literal">nullptr</span>;<span class="comment">//q是一个指向整数的常量指针</span></div></pre></td></tr></table></figure></p>
+<h3 id="使用别名"><a href="#使用别名" class="headerlink" title="使用别名"></a>使用别名</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="keyword">double</span> wages;</div><div class="line"><span class="keyword">using</span> SI= Sales_Item;</div></pre></td></tr></table></figure>
+<h3 id="decltype类型指示符"><a href="#decltype类型指示符" class="headerlink" title="decltype类型指示符"></a>decltype类型指示符</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">decltype</span>(f()) sum = x;<span class="comment">//sum的类型就是函数f的返回类型</span></div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> ci =<span class="number">0</span>,&amp;cj = ci;</div><div class="line"><span class="keyword">decltype</span>(ci) x = <span class="number">0</span>;<span class="comment">//x的类型是const int</span></div><div class="line"><span class="keyword">decltype</span>(cj) y = x;<span class="comment">//y的类型是const int&amp;，y绑定到变量x</span></div><div class="line"><span class="keyword">decltype</span>(cj) z;<span class="comment">//错误，引用不能够为空</span></div><div class="line"><span class="keyword">int</span> i=<span class="number">42</span>,*p = &amp;i;</div><div class="line"><span class="keyword">decltype</span>(*p) c;<span class="comment">//解引用指针可以得到指针所指定的对象，而且给这个对象赋值，因为结果是int&amp;</span></div></pre></td></tr></table></figure>
+<h3 id="vector"><a href="#vector" class="headerlink" title="vector"></a>vector</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; v1(<span class="number">10</span>)<span class="comment">//v1有10个元素，每个元素的值都是0</span></div><div class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; v2&#123;<span class="number">10</span>&#125;<span class="comment">//v2有1个元素，元素的值为0</span></div><div class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; v3(<span class="number">10</span>,<span class="number">1</span>)<span class="comment">//v3有10个元素，每个元素的值都是1</span></div><div class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; v4&#123;<span class="number">10</span>,<span class="number">1</span>&#125;<span class="comment">//v4有2个元素，元素的值为10,1</span></div></pre></td></tr></table></figure>
+<p>vector对象的下标对象运算符可用于访问已存在的元素,而不能够用于添加元素。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="built_in">string</span> <span class="title">s</span><span class="params">(<span class="string">"some string"</span>)</span></span>;</div><div class="line"><span class="keyword">if</span> (s.begin() != s.end())&#123;</div><div class="line">    <span class="keyword">auto</span> it = s.begin();</div><div class="line">    *it = <span class="built_in">toupper</span>(*it);</div><div class="line">&#125;</div><div class="line"><span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; s &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line"></div><div class="line"><span class="keyword">for</span> (<span class="keyword">auto</span> it = s.begin(); it != s.end() &amp;&amp; !<span class="built_in">isspace</span>(*it); it++)&#123;</div><div class="line">    *it = <span class="built_in">toupper</span>(*it);</div><div class="line">&#125;</div><div class="line"><span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; s &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div></pre></td></tr></table></figure>
+<p>迭代器类型<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//读写类型</span></div><div class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;::iterator it;</div><div class="line"><span class="built_in">string</span>::iterator it2;</div><div class="line"><span class="comment">//只读类型</span></div><div class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;::const_iterator it3;</div><div class="line"><span class="built_in">string</span>::const_iterator it4;</div></pre></td></tr></table></figure></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; v;</div><div class="line"><span class="keyword">const</span> <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; cv;</div><div class="line"><span class="keyword">auto</span> it1 = v.begin();<span class="comment">//it1的类型是vector&lt;int&gt;::iterator</span></div><div class="line"><span class="keyword">auto</span> it2 = cv.begin();<span class="comment">//it2的类型是vector&lt;int&gt;::const_iterator</span></div><div class="line"><span class="keyword">auto</span> it3 = v.cbegin();<span class="comment">//it3的类型是vector&lt;int&gt;::const_iterator</span></div><div class="line">（*it).empty()等于it-&gt;empty()<span class="comment">//it为迭代器</span></div></pre></td></tr></table></figure>
+<h3 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h3><p>定义数组时一定要保证数组的个数为常量，定义数组时一定要定义数组的类型，不能够是使用auto<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">unsigned</span> cnt = <span class="number">12</span>;</div><div class="line"><span class="keyword">constexpr</span> <span class="keyword">unsigned</span> cnt1 = <span class="number">12</span>;<span class="comment">//常量表达式</span></div><div class="line"><span class="built_in">string</span> bad[cnt];<span class="comment">//错误，cnt不是常量表达式</span></div></pre></td></tr></table></figure></p>
+<p>字符数组的特殊性<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">char</span> a3[] = <span class="string">"C++"</span><span class="comment">//自动添加表示字符串结束的空字符</span></div><div class="line"><span class="keyword">const</span> <span class="keyword">char</span> a4[<span class="number">6</span>] = <span class="string">"Deniel"</span>;<span class="comment">//错误，没有空间可存放空字符</span></div></pre></td></tr></table></figure></p>
+<p><strong>注意</strong>：不能够将数组拷贝给其他数组作为初始值</p>
+<figure class="highlight 1c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">int (*Parray)[<span class="number">10</span>] = <span class="meta">&amp;arr;<span class="comment">//Parray指向一个含有10个整数的数组</span></span></div><div class="line">int (<span class="meta">&amp;arrRef)[10] = arr;<span class="comment">//arrRef引用一个含有10个整数的数组</span></span></div></pre></td></tr></table></figure>
+<p><strong>指针和数组</strong>：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">string</span> nums[] = &#123;<span class="string">"one"</span>,<span class="string">"two"</span>,<span class="string">"three"</span>&#125;;</div><div class="line"><span class="built_in">string</span> *p = &amp;nums[<span class="number">0</span>];</div><div class="line"><span class="built_in">string</span> *p2 = nums;<span class="comment">//等价于string *p = &amp;nums[0];</span></div><div class="line"><span class="function"><span class="keyword">auto</span> <span class="title">ia2</span><span class="params">(nums)</span></span>;<span class="comment">//ia2是一个整形指针，指向ia的第一个元素</span></div></pre></td></tr></table></figure></p>
+<p>数组输出全部元素<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> *e = &amp;arr[<span class="number">10</span>];<span class="comment">//arr有10个元素</span></div><div class="line"><span class="keyword">for</span>(<span class="keyword">int</span> *b = &amp;arr;b!=e;b++)&#123;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span>&lt;&lt;*b&lt;&lt;<span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>数组的函数<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">int arr[] = &#123;<span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>&#125;;</div><div class="line">int *pbeg = begin(arr);</div><div class="line">int *pend = end(arr);</div><div class="line">while(pbeg != pend &amp;&amp; *pbeg &gt;= <span class="number">0</span>)</div><div class="line">    ++pbeg;</div></pre></td></tr></table></figure></p>
+<p>只有同一相关对象的指针才能够比较，不相关对象的指针不能够进行比较。</p>
+<h3 id="多维数组的下标引用"><a href="#多维数组的下标引用" class="headerlink" title="多维数组的下标引用"></a>多维数组的下标引用</h3><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">int ia[<span class="number">3</span>][<span class="number">4</span>]=&#123;</div><div class="line">    &#123;<span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>&#125;,</div><div class="line">    &#123;<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>&#125;,</div><div class="line">    &#123;<span class="number">8</span>,<span class="number">9</span>,<span class="number">10</span>,<span class="number">11</span>&#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">int (&amp;row)[<span class="number">4</span>] = ia[<span class="number">1</span>];<span class="comment">//把row绑定到ia的第二个4元素数组上</span></div><div class="line"><span class="comment">//把row定义为一个含有4个整数的数组的引用，然后将其绑定到ia的第2行。</span></div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/C-基础/" rel="tag"># C++基础</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/09/string字符串/" rel="next" title="C++ string字符串">
+                <i class="fa fa-chevron-left"></i> C++ string字符串
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="caixueyuan" />
+          <p class="site-author-name" itemprop="name">caixueyuan</p>
+           
+              <p class="site-description motion-element" itemprop="description">Java后台开发程序员</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#概念"><span class="nav-number">1.</span> <span class="nav-text">概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用别名"><span class="nav-number">1.1.</span> <span class="nav-text">使用别名</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#decltype类型指示符"><span class="nav-number">1.2.</span> <span class="nav-text">decltype类型指示符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vector"><span class="nav-number">1.3.</span> <span class="nav-text">vector</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数组"><span class="nav-number">1.4.</span> <span class="nav-text">数组</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多维数组的下标引用"><span class="nav-number">1.5.</span> <span class="nav-text">多维数组的下标引用</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">caixueyuan</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
