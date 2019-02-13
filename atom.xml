@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://caixueyuan.github.io/"/>
-  <updated>2018-09-23T07:57:16.027Z</updated>
+  <updated>2017-07-03T12:45:33.879Z</updated>
   <id>https://caixueyuan.github.io/</id>
   
   <author>
@@ -16,11 +16,176 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Hello World</title>
+    <link href="https://caixueyuan.github.io/2019/02/14/hello-world/"/>
+    <id>https://caixueyuan.github.io/2019/02/14/hello-world/</id>
+    <published>2019-02-13T16:10:35.276Z</published>
+    <updated>2017-07-03T12:45:33.879Z</updated>
+    
+    <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>&#39;C++类&#39;</title>
+    <link href="https://caixueyuan.github.io/2018/10/08/C-%E7%B1%BB/"/>
+    <id>https://caixueyuan.github.io/2018/10/08/C-类/</id>
+    <published>2018-10-08T15:36:33.000Z</published>
+    <updated>2018-10-17T14:30:04.255Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="类概念"><a href="#类概念" class="headerlink" title="类概念"></a>类概念</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Sales_data</span></span></div><div class="line">&#123;</div><div class="line">    <span class="built_in">std</span>::<span class="function"><span class="built_in">string</span> <span class="title">isbn</span><span class="params">()</span> <span class="keyword">const</span></span>&#123;<span class="keyword">return</span> bookNo&#125;</div><div class="line">    Sales_data&amp; combine(<span class="keyword">const</span> Sales_data&amp;);</div><div class="line">    <span class="function"><span class="keyword">double</span> <span class="title">avg_price</span><span class="params">()</span> <span class="keyword">const</span></span>;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">string</span> bookNo;</div><div class="line">    <span class="keyword">unsigned</span> units_sold = <span class="number">0</span>;</div><div class="line">    <span class="keyword">double</span> revenue = <span class="number">0.0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>std::string isbn() const{return this-&gt;bookNo;}</code>this的目的总是指向这个对象，this是一个常量指针，不能够修改this中保存的地址。<br>const的作用是修改隐式this指针的类型，相当于const int i =1;中const的作用。<br>默认情况下，this的类型是指向类类型的非常量版本的常量指针。</p>
+<p>C++编译顺序：首先编译成员的声明，然后才轮到成员函数体。</p>
+<h2 id="访问控制与封装"><a href="#访问控制与封装" class="headerlink" title="访问控制与封装"></a>访问控制与封装</h2><p>使用class和struct定义唯一的区别是默认的访问权限，struct的默认权限是public，而class的默认权限是private</p>
+<p>不管是在类内，还是在类外，都可以将函数转为内联函数。</p>
+<p><strong>可变数据成员</strong>：mutable size_t access_cst;//任何成员函数，包括const函数在内都能够修改它的值。</p>
+<p>返回*this的成员函数：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Screen</span>&#123;</span></div><div class="line">    <span class="keyword">public</span>:</div><div class="line">        <span class="function">Screen &amp;<span class="title">set</span><span class="params">(<span class="keyword">char</span>)</span></span>;</div><div class="line">        <span class="function">Screen &amp;<span class="title">set</span><span class="params">(pos,pos,<span class="keyword">char</span>)</span></span>;</div><div class="line">&#125;;</div><div class="line"><span class="keyword">inline</span> Screen &amp;Screen::<span class="built_in">set</span>(<span class="keyword">char</span> c)</div><div class="line">&#123;</div><div class="line">    contents[cursor] = c;</div><div class="line">    <span class="keyword">return</span> *<span class="keyword">this</span>;<span class="comment">//将this对象作为左值返回</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>返回引用的函数是左值的，意味这些函数返回的是对象本身而非对象的副本。<br><code>myScreen.move(4,0).set(&#39;#&#39;);</code>//返回的是对象的引用，所以可以这样使用<br>如果返回的是对象的话，也就是<code>inline Screen Screen::set(char c)</code>的话，那么<br><figure class="highlight sqf"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Screen temp = myScreen.<span class="built_in">move</span>(<span class="number">4</span>,<span class="number">0</span>);<span class="comment">//对返回值进行拷贝</span></div><div class="line">temp.<span class="built_in">set</span>(<span class="string">'#'</span>);<span class="comment">//不会修改myScreen的contents</span></div></pre></td></tr></table></figure></p>
+<p>因此调用set只能改变临时副本，而不能修改myScreen的值</p>
+<p>一个const成员函数如果以引用的形式返回*this，那么它的返回类型将是常量引用。</p>
+<h2 id="友元类"><a href="#友元类" class="headerlink" title="友元类"></a>友元类</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Screen</span>&#123;</span></div><div class="line">    <span class="keyword">friend</span> <span class="class"><span class="keyword">class</span> <span class="title">Window_mgr</span>;</span></div><div class="line">    <span class="comment">//Window_mgr的成员可以访问Screen类的私有成员</span></div><div class="line">&#125;</div><div class="line"><span class="comment">//如果一个类指定了友元类，则友元类的成员函数可以访问次类包括非公有成员在内的所有成员</span></div></pre></td></tr></table></figure>
+<p>友元关系不存在传递性<br>每个类负责控制自己的友元类或友元函数</p>
+<p><strong>让成员函数作为友元</strong>：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Screen</span>&#123;</span></div><div class="line"></div><div class="line">    <span class="comment">//Window_mgr:clear必须在Screen类之前被声明</span></div><div class="line">    <span class="keyword">friend</span> <span class="keyword">void</span> Window_mgr::clear(ScreenIndex);<span class="comment">//这样的话只有Window_mgr中的函数clear能够访问Screen中的非公有成员</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">extern</span> <span class="built_in">std</span>::<span class="function">ostream&amp; <span class="title">storeOn</span><span class="params">(<span class="built_in">std</span>::ostream &amp;, Screen &amp;)</span></span>;</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Screen</span>&#123;</span></div><div class="line">    <span class="keyword">friend</span> <span class="built_in">std</span>::<span class="function">ostream&amp; <span class="title">storeOn</span><span class="params">(<span class="built_in">std</span>::ostream &amp;,Screen &amp;)</span></span>;<span class="comment">//storeOn的中ostream版本能够访问Screen对象的私有部分</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;类概念&quot;&gt;&lt;a href=&quot;#类概念&quot; class=&quot;headerlink&quot; title=&quot;类概念&quot;&gt;&lt;/a&gt;类概念&lt;/h2&gt;&lt;figure class=&quot;highlight cpp&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div
+    
+    </summary>
+    
+      <category term="C++" scheme="https://caixueyuan.github.io/categories/C/"/>
+    
+    
+      <category term="C++基础" scheme="https://caixueyuan.github.io/tags/C-%E5%9F%BA%E7%A1%80/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>&#39;C++基础知识&#39;</title>
+    <link href="https://caixueyuan.github.io/2018/09/23/C-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/"/>
+    <id>https://caixueyuan.github.io/2018/09/23/C-基础知识/</id>
+    <published>2018-09-23T13:10:59.000Z</published>
+    <updated>2018-10-17T14:30:25.583Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="语句"><a href="#语句" class="headerlink" title="语句"></a>语句</h2><p><strong>case标签</strong>：switch…case中case标签必须是整形常量表达式。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span>(deltype(s.size())index = <span class="number">0</span>;index!= s.size() &amp;&amp; !<span class="built_in">isspace</span>(s[index]);++index)&#123;</div><div class="line">    s[index]=<span class="built_in">toupper</span>(s[index]);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>错误类型</p>
+<blockquote>
+<ul>
+<li>exception最常见的问题</li>
+<li>runtime_error只有在运行的时候才能够检测出来的问题</li>
+<li>range_error运行时错误，生成的结果超过了有意义的值域范围</li>
+<li>overflow_error:运行时错误：计算上溢</li>
+<li>underflow_error:运行时错误：计算下溢</li>
+<li>logic_error：程序逻辑错误</li>
+<li>domain_error:逻辑错误：参数对应的结果不存在</li>
+<li>invalid_argument:逻辑错误：无效参数</li>
+<li>length_error：逻辑错误，试图创建一个超出该类型最大长度的对象</li>
+<li>out_of_range：逻辑错误：使用一个超过有效范围的值</li>
+</ul>
+</blockquote>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">try</span>&#123;</div><div class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> runtime_error(<span class="string">"abc"</span>);</div><div class="line">&#125;</div><div class="line"><span class="keyword">catch</span>(runtime_error err)&#123;</div><div class="line">    <span class="built_in">cout</span>&lt;&lt;err.what()&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><p><strong>函数的返回值不能是数组类型或者函数类型，但可以是指向数组或函数的指针</strong></p>
+<p><strong>局部静态对象</strong>：在程序的执行路径第一次经过对象定义语句时初始化，并且直到程序终止才被销毁。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">size_t</span> count_calls()</div><div class="line">&#123;</div><div class="line">    <span class="keyword">static</span> <span class="keyword">size_t</span> ctr = <span class="number">0</span>;<span class="comment">//调用结束后，这个值仍然有效</span></div><div class="line">    <span class="keyword">return</span> ++ctr;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="编译程序"><a href="#编译程序" class="headerlink" title="编译程序"></a>编译程序</h3><p>分离式编译<br><figure class="highlight stata"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">CC</span> factMain.<span class="keyword">cc</span> <span class="keyword">fact</span>.<span class="keyword">cc</span></div><div class="line"><span class="keyword">CC</span> factMain.<span class="keyword">cc</span> <span class="keyword">fact</span>.<span class="keyword">cc</span> -o main</div></pre></td></tr></table></figure></p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">CC -c factMain<span class="selector-class">.cc</span></div><div class="line">CC -c fact<span class="selector-class">.cc</span></div><div class="line">CC factMain<span class="selector-class">.o</span> fact<span class="selector-class">.o</span></div><div class="line">CC factMain<span class="selector-class">.o</span> fact<span class="selector-class">.o</span> -o main</div></pre></td></tr></table></figure>
+<h3 id="参数传递"><a href="#参数传递" class="headerlink" title="参数传递"></a>参数传递</h3><p><strong>传值参数</strong>：</p>
+<blockquote>
+<ul>
+<li>传基本类型</li>
+<li>指针形参：指针也是值，当执行指针拷贝操作时，拷贝的是指针的值。拷贝之后，两个指针是不同的指针。</li>
+</ul>
+</blockquote>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">reset</span><span class="params">(<span class="keyword">int</span> *ip)</span></span></div><div class="line">&#123;</div><div class="line">    *ip = <span class="number">0</span>;<span class="comment">//改变指针ip所指对象的值</span></div><div class="line">    ip = <span class="number">0</span>;<span class="comment">//只改变了ip的局部拷贝，实参没有改变</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>传引用参数</strong>：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">reset</span><span class="params">(<span class="keyword">int</span> &amp;i)</span></span></div><div class="line">&#123;</div><div class="line">    i = <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>使用引用的好处是：</p>
+<blockquote>
+<ul>
+<li>使用引用避免拷贝</li>
+<li>使用引用形参返回额外信息。</li>
+</ul>
+</blockquote>
+<p>顶层和底层const<br><strong>顶层const表示指针本身是个常量，底层const表示指针所指的对象是一个常量</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> i = <span class="number">0</span>;</div><div class="line"><span class="keyword">int</span> *<span class="keyword">const</span> p1 = &amp;i;<span class="comment">//不能够修改p1的值，这是一个顶层const</span></div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> ci = <span class="number">42</span>;<span class="comment">//不能修改ci的值，这是一个顶层的const</span></div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> *p2 = &amp;ci;<span class="comment">//允许修改p2的值，这是一个底层的const</span></div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> *<span class="keyword">const</span> p3 = p2;</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;语句&quot;&gt;&lt;a href=&quot;#语句&quot; class=&quot;headerlink&quot; title=&quot;语句&quot;&gt;&lt;/a&gt;语句&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;case标签&lt;/strong&gt;：switch…case中case标签必须是整形常量表达式。&lt;/p&gt;
+&lt;figure clas
+    
+    </summary>
+    
+      <category term="C++" scheme="https://caixueyuan.github.io/categories/C/"/>
+    
+    
+      <category term="C++基础" scheme="https://caixueyuan.github.io/tags/C-%E5%9F%BA%E7%A1%80/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>&#39;C++算术运算符&#39;</title>
+    <link href="https://caixueyuan.github.io/2018/09/23/C-%E7%AE%97%E6%9C%AF%E8%BF%90%E7%AE%97%E7%AC%A6/"/>
+    <id>https://caixueyuan.github.io/2018/09/23/C-算术运算符/</id>
+    <published>2018-09-23T09:25:11.000Z</published>
+    <updated>2018-09-23T11:15:34.079Z</updated>
+    
+    <content type="html"><![CDATA[<p>##赋值运算符</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> i;</div><div class="line"><span class="keyword">while</span>((i=get_value()) != <span class="number">42</span>)&#123;</div><div class="line">    <span class="comment">//其他处理</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>sizeof运算符的结果部分地依赖于其作用的类型：</p>
+<blockquote>
+<ul>
+<li>对char或者类型为char的表达式执行sizeof运算，结果为1</li>
+<li>对引用类型执行sizeof运算得到被引用对象所占的空间的大小</li>
+<li>对指针执行sizeof运算得到指针本身所占空间的大小</li>
+<li>对解引用指针执行sizeof运算得到指针所指向的对象所占空间的大小，指针不需要有效</li>
+<li>对数组执行sizeof运算得到整个数组所占空间的大小，等价于对数组中所有的元素各执行一次sizeof运算并将所得到的结果求和</li>
+<li>对string对象或vector对象执行sizeof运算只返回该类型固定部分的大小，不会计算对象中的元素占用了多少空间</li>
+</ul>
+</blockquote>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">constexpr</span> <span class="keyword">size_t</span> sz=<span class="keyword">sizeof</span>(ia)/<span class="keyword">sizeof</span>(*ia);<span class="comment">//得到ia元素的个数</span></div></pre></td></tr></table></figure>
+<h2 id="强制类型转换"><a href="#强制类型转换" class="headerlink" title="强制类型转换"></a>强制类型转换</h2><p><strong>static_cast</strong>:作用域任何具有明确定义的类型转换，只要不包含底层const，都可以使用static_cast.<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span>* p = &amp;d;<span class="comment">//正确：任何非常量对象的地址都能够存入void*</span></div><div class="line"><span class="keyword">double</span> *dp = <span class="keyword">static_cast</span>&lt;<span class="keyword">double</span>*&gt;(p);<span class="comment">//正确，将void*转换回初始的指针类型</span></div></pre></td></tr></table></figure></p>
+<p><strong>const_cast</strong>:只能改变运算对象的底层const。能够将常量对象转换成非常量对象的行为。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> <span class="keyword">char</span> *pc;</div><div class="line"><span class="keyword">char</span> *p = <span class="keyword">const_cast</span>&lt;<span class="keyword">char</span>*&gt;(pc);</div></pre></td></tr></table></figure></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;##赋值运算符&lt;/p&gt;
+&lt;figure class=&quot;highlight cpp&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class
+    
+    </summary>
+    
+      <category term="C++" scheme="https://caixueyuan.github.io/categories/C/"/>
+    
+    
+      <category term="C++基础" scheme="https://caixueyuan.github.io/tags/C-%E5%9F%BA%E7%A1%80/"/>
+    
+  </entry>
+  
+  <entry>
     <title>指针与引用</title>
     <link href="https://caixueyuan.github.io/2018/09/11/%E6%8C%87%E9%92%88%E4%B8%8E%E5%BC%95%E7%94%A8/"/>
     <id>https://caixueyuan.github.io/2018/09/11/指针与引用/</id>
     <published>2018-09-11T14:07:02.000Z</published>
-    <updated>2018-09-23T07:57:16.027Z</updated>
+    <updated>2018-09-23T07:57:16.028Z</updated>
     
     <content type="html"><![CDATA[<h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>引用为对象起了另外一个名字，引用类型引用另外一种类型，引用类型的初始值必须是一个对象。<br><code>int &amp;refVal4 = 10</code>这种引用类型不是一个对象。</p>
 <p>指针本身是一个对象，允许对指针赋值和拷贝，而且在指针的生命周期内可以先后指向几个不同的对象。其二,指针无需在定义时赋初值。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> ival = <span class="number">42</span>;</div><div class="line"><span class="keyword">int</span> *p = &amp;ival;<span class="comment">//&amp;是取地址符，存放变量ival的地址，或者说p是指向变量ival的指针。</span></div><div class="line"><span class="comment">//第二条语句把p定义为一个指向int的指针，随后初始化p让其指向名为ival的int对象。</span></div><div class="line"><span class="keyword">int</span> *p;</div><div class="line">p = &amp;ival;</div></pre></td></tr></table></figure></p>
@@ -61,7 +226,7 @@
     <link href="https://caixueyuan.github.io/2018/09/09/string%E5%AD%97%E7%AC%A6%E4%B8%B2/"/>
     <id>https://caixueyuan.github.io/2018/09/09/string字符串/</id>
     <published>2018-09-09T15:14:50.000Z</published>
-    <updated>2018-09-23T07:57:20.952Z</updated>
+    <updated>2018-09-23T07:57:20.953Z</updated>
     
     <content type="html"><![CDATA[<h2 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h2><h3 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h3><p>初始化有两种，直接初始化和拷贝初始化。<br>拷贝初始化<code>string a = &#39;abc&#39;</code><br>直接初始化<code>string a {&#39;abc&#39;}</code></p>
 <h3 id="字符串拼接"><a href="#字符串拼接" class="headerlink" title="字符串拼接"></a>字符串拼接</h3><p>C++语法中的字符串字面值并不是标准库中的string的对象。字符串字面量和string是不同的类型。</p>
@@ -141,7 +306,7 @@
     <link href="https://caixueyuan.github.io/2018/08/12/MySQL%E6%96%87%E4%BB%B6/"/>
     <id>https://caixueyuan.github.io/2018/08/12/MySQL文件/</id>
     <published>2018-08-12T09:42:46.000Z</published>
-    <updated>2018-08-12T16:14:08.471Z</updated>
+    <updated>2018-08-12T16:14:08.472Z</updated>
     
     <content type="html"><![CDATA[<h2 id="参数文件"><a href="#参数文件" class="headerlink" title="参数文件"></a>参数文件</h2><p>告诉MySQL实例启动时在哪里，指定初始化参数，定义某些内存结构的大小</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">show</span> <span class="keyword">variables</span> <span class="keyword">like</span> <span class="string">'innodb_buffer%'</span>;显示查询参数</div><div class="line"><span class="keyword">set</span> read_buffer_size = <span class="number">100100</span>;//设置查询参数</div><div class="line"><span class="keyword">select</span> @@session.read_buffer_size;</div></pre></td></tr></table></figure>
@@ -179,7 +344,7 @@
     <link href="https://caixueyuan.github.io/2018/08/12/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/"/>
     <id>https://caixueyuan.github.io/2018/08/12/InnoDB存储引擎/</id>
     <published>2018-08-12T08:12:23.000Z</published>
-    <updated>2018-08-12T09:42:12.458Z</updated>
+    <updated>2018-08-12T09:42:12.459Z</updated>
     
     <content type="html"><![CDATA[<h2 id="InnoDB体系结构"><a href="#InnoDB体系结构" class="headerlink" title="InnoDB体系结构"></a>InnoDB体系结构</h2><p><strong>后台线程</strong>：负责刷新内存池中的数据，保证缓冲池中的内存缓存的是最近的数据，将已修改的数据文件刷新到磁盘文件，同时保证在数据库发生异常的情况下InnoDB能恢复到正常运行状态</p>
 <h3 id="线程分类"><a href="#线程分类" class="headerlink" title="线程分类"></a>线程分类</h3><blockquote>
@@ -233,7 +398,7 @@
     <link href="https://caixueyuan.github.io/2018/08/06/MySQL-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/"/>
     <id>https://caixueyuan.github.io/2018/08/06/MySQL-学习笔记（一）/</id>
     <published>2018-08-06T15:38:46.000Z</published>
-    <updated>2018-08-06T16:05:52.918Z</updated>
+    <updated>2018-08-06T16:05:52.919Z</updated>
     
     <content type="html"><![CDATA[<h2 id="数据库与实例"><a href="#数据库与实例" class="headerlink" title="数据库与实例"></a>数据库与实例</h2><blockquote>
 <ul>
@@ -309,7 +474,7 @@
     <link href="https://caixueyuan.github.io/2018/07/29/T-SQL/"/>
     <id>https://caixueyuan.github.io/2018/07/29/T-SQL/</id>
     <published>2018-07-29T08:49:12.000Z</published>
-    <updated>2018-07-29T16:07:45.281Z</updated>
+    <updated>2018-07-29T16:07:45.282Z</updated>
     
     <content type="html"><![CDATA[<h2 id="基本操作"><a href="#基本操作" class="headerlink" title="基本操作"></a>基本操作</h2><h3 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h3><p>定义用户数据类型<br><figure class="highlight ada"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sp_addtype dbname2,<span class="symbol">'varchar</span>(<span class="number">10</span>)<span class="string">','</span><span class="keyword">not</span> null'</div></pre></td></tr></table></figure></p>
 <p>显示用户定义的数据类型<strong>sp_help</strong><br>删除用户定义的数据类型<strong>sp_droptype dbname2</strong></p>
@@ -535,7 +700,7 @@
     <link href="https://caixueyuan.github.io/2018/04/02/HTML5-API/"/>
     <id>https://caixueyuan.github.io/2018/04/02/HTML5-API/</id>
     <published>2018-04-02T12:33:51.000Z</published>
-    <updated>2018-04-11T08:50:25.883Z</updated>
+    <updated>2018-04-11T08:50:25.884Z</updated>
     
     <content type="html"><![CDATA[<h2 id="地理位置"><a href="#地理位置" class="headerlink" title="地理位置"></a>地理位置</h2><p><code>navigator.geolocation.getCurrentPosition()</code>获取用户当前位置<br><code>navigator.geolocation.watchPosition()</code>获取当前位置，同时不断地检视当前位置<br><code>navigator.gerlocation.clearWatch()</code>停止检视用户位置</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//获取经纬度</span></div><div class="line">navigator.geolocation.getCurrentPosition(<span class="function"><span class="keyword">function</span>(<span class="params">pos</span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> latitude = pos.coords.latitude;</div><div class="line">    <span class="keyword">var</span> longitude = pos.coords.longitude;</div><div class="line">    alert(<span class="string">"Your position:"</span> + latitude+<span class="string">", "</span>+longitude);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
@@ -622,7 +787,7 @@
     <link href="https://caixueyuan.github.io/2018/04/02/%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%AD%98%E5%82%A8/"/>
     <id>https://caixueyuan.github.io/2018/04/02/客户端存储/</id>
     <published>2018-04-02T07:09:36.000Z</published>
-    <updated>2018-04-02T08:36:55.831Z</updated>
+    <updated>2018-04-02T08:36:55.832Z</updated>
     
     <content type="html"><![CDATA[<h2 id="客户端存储"><a href="#客户端存储" class="headerlink" title="客户端存储"></a>客户端存储</h2><p>客户端存储遵循“同源策略”，不同站点的页面是无法互相读取对方存储的数据，而同一个站点的不同页面之间是可以互相存储数据的，它为我们提供了一种通信机制。</p>
 <p>所有的数据都是以字符串的形式来存储的<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">localStorage.x =<span class="number">10</span>;</div><div class="line"><span class="keyword">var</span> x= <span class="built_in">parseInt</span>(localStorage.x);</div><div class="line"></div><div class="line">localStorage.lastRead = (<span class="keyword">new</span> <span class="built_in">Date</span>()).toUTCString();</div><div class="line"><span class="keyword">var</span> lastRead = <span class="keyword">new</span> <span class="built_in">Date</span>(<span class="built_in">Date</span>.parse(localStorage.lastRead));</div><div class="line"></div><div class="line">localStorage.data = <span class="built_in">JSON</span>.stringify(data);</div><div class="line"><span class="keyword">var</span> data = <span class="built_in">JSON</span>.parse(localStorage.data);</div></pre></td></tr></table></figure></p>
@@ -936,176 +1101,6 @@
     
     
       <category term="JavaScript学习笔记" scheme="https://caixueyuan.github.io/tags/JavaScript%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>JavaScript学习笔记（二）</title>
-    <link href="https://caixueyuan.github.io/2018/03/23/JavaScript%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89/"/>
-    <id>https://caixueyuan.github.io/2018/03/23/JavaScript学习笔记（二）/</id>
-    <published>2018-03-23T06:17:09.000Z</published>
-    <updated>2018-03-25T13:14:43.676Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="表达式和运算符"><a href="#表达式和运算符" class="headerlink" title="表达式和运算符"></a>表达式和运算符</h2><h3 id="算术运算符"><a href="#算术运算符" class="headerlink" title="算术运算符"></a>算术运算符</h3><blockquote>
-<p>在JavaScript中，所有的数字都是浮点型的，除法运算的结果也是浮点型的</p>
-<p>NaN和其他任何值都是不相等的，包括它本身，通过x！==x来判断x是否为NaN，只有在x为NaN的时候，这个表达式的值才为true。</p>
-</blockquote>
-<h3 id="逻辑表达式"><a href="#逻辑表达式" class="headerlink" title="逻辑表达式"></a>逻辑表达式</h3><blockquote>
-<p>假值是false，null，undefined，0，-0，NaN和’’，所有的其他的值包括所有的对象都是真值</p>
-<p>eval允许我们执行那些对上下文没有任何依赖的全局脚本代码段</p>
-<p>delete不能够删除var声明的变量，返回false，在严格条件下，将抛出异常</p>
-<p>var声明的全局变量是无法通过delete删除的。</p>
-</blockquote>
-<h3 id="语句"><a href="#语句" class="headerlink" title="语句"></a>语句</h3><blockquote>
-<ul>
-<li><p>由于对每个case的匹配操作实际上是“====”恒等运算符比较，而不是“==”相等运算符比较，所以，表达式和case的匹配并不会做任何类型转换。</p>
-</li>
-<li><p>for/in 循环并不会遍历对象的所有属性，只有“可枚举”的属性才能够遍历，由JavaScript语言核心所定义的内置方法不是“可枚举”的。</p>
-</li>
-</ul>
-</blockquote>
-<p><strong>判断JavaScript实现是否支持严格模式</strong><br><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">var hasStrictMode</span> = (function()&#123;<span class="string">"use strict"</span>;<span class="attribute">r</span><span class="attribute">e</span><span class="attribute">t</span><span class="attribute">u</span><span class="attribute">r</span><span class="attribute">n</span> <span class="attribute">t</span><span class="attribute">h</span><span class="attribute">i</span><span class="attribute">s</span> === undefined&#125;());</div></pre></td></tr></table></figure></p>
-<h3 id="对象：JavaScript对象是动态的"><a href="#对象：JavaScript对象是动态的" class="headerlink" title="对象：JavaScript对象是动态的"></a>对象：JavaScript对象是动态的</h3><p>属性特征：</p>
-<blockquote>
-<ul>
-<li>可写：标明是否可用设置该属性的值</li>
-<li>可枚举：标明是否通过for/in循环返回该属性</li>
-<li>可配置：表明是否能够删除或者修改该属性</li>
-</ul>
-</blockquote>
-<p>对象</p>
-<blockquote>
-<ul>
-<li>包含属性</li>
-<li>对象的原型指向另外一个对象，本对象的属性继承自它的原型对象</li>
-<li>对象的类是一个标识对象类型的字符串</li>
-<li>对象的扩展标记指明了是否可以向该对象添加新属性</li>
-</ul>
-</blockquote>
-<p>判断属性</p>
-<blockquote>
-<ul>
-<li>hasOwnProperty()用来检测给定的名字是否是对象的自有属性</li>
-<li>propertyIsEnumerable()只有检测是自有属性且这个属性的可枚举性为true</li>
-<li>！=== 判断一个属性是否为undefined</li>
-<li>in 区分值为null的情况</li>
-</ul>
-</blockquote>
-<p><code>Object.getOwnPropertyDescrptor()</code>得到自由属性的描述符<br><code>Object.definePeoperty()</code> 传入要修改的对象、要创建或者修改的属性的名称以及属性描述符对象</p>
-<p><code>Object.getPrototypeOf()</code>查询原型<br><code>Object.isPrototypeOf()</code>检测一个对象是否是另一个对象的原型</p>
-<p><code>Object.esExtensible()</code>来判断该对象是否是可扩展的<br><code>Object.preventExtensions()</code>将对象转换为不可扩展的，一旦设置为不可扩展，就没有办法设置为可扩展啦<br><code>Object.seal()</code>将对象设置为不可扩展，将对象的所有的自有属性都设置为不可配置的<br><code>Object.isSealed()</code>检测对象是否封闭<br><code>Object.freeze()</code>将对象设置为不可扩展的和将其属性设置为不可配置的，将自有的所有数据属性设置为制只读<br><code>Object.isFrozen()</code>检测对象是否冻结</p>
-<h3 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h3><p>所有的索引都是属性名，但只有在0-2^32-2之间的整数属性名才是索引。本质上数组和对象之间是没有区别的，只是数组的索引都是0-2^32-2，而且自动维持length属性值的变化</p>
-<p><code>push()</code>在数组末尾增加一个或者多个元素<br><code>unshift()</code>在数组的首部插入一个元素，并且将其他元素依次移到更高的索引处<br><code>pop()</code>一次减少长度1并返回被删除元素<br><code>unshift()</code>从头部删除一个元素，并将其他元素依次移动更低的索引处<br><code>splice()</code>删除，删除，替换数组元素<br><code>Array.join()</code>将数组中所有的元素都转化为字符串并连接在一起<br><code>数组.forEach(function(v,i,a){})</code>从头到为遍历一遍数组，参数含义分别为（数组元素，元素的索引，数组的本身)</p>
-<h3 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h3><hr>
-<p><strong>函数调用</strong><br>定义并调用一个函数来确定当前脚本运行时是否为严格模式<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> strict = (<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">return</span> !<span class="keyword">this</span>;</div><div class="line">    &#125;());</div></pre></td></tr></table></figure></p>
-<p>标识符arguments是指向实参对象的引用，实参对象是一个类数组对象<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">f</span>(<span class="params">x,y,z</span>)</span>&#123;</div><div class="line">    <span class="keyword">if</span>(<span class="built_in">arguments</span>.length != <span class="number">3</span>)&#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">"function f called with "</span> + <span class="built_in">arguments</span>.length +</div><div class="line">            <span class="string">"arguments,but it expects 3 arguments."</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>callee属性指代当前正在执行的函数<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> factorial = <span class="function"><span class="keyword">function</span>(<span class="params">x</span>)</span>&#123;</div><div class="line">    <span class="keyword">if</span>(x &lt;= <span class="number">1</span>)</div><div class="line">        <span class="keyword">return</span> <span class="number">1</span>;</div><div class="line">    <span class="keyword">return</span> x * <span class="built_in">arguments</span>.callee(x<span class="number">-1</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>caller:调用当前正在执行的函数的函数</p>
-<p>嵌套的函数不会将作用域内的私有成员复制一份，也不会对所绑定的变量生成静态快照<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">constfuncs</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> funcs = [];</div><div class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> i =<span class="number">0</span> ;i&lt;<span class="number">10</span>;i++)</div><div class="line">        funcs[i] = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123; <span class="keyword">return</span> i;&#125;;</div><div class="line">        <span class="keyword">return</span> funcs;</div><div class="line">&#125;</div><div class="line"><span class="keyword">var</span> funcs = constfuncs();</div><div class="line">funcs[<span class="number">5</span>]()</div></pre></td></tr></table></figure></p>
-<figure class="highlight applescript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="literal">result</span>:<span class="number">10</span>;</div></pre></td></tr></table></figure>
-<blockquote>
-<p>call() 和 apply()<br>call()的第一个参数都会变成this的值，哪怕传入的实参是原始值甚至是null或者undefined。<br>f.call(o,1,2);<br>f.apply(o,[1,2])<br>f为函数名，o为对象名字</p>
-<p>bind()<br>将函数绑定至某个对象中</p>
-</blockquote>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> scope = <span class="string">"global"</span>;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">constructFunction</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> scope = <span class="string">"local"</span>;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Function</span>(<span class="string">"return scope"</span>);</div><div class="line">&#125;</div><div class="line">constructFunction()()=====&gt;<span class="string">"global"</span></div></pre></td></tr></table></figure>
-<p>函数体代码的编译总是会在顶层函数中。</p>
-<blockquote>
-<ul>
-<li>map对每个元素都进行操作，单独</li>
-<li>reduce将多个元素都结合成一个元素</li>
-</ul>
-</blockquote>
-<p>memorize()函数创建一个新的对象，这个对象呗当做缓存并赋值给一个局部变量，因此对于返回的函数来说它是私有的，所返回的函数将它的是实参数组转换为字符串，并将字符串用作缓存对象的属性名。如果在缓存中存在这个值，则直接返回它。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> factorial = memorize(<span class="function"><span class="keyword">function</span>(<span class="params">n</span>)</span>&#123;</div><div class="line">    <span class="keyword">return</span> (n&lt;=<span class="number">1</span>) ? <span class="number">1</span>:n * factorial(n<span class="number">-1</span>);</div><div class="line">    &#125;);</div><div class="line">factorial(<span class="number">5</span>)   =====&gt;<span class="number">120</span>(对于<span class="number">1</span><span class="number">-4</span>的值都有缓存）</div></pre></td></tr></table></figure></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;表达式和运算符&quot;&gt;&lt;a href=&quot;#表达式和运算符&quot; class=&quot;headerlink&quot; title=&quot;表达式和运算符&quot;&gt;&lt;/a&gt;表达式和运算符&lt;/h2&gt;&lt;h3 id=&quot;算术运算符&quot;&gt;&lt;a href=&quot;#算术运算符&quot; class=&quot;headerlink&quot; ti
-    
-    </summary>
-    
-      <category term="JavaScript学习笔记" scheme="https://caixueyuan.github.io/categories/JavaScript%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
-    
-    
-      <category term="JavaScript基础" scheme="https://caixueyuan.github.io/tags/JavaScript%E5%9F%BA%E7%A1%80/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>JavaScript学习笔记（一）</title>
-    <link href="https://caixueyuan.github.io/2018/03/19/JavaScript%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/"/>
-    <id>https://caixueyuan.github.io/2018/03/19/JavaScript学习笔记（一）/</id>
-    <published>2018-03-19T08:49:19.000Z</published>
-    <updated>2018-03-25T13:17:54.829Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="类型、值和变量"><a href="#类型、值和变量" class="headerlink" title="类型、值和变量"></a>类型、值和变量</h2><h3 id="包装对象"><a href="#包装对象" class="headerlink" title="包装对象"></a>包装对象</h3><blockquote>
-<ul>
-<li>==等于运算符将原始值和其包装对象视为平等</li>
-<li>=== 全等运算符将它们视为不等</li>
-</ul>
-</blockquote>
-<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">var s</span> = <span class="string">'test'</span></div><div class="line">s.len = 4;</div><div class="line"><span class="attribute">var t</span> = s.len;</div></pre></td></tr></table></figure>
-<p>最后的结果为<strong>undefined</strong>，因为字符串为不可变类型，不能够为其赋值，如果强行赋值，只是为其创建一个临时类型，然后在赋值之后进行销毁，本质上不能够为不可变类型赋值。</p>
-<h3 id="类型转换"><a href="#类型转换" class="headerlink" title="类型转换"></a>类型转换</h3><p><strong>所有的对象（包括数组和函数）都转换为true</strong></p>
-<blockquote>
-<ul>
-<li>对象到字符串的转换toString()</li>
-<li>对象到数组的转换valueOf()</li>
-</ul>
-</blockquote>
-<h3 id="变量作用域"><a href="#变量作用域" class="headerlink" title="变量作用域"></a>变量作用域</h3><p><strong>JavaScript的函数作用域是指在函数内声明的所有变量在函数体内始终是可见的</strong>：也就是说JavaScript函数里声明的所有变量都被“提前”至函数体的顶部。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;类型、值和变量&quot;&gt;&lt;a href=&quot;#类型、值和变量&quot; class=&quot;headerlink&quot; title=&quot;类型、值和变量&quot;&gt;&lt;/a&gt;类型、值和变量&lt;/h2&gt;&lt;h3 id=&quot;包装对象&quot;&gt;&lt;a href=&quot;#包装对象&quot; class=&quot;headerlink&quot; titl
-    
-    </summary>
-    
-      <category term="JavaScript学习笔记" scheme="https://caixueyuan.github.io/categories/JavaScript%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
-    
-    
-      <category term="JavaScript基础" scheme="https://caixueyuan.github.io/tags/JavaScript%E5%9F%BA%E7%A1%80/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>磁盘阵列</title>
-    <link href="https://caixueyuan.github.io/2017/08/29/%E7%A3%81%E7%9B%98%E9%98%B5%E5%88%97/"/>
-    <id>https://caixueyuan.github.io/2017/08/29/磁盘阵列/</id>
-    <published>2017-08-29T14:51:24.000Z</published>
-    <updated>2017-08-29T15:55:33.088Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="RAID"><a href="#RAID" class="headerlink" title="RAID"></a>RAID</h2><p><a href="https://www.zhihu.com/question/20131784" target="_blank" rel="external">RAID有哪几种有什么区别？</a></p>
-<h2 id="什么是软RAID5，硬RAID5？"><a href="#什么是软RAID5，硬RAID5？" class="headerlink" title="什么是软RAID5，硬RAID5？"></a>什么是软RAID5，硬RAID5？</h2><p><a href="https://www.zhihu.com/question/19613331" target="_blank" rel="external">软RAID和硬RAID各有什么优劣</a></p>
-<h2 id="磁带机，是块设备还是字符设备"><a href="#磁带机，是块设备还是字符设备" class="headerlink" title="磁带机，是块设备还是字符设备"></a>磁带机，是块设备还是字符设备</h2><p><a href="https://www.zhihu.com/question/40472366" target="_blank" rel="external">块设备和字符设备</a></p>
-<h2 id="dd"><a href="#dd" class="headerlink" title="dd"></a>dd</h2><p><a href="http://man.linuxde.net/dd" target="_blank" rel="external">dd命令</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;RAID&quot;&gt;&lt;a href=&quot;#RAID&quot; class=&quot;headerlink&quot; title=&quot;RAID&quot;&gt;&lt;/a&gt;RAID&lt;/h2&gt;&lt;p&gt;&lt;a href=&quot;https://www.zhihu.com/question/20131784&quot; target=&quot;_bla
-    
-    </summary>
-    
-      <category term="操作系统" scheme="https://caixueyuan.github.io/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
-    
-    
-      <category term="磁盘阵列" scheme="https://caixueyuan.github.io/tags/%E7%A3%81%E7%9B%98%E9%98%B5%E5%88%97/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>嵌入式入门</title>
-    <link href="https://caixueyuan.github.io/2017/08/28/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%85%A5%E9%97%A8/"/>
-    <id>https://caixueyuan.github.io/2017/08/28/嵌入式入门/</id>
-    <published>2017-08-28T13:18:22.000Z</published>
-    <updated>2017-08-28T13:18:22.486Z</updated>
-    
-    <summary type="html">
-    
-    </summary>
-    
     
   </entry>
   
