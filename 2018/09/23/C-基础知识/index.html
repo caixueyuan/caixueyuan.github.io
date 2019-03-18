@@ -95,17 +95,17 @@
 
 
 
-<meta name="description" content="语句case标签：switch…case中case标签必须是整形常量表达式。 123for(deltype(s.size())index = 0;index!= s.size() &amp;amp;&amp;amp; !isspace(s[index]);++index)&amp;#123;    s[index]=toupper(s[index]);&amp;#125; 错误类型   exception最常见的问题 runti">
+<meta name="description" content="指针和引用指针是“指向”另外一种类型的复合类型。和引用类似，指针也实现了对其他对象的间接访问。然而指针和引用相比又有很多不相同点。   指针本身就是一个对象，允许对指针赋值和靠背，而且在指针的生命周期内它可以先后指向几个不同的对象 指针无需在定义的时候赋初值 和其他内置对象类型一样，在块作用域中定义的指针如果没有被初始化，也将拥有一个不确定的值   语句case标签：switch…case中cas">
 <meta name="keywords" content="C++基础">
 <meta property="og:type" content="article">
 <meta property="og:title" content="&#39;C++基础知识&#39;">
 <meta property="og:url" content="https://caixueyuan.github.io/2018/09/23/C-基础知识/index.html">
 <meta property="og:site_name" content="caixueyuan">
-<meta property="og:description" content="语句case标签：switch…case中case标签必须是整形常量表达式。 123for(deltype(s.size())index = 0;index!= s.size() &amp;amp;&amp;amp; !isspace(s[index]);++index)&amp;#123;    s[index]=toupper(s[index]);&amp;#125; 错误类型   exception最常见的问题 runti">
-<meta property="og:updated_time" content="2018-10-17T14:30:25.583Z">
+<meta property="og:description" content="指针和引用指针是“指向”另外一种类型的复合类型。和引用类似，指针也实现了对其他对象的间接访问。然而指针和引用相比又有很多不相同点。   指针本身就是一个对象，允许对指针赋值和靠背，而且在指针的生命周期内它可以先后指向几个不同的对象 指针无需在定义的时候赋初值 和其他内置对象类型一样，在块作用域中定义的指针如果没有被初始化，也将拥有一个不确定的值   语句case标签：switch…case中cas">
+<meta property="og:updated_time" content="2019-03-18T16:05:05.322Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="&#39;C++基础知识&#39;">
-<meta name="twitter:description" content="语句case标签：switch…case中case标签必须是整形常量表达式。 123for(deltype(s.size())index = 0;index!= s.size() &amp;amp;&amp;amp; !isspace(s[index]);++index)&amp;#123;    s[index]=toupper(s[index]);&amp;#125; 错误类型   exception最常见的问题 runti">
+<meta name="twitter:description" content="指针和引用指针是“指向”另外一种类型的复合类型。和引用类似，指针也实现了对其他对象的间接访问。然而指针和引用相比又有很多不相同点。   指针本身就是一个对象，允许对指针赋值和靠背，而且在指针的生命周期内它可以先后指向几个不同的对象 指针无需在定义的时候赋初值 和其他内置对象类型一样，在块作用域中定义的指针如果没有被初始化，也将拥有一个不确定的值   语句case标签：switch…case中cas">
 
 
 
@@ -364,7 +364,15 @@
       
 
       
-        <h2 id="语句"><a href="#语句" class="headerlink" title="语句"></a>语句</h2><p><strong>case标签</strong>：switch…case中case标签必须是整形常量表达式。</p>
+        <h2 id="指针和引用"><a href="#指针和引用" class="headerlink" title="指针和引用"></a>指针和引用</h2><p>指针是“指向”另外一种类型的复合类型。和引用类似，指针也实现了对其他对象的间接访问。然而指针和引用相比又有很多不相同点。</p>
+<blockquote>
+<ul>
+<li>指针本身就是一个对象，允许对指针赋值和靠背，而且在指针的生命周期内它可以先后指向几个不同的对象</li>
+<li>指针无需在定义的时候赋初值</li>
+<li>和其他内置对象类型一样，在块作用域中定义的指针如果没有被初始化，也将拥有一个不确定的值</li>
+</ul>
+</blockquote>
+<h2 id="语句"><a href="#语句" class="headerlink" title="语句"></a>语句</h2><p><strong>case标签</strong>：switch…case中case标签必须是整形常量表达式。</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span>(deltype(s.size())index = <span class="number">0</span>;index!= s.size() &amp;&amp; !<span class="built_in">isspace</span>(s[index]);++index)&#123;</div><div class="line">    s[index]=<span class="built_in">toupper</span>(s[index]);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>错误类型</p>
 <blockquote>
@@ -594,7 +602,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#语句"><span class="nav-number">1.</span> <span class="nav-text">语句</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#函数"><span class="nav-number">2.</span> <span class="nav-text">函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#编译程序"><span class="nav-number">2.1.</span> <span class="nav-text">编译程序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参数传递"><span class="nav-number">2.2.</span> <span class="nav-text">参数传递</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#指针和引用"><span class="nav-number">1.</span> <span class="nav-text">指针和引用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#语句"><span class="nav-number">2.</span> <span class="nav-text">语句</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#函数"><span class="nav-number">3.</span> <span class="nav-text">函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#编译程序"><span class="nav-number">3.1.</span> <span class="nav-text">编译程序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参数传递"><span class="nav-number">3.2.</span> <span class="nav-text">参数传递</span></a></li></ol></li></ol></div>
             
 
           </div>

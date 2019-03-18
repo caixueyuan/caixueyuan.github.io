@@ -83,9 +83,17 @@
     <link href="https://caixueyuan.github.io/2018/09/23/C-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/"/>
     <id>https://caixueyuan.github.io/2018/09/23/C-基础知识/</id>
     <published>2018-09-23T13:10:59.000Z</published>
-    <updated>2018-10-17T14:30:25.583Z</updated>
+    <updated>2019-03-18T16:05:05.322Z</updated>
     
-    <content type="html"><![CDATA[<h2 id="语句"><a href="#语句" class="headerlink" title="语句"></a>语句</h2><p><strong>case标签</strong>：switch…case中case标签必须是整形常量表达式。</p>
+    <content type="html"><![CDATA[<h2 id="指针和引用"><a href="#指针和引用" class="headerlink" title="指针和引用"></a>指针和引用</h2><p>指针是“指向”另外一种类型的复合类型。和引用类似，指针也实现了对其他对象的间接访问。然而指针和引用相比又有很多不相同点。</p>
+<blockquote>
+<ul>
+<li>指针本身就是一个对象，允许对指针赋值和靠背，而且在指针的生命周期内它可以先后指向几个不同的对象</li>
+<li>指针无需在定义的时候赋初值</li>
+<li>和其他内置对象类型一样，在块作用域中定义的指针如果没有被初始化，也将拥有一个不确定的值</li>
+</ul>
+</blockquote>
+<h2 id="语句"><a href="#语句" class="headerlink" title="语句"></a>语句</h2><p><strong>case标签</strong>：switch…case中case标签必须是整形常量表达式。</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span>(deltype(s.size())index = <span class="number">0</span>;index!= s.size() &amp;&amp; !<span class="built_in">isspace</span>(s[index]);++index)&#123;</div><div class="line">    s[index]=<span class="built_in">toupper</span>(s[index]);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>错误类型</p>
 <blockquote>
@@ -129,8 +137,7 @@
     
     <summary type="html">
     
-      &lt;h2 id=&quot;语句&quot;&gt;&lt;a href=&quot;#语句&quot; class=&quot;headerlink&quot; title=&quot;语句&quot;&gt;&lt;/a&gt;语句&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;case标签&lt;/strong&gt;：switch…case中case标签必须是整形常量表达式。&lt;/p&gt;
-&lt;figure clas
+      &lt;h2 id=&quot;指针和引用&quot;&gt;&lt;a href=&quot;#指针和引用&quot; class=&quot;headerlink&quot; title=&quot;指针和引用&quot;&gt;&lt;/a&gt;指针和引用&lt;/h2&gt;&lt;p&gt;指针是“指向”另外一种类型的复合类型。和引用类似，指针也实现了对其他对象的间接访问。然而指针和引用相比又有很多不相同
     
     </summary>
     
