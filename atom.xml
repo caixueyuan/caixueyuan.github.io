@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://caixueyuan.github.io/"/>
-  <updated>2019-05-19T16:29:25.522Z</updated>
+  <updated>2019-05-20T16:32:07.498Z</updated>
   <id>https://caixueyuan.github.io/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="https://caixueyuan.github.io/2019/05/19/Linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/"/>
     <id>https://caixueyuan.github.io/2019/05/19/Linux进程管理/</id>
     <published>2019-05-19T14:31:59.000Z</published>
-    <updated>2019-05-19T16:29:25.522Z</updated>
+    <updated>2019-05-20T16:32:07.498Z</updated>
     
     <content type="html"><![CDATA[<h2 id="进程管理"><a href="#进程管理" class="headerlink" title="进程管理"></a>进程管理</h2><blockquote>
 <ul>
@@ -39,11 +39,26 @@
 </blockquote>
 <h3 id="进程创建和撤销"><a href="#进程创建和撤销" class="headerlink" title="进程创建和撤销"></a>进程创建和撤销</h3><blockquote>
 <ul>
-<li>fork:使用写时复制的方式，刚开始的时候子进程和父进程都是同享一份物理空间，但是虚拟空间是不一样，只有在往共享空间进行写入的时候才会触发复制</li>
-<li>vfork:刚开始的时候子进程和父进程都是同享一份物理内存，并且最重要的是虚拟空间都是一样的</li>
+<li>fork:使用写时复制的方式，刚开始的时候子进程和父进程都是同享一份物理空间，堆栈和数据资源都是完全的复制</li>
 </ul>
 </blockquote>
-<p><a href="https://blog.csdn.net/chenjiayi_yun/article/details/26242245" target="_blank" rel="external">https://blog.csdn.net/chenjiayi_yun/article/details/26242245</a></p>
+<p><code>写时复制</code>:父进程和子进程共享页帧而不是复制页帧。然而，只要页帧被共享，它们就不能被修改，即页帧被保护。无论父进程还是子进程何时试图写一个共享的页帧，就产生一个异常，这时内核就把这个页复制到一个新的页帧中并标记为可写。原来的页帧仍然是写保护的：当其他进程试图写入时，内核检查写进程是否是这个页帧的唯一属主，如果是，就把这个页帧标记为对这个进程是可写的。</p>
+<p>当进程A使用系统调用fork创建一个子进程B时,由于子进程B实际上是父进程A的一个拷贝,</p>
+<p>因此会拥有与父进程相同的物理页面.为了节约内存和加快创建速度的目标,fork()函数会让子进程B以只读方式共享父进程A的物理页面.同时将父进程A对这些物理页面的访问权限也设成只读.</p>
+<p>这样,当父进程A或子进程B任何一方对这些已共享的物理页面执行写操作时,都会产生页面出错异常(page_fault int14)中断,此时CPU会执行系统提供的异常处理函数do_wp_page()来解决这个异常.</p>
+<p>do_wp_page()会对这块导致写入异常中断的物理页面进行取消共享操作,为写进程复制一新的物理页面,使父进程A和子进程B各自拥有一块内容相同的物理页面.最后,从异常处理函数中返回时,CPU就会重新执行刚才导致异常的写入操作指令,使进程继续执行下去.</p>
+<blockquote>
+<ul>
+<li>vfork:刚开始的时候子进程和父进程都是同享一份物理内存，并且最重要的是虚拟空间都是一样的，子进程只能够使用exit(0)或者execve的方式来退出，而不能够使用return的方式来退出。</li>
+</ul>
+</blockquote>
+<p><code>重要</code>: fork的区别<br>fork() 子进程拷贝父进程的数据段，代码段.<br>vfork() 子进程与父进程共享数据段.|</p>
+<p>fork() 父子进程的执行次序不确定.<br>vfork():保证子进程先运行，</p>
+<blockquote>
+<p>一般情况下，vfork是用来做调用其他的运行程序而创建的进程，虚拟空间和内存空间和父进程是一样的，子进程先运行，使用execve或者exit退出之后才会运行父进程，保证不要做修改数据的操作</p>
+</blockquote>
+<p>参考链接：</p>
+<p><a href="https://blog.csdn.net/gatieme/article/details/51417488" target="_blank" rel="external">Linux中fork，vfork和clone详解（区别与联系）</a></p>
 ]]></content>
     
     <summary type="html">
