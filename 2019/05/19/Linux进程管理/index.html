@@ -95,17 +95,20 @@
 
 
 
-<meta name="description" content="进程管理  fg 将后台转变成前台 bg 将前台转变成后台 nohup 用户注销不影响进程运行 ps -j –forest 查询进程树的结构   进程的优先级进程有40个优先级，以-20（最高优先级）到19（最低优先级），默认有限级为0,使用renice能够改变进程的优先级，只有root用户才能够提高进程的优先级，而普通用户只能够减低进程的优先级使用的命令如下：   nice -n 6 sh ba">
+<meta name="description" content="进程优先级进程优先级进程可以分为实时线程和普通线程，一般情况下咱们运行的微服务的进程都是普通线程。实时进程的优先级大于普通线程，在CPU调度中优先执行，采用先进先出的原则进行调度；普通线程的优先级：影响进程的优先级有两个值：动态优先级（PRI）和静态优先级（NI），静态优先级可以影响进程的优先级。使用ps -l的方式进行查询 NICE有40个优先级，以-20（最高优先级）到19（最低优先级），默认">
 <meta name="keywords" content="Linux基础知识">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Linux进程管理">
 <meta property="og:url" content="https://caixueyuan.github.io/2019/05/19/Linux进程管理/index.html">
 <meta property="og:site_name" content="caixueyuan">
-<meta property="og:description" content="进程管理  fg 将后台转变成前台 bg 将前台转变成后台 nohup 用户注销不影响进程运行 ps -j –forest 查询进程树的结构   进程的优先级进程有40个优先级，以-20（最高优先级）到19（最低优先级），默认有限级为0,使用renice能够改变进程的优先级，只有root用户才能够提高进程的优先级，而普通用户只能够减低进程的优先级使用的命令如下：   nice -n 6 sh ba">
-<meta property="og:updated_time" content="2019-05-20T16:32:07.498Z">
+<meta property="og:description" content="进程优先级进程优先级进程可以分为实时线程和普通线程，一般情况下咱们运行的微服务的进程都是普通线程。实时进程的优先级大于普通线程，在CPU调度中优先执行，采用先进先出的原则进行调度；普通线程的优先级：影响进程的优先级有两个值：动态优先级（PRI）和静态优先级（NI），静态优先级可以影响进程的优先级。使用ps -l的方式进行查询 NICE有40个优先级，以-20（最高优先级）到19（最低优先级），默认">
+<meta property="og:image" content="https://img-blog.csdn.net/20180227113851124">
+<meta property="og:image" content="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/linux/base/%E8%BF%9B%E7%A8%8B%E9%80%80%E5%87%BA.png">
+<meta property="og:updated_time" content="2019-05-22T16:54:06.719Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux进程管理">
-<meta name="twitter:description" content="进程管理  fg 将后台转变成前台 bg 将前台转变成后台 nohup 用户注销不影响进程运行 ps -j –forest 查询进程树的结构   进程的优先级进程有40个优先级，以-20（最高优先级）到19（最低优先级），默认有限级为0,使用renice能够改变进程的优先级，只有root用户才能够提高进程的优先级，而普通用户只能够减低进程的优先级使用的命令如下：   nice -n 6 sh ba">
+<meta name="twitter:description" content="进程优先级进程优先级进程可以分为实时线程和普通线程，一般情况下咱们运行的微服务的进程都是普通线程。实时进程的优先级大于普通线程，在CPU调度中优先执行，采用先进先出的原则进行调度；普通线程的优先级：影响进程的优先级有两个值：动态优先级（PRI）和静态优先级（NI），静态优先级可以影响进程的优先级。使用ps -l的方式进行查询 NICE有40个优先级，以-20（最高优先级）到19（最低优先级），默认">
+<meta name="twitter:image" content="https://img-blog.csdn.net/20180227113851124">
 
 
 
@@ -364,44 +367,108 @@
       
 
       
-        <h2 id="进程管理"><a href="#进程管理" class="headerlink" title="进程管理"></a>进程管理</h2><blockquote>
-<ul>
-<li>fg 将后台转变成前台</li>
-<li>bg 将前台转变成后台</li>
-<li>nohup 用户注销不影响进程运行</li>
-<li>ps -j –forest 查询进程树的结构</li>
-</ul>
-</blockquote>
-<h3 id="进程的优先级"><a href="#进程的优先级" class="headerlink" title="进程的优先级"></a>进程的优先级</h3><p>进程有40个优先级，以-20（最高优先级）到19（最低优先级），默认有限级为0,<br>使用renice能够改变进程的优先级，只有root用户才能够提高进程的优先级，而普通用户只能够减低进程的优先级<br>使用的命令如下：</p>
+        <h2 id="进程优先级"><a href="#进程优先级" class="headerlink" title="进程优先级"></a>进程优先级</h2><h3 id="进程优先级-1"><a href="#进程优先级-1" class="headerlink" title="进程优先级"></a>进程优先级</h3><p>进程可以分为实时线程和普通线程，一般情况下咱们运行的微服务的进程都是普通线程。<br>实时进程的优先级大于普通线程，在CPU调度中优先执行，采用先进先出的原则进行调度；<br>普通线程的优先级：影响进程的优先级有两个值：动态优先级（PRI）和静态优先级（NI），静态优先级可以影响进程的优先级。<br>使用ps -l的方式进行查询</p>
+<p>NICE有40个优先级，以-20（最高优先级）到19（最低优先级），默认有限级为0,<br>使用renice能够改变进程的优先级，只有root用户才能够提高进程的优先级，而普通用户只能够减低进程的优先级<br>使用的命令如下：</p>
 <blockquote>
 <ul>
 <li>nice -n 6 sh bash.sh</li>
 <li>renice +3 1234(PID)</li>
 </ul>
 </blockquote>
-<h3 id="进程创建和撤销"><a href="#进程创建和撤销" class="headerlink" title="进程创建和撤销"></a>进程创建和撤销</h3><blockquote>
-<ul>
-<li>fork:使用写时复制的方式，刚开始的时候子进程和父进程都是同享一份物理空间，堆栈和数据资源都是完全的复制</li>
-</ul>
-</blockquote>
-<p><code>写时复制</code>:父进程和子进程共享页帧而不是复制页帧。然而，只要页帧被共享，它们就不能被修改，即页帧被保护。无论父进程还是子进程何时试图写一个共享的页帧，就产生一个异常，这时内核就把这个页复制到一个新的页帧中并标记为可写。原来的页帧仍然是写保护的：当其他进程试图写入时，内核检查写进程是否是这个页帧的唯一属主，如果是，就把这个页帧标记为对这个进程是可写的。</p>
-<p>当进程A使用系统调用fork创建一个子进程B时,由于子进程B实际上是父进程A的一个拷贝,</p>
-<p>因此会拥有与父进程相同的物理页面.为了节约内存和加快创建速度的目标,fork()函数会让子进程B以只读方式共享父进程A的物理页面.同时将父进程A对这些物理页面的访问权限也设成只读.</p>
-<p>这样,当父进程A或子进程B任何一方对这些已共享的物理页面执行写操作时,都会产生页面出错异常(page_fault int14)中断,此时CPU会执行系统提供的异常处理函数do_wp_page()来解决这个异常.</p>
-<p>do_wp_page()会对这块导致写入异常中断的物理页面进行取消共享操作,为写进程复制一新的物理页面,使父进程A和子进程B各自拥有一块内容相同的物理页面.最后,从异常处理函数中返回时,CPU就会重新执行刚才导致异常的写入操作指令,使进程继续执行下去.</p>
+<h3 id="常用命令："><a href="#常用命令：" class="headerlink" title="常用命令："></a>常用命令：</h3><p>进程还分为前台进程和后台进程，前台进程负责跟用户进行交互，使用以下两个命令能够进行前后台切换</p>
 <blockquote>
 <ul>
-<li>vfork:刚开始的时候子进程和父进程都是同享一份物理内存，并且最重要的是虚拟空间都是一样的，子进程只能够使用exit(0)或者execve的方式来退出，而不能够使用return的方式来退出。</li>
+<li>fg 将后台转变成前台</li>
+<li><p>bg 将前台转变成后台</p>
+</li>
+<li><p>nohup 用户注销不影响进程运行</p>
+</li>
+<li>ps -j –forest 查询进程树的结构</li>
 </ul>
 </blockquote>
-<p><code>重要</code>: fork的区别<br>fork() 子进程拷贝父进程的数据段，代码段.<br>vfork() 子进程与父进程共享数据段.|</p>
-<p>fork() 父子进程的执行次序不确定.<br>vfork():保证子进程先运行，</p>
+<h2 id="进程的生命周期"><a href="#进程的生命周期" class="headerlink" title="进程的生命周期"></a>进程的生命周期</h2><p><img src="https://img-blog.csdn.net/20180227113851124" alt="进程生命周期"><br>进程有这几个状态：</p>
 <blockquote>
-<p>一般情况下，vfork是用来做调用其他的运行程序而创建的进程，虚拟空间和内存空间和父进程是一样的，子进程先运行，使用execve或者exit退出之后才会运行父进程，保证不要做修改数据的操作</p>
+<ul>
+<li>运行状态：进程正在CPU上运行</li>
+<li>等待状态：进程已经准备好啦，等待CPU进行调度，获取CPU片段时间</li>
+<li>终止状态：进程已经运行完啦，通过return/_exit/exit进行返回</li>
+<li>睡眠状态：进程因为某些原因（主要有两种：IO缺页问题导致需要进行IO退出CPU运行，或者是周期性的CPU调度）导致进程CPU片段时间被抢占，进入睡眠状态</li>
+</ul>
 </blockquote>
-<p>参考链接：</p>
-<p><a href="https://blog.csdn.net/gatieme/article/details/51417488" target="_blank" rel="external">Linux中fork，vfork和clone详解（区别与联系）</a></p>
+<h2 id="数据结构task-struct"><a href="#数据结构task-struct" class="headerlink" title="数据结构task_struct"></a>数据结构task_struct</h2><p>包含了进程运行的所有信息，其实比较重要的变量：</p>
+<blockquote>
+<ul>
+<li><figure class="highlight plain"><figcaption><span>long state```代表进程的状态</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line">&gt; * `pid_t pid;  pid_t tgid;`进程的唯一标识PID</div><div class="line">&gt; * `void *stack;  `进程的内核栈</div><div class="line"></div><div class="line">具体的参考链接：</div><div class="line">[Linux进程描述符task_struct结构体详解](https://blog.csdn.net/gatieme/article/details/51383272)</div><div class="line"></div><div class="line">## 进程关系：</div><div class="line"></div><div class="line">### 进程组的概念</div><div class="line">每个进程都属于一个进程组，进程组有一个进程组领导进程。</div><div class="line">比如这个（这三个进程为一个进程组，进程组领导进程为第一个进程bash进程）</div><div class="line">![进程组](https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/linux/base/%E8%BF%9B%E7%A8%8B%E5%85%B3%E7%B3%BB.png)</div><div class="line"></div><div class="line">### 会话 (session)</div><div class="line">将进程分为前台进程和后台进程，通过fg和pg进行切换</div><div class="line"></div><div class="line">参考链接：[Linux进程关系](https://www.cnblogs.com/vamei/archive/2012/10/07/2713023.html)</div><div class="line"></div><div class="line"></div><div class="line">## 进程创建</div><div class="line"></div><div class="line">进程都是通过父进程创建子进程的方式来创建进程的。主要有三种方式：fork，vfork和clone</div><div class="line"></div><div class="line">### fork</div><div class="line">fork是最常用的方式，一般情况下我们都是使用这种方式来创建进程</div><div class="line"></div><div class="line">`重要`:</div><div class="line">开始的时候，父进程和子进程都是共用一份可执行文件，堆栈等，物理地址和逻辑地址都是一致的，父进程和子进程共享页帧而不是复制页帧，并且页帧是被保护的。</div><div class="line"></div><div class="line">当父进程A或子进程B任何一方对这些已共享的物理页面执行写操作时,都会产生页面出错异常(page_fault int14)中断,此时CPU会执行系统提供的异常处理函数do_wp_page()来解决这个异常，这时内核就把这个页复制到一个新的页帧中并标记为可写。如果是父进程创建的页帧，只对父进程可见可读可写。如果是子进程创建的页，只对父进程可见可读可写。</div><div class="line"></div><div class="line">do_wp_page()会对这块导致写入异常中断的物理页面进行取消共享操作,为写进程复制一新的物理页面,使父进程A和子进程B各自拥有一块内容相同的物理页面.最后,从异常处理函数中返回时,CPU就会重新执行刚才导致异常的写入操作指令,使进程继续执行下去.</div><div class="line"></div><div class="line">这个过程结束之后，虚拟地址依然是不变的，只是虚拟地址映射到物理地址的映射变化，物理地址是变化的，但是虚拟地址不变</div><div class="line"></div><div class="line">子进程和父进程的执行顺序不能够确定</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</blockquote>
+<p>#include <stdio.h></stdio.h></p>
+<p>#include <stdlib.h></stdlib.h></p>
+<p>#include <sys types.h=""></sys></p>
+<p>#include <unistd.h></unistd.h></p>
+<p>int main(void)<br>{<br>    int count = 1;<br>    int child;</p>
+<pre><code>child = fork( );
 
+if(child &lt; 0)
+{
+    perror(&quot;fork error : &quot;);
+}
+else if(child == 0)     //  fork return 0 in the child process because child can get hid PID by getpid( )
+{
+    printf(&quot;This is son, his count is: %d (%p). and his pid is: %d\n&quot;, ++count, &amp;count, getpid());
+}
+else                    //  the PID of the child process is returned in the parent’s thread of execution
+{
+    printf(&quot;This is father, his count is: %d (%p), his pid is: %d\n&quot;, count, &amp;count, getpid());
+}
+
+return EXIT_SUCCESS;
+</code></pre><p>}</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
+<p>caixueyuan@caixueyuan-PC:~/Desktop/process$ ./fork<br>This is father, his count is: 1 (0x7ffeff294758), his pid is: 11495<br>This is son, his count is: 2 (0x7ffeff294758). and his pid is: 11496<br><figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="comment">### vfork</span></div><div class="line">vfork跟fork最大的区别就是vfork没有采用写时复制这一块，子进程从开始到结束都是使用父进程的虚拟地址和物理空间，如果子进程要修改数据，修改的也是父进程的数据</div><div class="line">`重要`:这里要特别注意：子进程退出不能够使用return的方式，因为子进程退出和父进程退出是一样的，会导致重复退出而报错。最好也不要使用<span class="keyword">exit</span>(<span class="number">0</span>)这种方式，稍后会进行解释。</div><div class="line"></div><div class="line">vfork的用处：一般是用来创建不修改父进程的数据的子进程（一般咱们是用来通过创建子进程来执行另外一个程序，不会修改到原程序的堆，数据等）</div><div class="line"></div><div class="line">vfork创建的进程都是子进程先执行，等子进程使用execve或者_exit退出之后才会继续运行父进程</div><div class="line"></div><div class="line">代码：</div></pre></td></tr></table></figure></p>
+<p>#include <stdio.h></stdio.h></p>
+<p>#include <stdlib.h></stdlib.h></p>
+<p>#include <sys types.h=""></sys></p>
+<p>#include <unistd.h></unistd.h></p>
+<p>int main(void)<br>{<br>    int count = 1;<br>    int child;</p>
+<p>   // child = vfork( );</p>
+<pre><code>printf(&quot;Before create son, the father&apos;s count is:%d\n&quot;, count);
+
+if((child = vfork())&lt; 0)
+{
+    perror(&quot;fork error : &quot;);
+}
+else if(child == 0)     //  fork return 0 in the child process because child can get hid PID by getpid( )
+{
+    printf(&quot;This is son, his count is: %d (%p). and his pid is: %d\n&quot;, ++count, &amp;count, getpid());
+    _exit(0);
+}
+else                    //  the PID of the child process is returned in the parent’s thread of execution
+{
+    printf(&quot;After son, This is father, his count is: %d (%p), his pid is: %d\n&quot;, ++count, &amp;count, getpid());
+    _exit(0);
+}
+
+return EXIT_SUCCESS;
+</code></pre><p>}<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure></p>
+<p>Before create son, the father’s count is:1<br>This is son, his count is: 2 (0x7ffe4b965058). and his pid is: 12998<br>After son, This is father, his count is: 3 (0x7ffe4b965058), his pid is: 12997<br>```</p>
+<h3 id="clone"><a href="#clone" class="headerlink" title="clone"></a>clone</h3><p>clone是libc中的函数，不是系统调用，一般是用来创建线程的，可以通过clone的方式来创建以上fork或者vfork的方式的创建进程</p>
+<p>参考链接：<a href="https://blog.csdn.net/gatieme/article/details/51417488" target="_blank" rel="external">Linux中fork，vfork和clone详解（区别与联系）</a></p>
+<h2 id="进程的退出"><a href="#进程的退出" class="headerlink" title="进程的退出"></a>进程的退出</h2><p>进程的退出有两种：</p>
+<blockquote>
+<ul>
+<li>正常退出（return,exit(0),_exit(0))</li>
+<li>非正常退出（调用abort(),通过信号的方式（kill -9))</li>
+</ul>
+</blockquote>
+<p>正常退出的方式要注意exit和_exit的区别，有可能造成很隐蔽的错误</p>
+<blockquote>
+<p>_exit是系统调用，直接使进程停止运行，清除其使用的内存空间，并销毁其在内核中的各种数据结构<br>exit不是系统调用，是libc中的接口，包含了_exit的操作，按ATEXIT注册时相反的顺序调用所有由它注册的函数，同时还能够刷一下IO，这样可以保证写文件的缓冲等能够刷到文件或者控制台中。</p>
+</blockquote>
+<p>之所有不推荐在vfork的方式下使用exit(0)的方式，就是怕exit需要刷IO，需要调用终止处理程序，可能会对进程中的内容造成破坏，给父进程造成不确定性</p>
+<p><img src="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/linux/base/%E8%BF%9B%E7%A8%8B%E9%80%80%E5%87%BA.png" alt="进程退出"></p>
+<h2 id="调度策略"><a href="#调度策略" class="headerlink" title="调度策略"></a>调度策略</h2><h3 id="进程的分类（略）"><a href="#进程的分类（略）" class="headerlink" title="进程的分类（略）"></a>进程的分类（略）</h3><p>实时进程：对于实时进程，采用先进先出的方式进行，优先级高于普通进程，会快速响应<br>普通进程：CFS调度。实现尽可能公平的分配CPU资源。一种是直接的, 比如进程打算睡眠或出于其他原因放弃CPU，另一种是通过周期性的机制, 以固定的频率运行, 不时的检测是否有必要</p>
+<h3 id="进程的上下文切换（略）"><a href="#进程的上下文切换（略）" class="headerlink" title="进程的上下文切换（略）"></a>进程的上下文切换（略）</h3>
       
     </div>
 
@@ -587,7 +654,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#进程管理"><span class="nav-number">1.</span> <span class="nav-text">进程管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#进程的优先级"><span class="nav-number">1.1.</span> <span class="nav-text">进程的优先级</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#进程创建和撤销"><span class="nav-number">1.2.</span> <span class="nav-text">进程创建和撤销</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#进程优先级"><span class="nav-number">1.</span> <span class="nav-text">进程优先级</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#进程优先级-1"><span class="nav-number">1.1.</span> <span class="nav-text">进程优先级</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常用命令："><span class="nav-number">1.2.</span> <span class="nav-text">常用命令：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#进程的生命周期"><span class="nav-number">2.</span> <span class="nav-text">进程的生命周期</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据结构task-struct"><span class="nav-number">3.</span> <span class="nav-text">数据结构task_struct</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#clone"><span class="nav-number">3.1.</span> <span class="nav-text">clone</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#进程的退出"><span class="nav-number">4.</span> <span class="nav-text">进程的退出</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#调度策略"><span class="nav-number">5.</span> <span class="nav-text">调度策略</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#进程的分类（略）"><span class="nav-number">5.1.</span> <span class="nav-text">进程的分类（略）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#进程的上下文切换（略）"><span class="nav-number">5.2.</span> <span class="nav-text">进程的上下文切换（略）</span></a></li></ol></li></ol></div>
             
 
           </div>
