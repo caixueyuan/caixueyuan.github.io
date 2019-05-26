@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://caixueyuan.github.io/"/>
-  <updated>2019-05-22T16:54:06.719Z</updated>
+  <updated>2019-05-22T16:57:12.690Z</updated>
   <id>https://caixueyuan.github.io/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="https://caixueyuan.github.io/2019/05/19/Linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/"/>
     <id>https://caixueyuan.github.io/2019/05/19/Linux进程管理/</id>
     <published>2019-05-19T14:31:59.000Z</published>
-    <updated>2019-05-22T16:54:06.719Z</updated>
+    <updated>2019-05-22T16:57:12.690Z</updated>
     
     <content type="html"><![CDATA[<h2 id="进程优先级"><a href="#进程优先级" class="headerlink" title="进程优先级"></a>进程优先级</h2><h3 id="进程优先级-1"><a href="#进程优先级-1" class="headerlink" title="进程优先级"></a>进程优先级</h3><p>进程可以分为实时线程和普通线程，一般情况下咱们运行的微服务的进程都是普通线程。<br>实时进程的优先级大于普通线程，在CPU调度中优先执行，采用先进先出的原则进行调度；<br>普通线程的优先级：影响进程的优先级有两个值：动态优先级（PRI）和静态优先级（NI），静态优先级可以影响进程的优先级。<br>使用ps -l的方式进行查询</p>
 <p>NICE有40个优先级，以-20（最高优先级）到19（最低优先级），默认有限级为0,<br>使用renice能够改变进程的优先级，只有root用户才能够提高进程的优先级，而普通用户只能够减低进程的优先级<br>使用的命令如下：</p>
@@ -53,60 +53,29 @@
 <h2 id="数据结构task-struct"><a href="#数据结构task-struct" class="headerlink" title="数据结构task_struct"></a>数据结构task_struct</h2><p>包含了进程运行的所有信息，其实比较重要的变量：</p>
 <blockquote>
 <ul>
-<li><figure class="highlight plain"><figcaption><span>long state```代表进程的状态</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line">&gt; * `pid_t pid;  pid_t tgid;`进程的唯一标识PID</div><div class="line">&gt; * `void *stack;  `进程的内核栈</div><div class="line"></div><div class="line">具体的参考链接：</div><div class="line">[Linux进程描述符task_struct结构体详解](https://blog.csdn.net/gatieme/article/details/51383272)</div><div class="line"></div><div class="line">## 进程关系：</div><div class="line"></div><div class="line">### 进程组的概念</div><div class="line">每个进程都属于一个进程组，进程组有一个进程组领导进程。</div><div class="line">比如这个（这三个进程为一个进程组，进程组领导进程为第一个进程bash进程）</div><div class="line">![进程组](https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/linux/base/%E8%BF%9B%E7%A8%8B%E5%85%B3%E7%B3%BB.png)</div><div class="line"></div><div class="line">### 会话 (session)</div><div class="line">将进程分为前台进程和后台进程，通过fg和pg进行切换</div><div class="line"></div><div class="line">参考链接：[Linux进程关系](https://www.cnblogs.com/vamei/archive/2012/10/07/2713023.html)</div><div class="line"></div><div class="line"></div><div class="line">## 进程创建</div><div class="line"></div><div class="line">进程都是通过父进程创建子进程的方式来创建进程的。主要有三种方式：fork，vfork和clone</div><div class="line"></div><div class="line">### fork</div><div class="line">fork是最常用的方式，一般情况下我们都是使用这种方式来创建进程</div><div class="line"></div><div class="line">`重要`:</div><div class="line">开始的时候，父进程和子进程都是共用一份可执行文件，堆栈等，物理地址和逻辑地址都是一致的，父进程和子进程共享页帧而不是复制页帧，并且页帧是被保护的。</div><div class="line"></div><div class="line">当父进程A或子进程B任何一方对这些已共享的物理页面执行写操作时,都会产生页面出错异常(page_fault int14)中断,此时CPU会执行系统提供的异常处理函数do_wp_page()来解决这个异常，这时内核就把这个页复制到一个新的页帧中并标记为可写。如果是父进程创建的页帧，只对父进程可见可读可写。如果是子进程创建的页，只对父进程可见可读可写。</div><div class="line"></div><div class="line">do_wp_page()会对这块导致写入异常中断的物理页面进行取消共享操作,为写进程复制一新的物理页面,使父进程A和子进程B各自拥有一块内容相同的物理页面.最后,从异常处理函数中返回时,CPU就会重新执行刚才导致异常的写入操作指令,使进程继续执行下去.</div><div class="line"></div><div class="line">这个过程结束之后，虚拟地址依然是不变的，只是虚拟地址映射到物理地址的映射变化，物理地址是变化的，但是虚拟地址不变</div><div class="line"></div><div class="line">子进程和父进程的执行顺序不能够确定</div></pre></td></tr></table></figure>
-</li>
+<li><code>volatile long state</code>代表进程的状态</li>
+<li><code>pid_t pid;  pid_t tgid;</code>进程的唯一标识PID</li>
+<li><code>void *stack;</code>进程的内核栈</li>
 </ul>
 </blockquote>
-<p>#include <stdio.h></stdio.h></p>
-<p>#include <stdlib.h></stdlib.h></p>
-<p>#include <sys types.h=""></sys></p>
-<p>#include <unistd.h></unistd.h></p>
-<p>int main(void)<br>{<br>    int count = 1;<br>    int child;</p>
-<pre><code>child = fork( );
-
-if(child &lt; 0)
-{
-    perror(&quot;fork error : &quot;);
-}
-else if(child == 0)     //  fork return 0 in the child process because child can get hid PID by getpid( )
-{
-    printf(&quot;This is son, his count is: %d (%p). and his pid is: %d\n&quot;, ++count, &amp;count, getpid());
-}
-else                    //  the PID of the child process is returned in the parent’s thread of execution
-{
-    printf(&quot;This is father, his count is: %d (%p), his pid is: %d\n&quot;, count, &amp;count, getpid());
-}
-
-return EXIT_SUCCESS;
-</code></pre><p>}</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-<p>caixueyuan@caixueyuan-PC:~/Desktop/process$ ./fork<br>This is father, his count is: 1 (0x7ffeff294758), his pid is: 11495<br>This is son, his count is: 2 (0x7ffeff294758). and his pid is: 11496<br><figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="comment">### vfork</span></div><div class="line">vfork跟fork最大的区别就是vfork没有采用写时复制这一块，子进程从开始到结束都是使用父进程的虚拟地址和物理空间，如果子进程要修改数据，修改的也是父进程的数据</div><div class="line">`重要`:这里要特别注意：子进程退出不能够使用return的方式，因为子进程退出和父进程退出是一样的，会导致重复退出而报错。最好也不要使用<span class="keyword">exit</span>(<span class="number">0</span>)这种方式，稍后会进行解释。</div><div class="line"></div><div class="line">vfork的用处：一般是用来创建不修改父进程的数据的子进程（一般咱们是用来通过创建子进程来执行另外一个程序，不会修改到原程序的堆，数据等）</div><div class="line"></div><div class="line">vfork创建的进程都是子进程先执行，等子进程使用execve或者_exit退出之后才会继续运行父进程</div><div class="line"></div><div class="line">代码：</div></pre></td></tr></table></figure></p>
-<p>#include <stdio.h></stdio.h></p>
-<p>#include <stdlib.h></stdlib.h></p>
-<p>#include <sys types.h=""></sys></p>
-<p>#include <unistd.h></unistd.h></p>
-<p>int main(void)<br>{<br>    int count = 1;<br>    int child;</p>
-<p>   // child = vfork( );</p>
-<pre><code>printf(&quot;Before create son, the father&apos;s count is:%d\n&quot;, count);
-
-if((child = vfork())&lt; 0)
-{
-    perror(&quot;fork error : &quot;);
-}
-else if(child == 0)     //  fork return 0 in the child process because child can get hid PID by getpid( )
-{
-    printf(&quot;This is son, his count is: %d (%p). and his pid is: %d\n&quot;, ++count, &amp;count, getpid());
-    _exit(0);
-}
-else                    //  the PID of the child process is returned in the parent’s thread of execution
-{
-    printf(&quot;After son, This is father, his count is: %d (%p), his pid is: %d\n&quot;, ++count, &amp;count, getpid());
-    _exit(0);
-}
-
-return EXIT_SUCCESS;
-</code></pre><p>}<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure></p>
-<p>Before create son, the father’s count is:1<br>This is son, his count is: 2 (0x7ffe4b965058). and his pid is: 12998<br>After son, This is father, his count is: 3 (0x7ffe4b965058), his pid is: 12997<br>```</p>
+<p>具体的参考链接：<br><a href="https://blog.csdn.net/gatieme/article/details/51383272" target="_blank" rel="external">Linux进程描述符task_struct结构体详解</a></p>
+<h2 id="进程关系："><a href="#进程关系：" class="headerlink" title="进程关系："></a>进程关系：</h2><h3 id="进程组的概念"><a href="#进程组的概念" class="headerlink" title="进程组的概念"></a>进程组的概念</h3><p>每个进程都属于一个进程组，进程组有一个进程组领导进程。<br>比如这个（这三个进程为一个进程组，进程组领导进程为第一个进程bash进程）<br><img src="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/linux/base/%E8%BF%9B%E7%A8%8B%E5%85%B3%E7%B3%BB.png" alt="进程组"></p>
+<h3 id="会话-session"><a href="#会话-session" class="headerlink" title="会话 (session)"></a>会话 (session)</h3><p>将进程分为前台进程和后台进程，通过fg和pg进行切换</p>
+<p>参考链接：<a href="https://www.cnblogs.com/vamei/archive/2012/10/07/2713023.html" target="_blank" rel="external">Linux进程关系</a></p>
+<h2 id="进程创建"><a href="#进程创建" class="headerlink" title="进程创建"></a>进程创建</h2><p>进程都是通过父进程创建子进程的方式来创建进程的。主要有三种方式：fork，vfork和clone</p>
+<h3 id="fork"><a href="#fork" class="headerlink" title="fork"></a>fork</h3><p>fork是最常用的方式，一般情况下我们都是使用这种方式来创建进程</p>
+<p><code>重要</code>:<br>开始的时候，父进程和子进程都是共用一份可执行文件，堆栈等，物理地址和逻辑地址都是一致的，父进程和子进程共享页帧而不是复制页帧，并且页帧是被保护的。</p>
+<p>当父进程A或子进程B任何一方对这些已共享的物理页面执行写操作时,都会产生页面出错异常(page_fault int14)中断,此时CPU会执行系统提供的异常处理函数do_wp_page()来解决这个异常，这时内核就把这个页复制到一个新的页帧中并标记为可写。如果是父进程创建的页帧，只对父进程可见可读可写。如果是子进程创建的页，只对父进程可见可读可写。</p>
+<p>do_wp_page()会对这块导致写入异常中断的物理页面进行取消共享操作,为写进程复制一新的物理页面,使父进程A和子进程B各自拥有一块内容相同的物理页面.最后,从异常处理函数中返回时,CPU就会重新执行刚才导致异常的写入操作指令,使进程继续执行下去.</p>
+<p>这个过程结束之后，虚拟地址依然是不变的，只是虚拟地址映射到物理地址的映射变化，物理地址是变化的，但是虚拟地址不变</p>
+<p>子进程和父进程的执行顺序不能够确定</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/types.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">int</span> count = <span class="number">1</span>;</div><div class="line">    <span class="keyword">int</span> child;</div><div class="line"></div><div class="line">    child = fork( );</div><div class="line"></div><div class="line">    <span class="keyword">if</span>(child &lt; <span class="number">0</span>)</div><div class="line">    &#123;</div><div class="line">        perror(<span class="string">"fork error : "</span>);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(child == <span class="number">0</span>)     <span class="comment">//  fork return 0 in the child process because child can get hid PID by getpid( )</span></div><div class="line">    &#123;</div><div class="line">        <span class="built_in">printf</span>(<span class="string">"This is son, his count is: %d (%p). and his pid is: %d\n"</span>, ++count, &amp;count, getpid());</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">else</span>                    <span class="comment">//  the PID of the child process is returned in the parent’s thread of execution</span></div><div class="line">    &#123;</div><div class="line">        <span class="built_in">printf</span>(<span class="string">"This is father, his count is: %d (%p), his pid is: %d\n"</span>, count, &amp;count, getpid());</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> EXIT_SUCCESS;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>运行结果：<br><figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">caixueyuan@caixueyuan-PC:~/Desktop/process$ ./fork </div><div class="line">This <span class="keyword">is</span> father, <span class="keyword">his</span> <span class="built_in">count</span> i<span class="variable">s:</span> <span class="number">1</span> (<span class="number">0</span>x7ffeff294758), <span class="keyword">his</span> pid i<span class="variable">s:</span> <span class="number">11495</span></div><div class="line">This <span class="keyword">is</span> son, <span class="keyword">his</span> <span class="built_in">count</span> i<span class="variable">s:</span> <span class="number">2</span> (<span class="number">0</span>x7ffeff294758). <span class="built_in">and</span> <span class="keyword">his</span> pid i<span class="variable">s:</span> <span class="number">11496</span></div></pre></td></tr></table></figure></p>
+<h3 id="vfork"><a href="#vfork" class="headerlink" title="vfork"></a>vfork</h3><p>vfork跟fork最大的区别就是vfork没有采用写时复制这一块，子进程从开始到结束都是使用父进程的虚拟地址和物理空间，如果子进程要修改数据，修改的也是父进程的数据<br><code>重要</code>:这里要特别注意：子进程退出不能够使用return的方式，因为子进程退出和父进程退出是一样的，会导致重复退出而报错。最好也不要使用exit(0)这种方式，稍后会进行解释。</p>
+<p>vfork的用处：一般是用来创建不修改父进程的数据的子进程（一般咱们是用来通过创建子进程来执行另外一个程序，不会修改到原程序的堆，数据等）</p>
+<p>vfork创建的进程都是子进程先执行，等子进程使用execve或者_exit退出之后才会继续运行父进程</p>
+<p>代码：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/types.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">int</span> count = <span class="number">1</span>;</div><div class="line">    <span class="keyword">int</span> child;</div><div class="line"></div><div class="line">   <span class="comment">// child = vfork( );</span></div><div class="line"></div><div class="line">    <span class="built_in">printf</span>(<span class="string">"Before create son, the father's count is:%d\n"</span>, count);</div><div class="line"></div><div class="line">    <span class="keyword">if</span>((child = vfork())&lt; <span class="number">0</span>)</div><div class="line">    &#123;</div><div class="line">        perror(<span class="string">"fork error : "</span>);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(child == <span class="number">0</span>)     <span class="comment">//  fork return 0 in the child process because child can get hid PID by getpid( )</span></div><div class="line">    &#123;</div><div class="line">        <span class="built_in">printf</span>(<span class="string">"This is son, his count is: %d (%p). and his pid is: %d\n"</span>, ++count, &amp;count, getpid());</div><div class="line">        _exit(<span class="number">0</span>);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">else</span>                    <span class="comment">//  the PID of the child process is returned in the parent’s thread of execution</span></div><div class="line">    &#123;</div><div class="line">        <span class="built_in">printf</span>(<span class="string">"After son, This is father, his count is: %d (%p), his pid is: %d\n"</span>, ++count, &amp;count, getpid());</div><div class="line">        _exit(<span class="number">0</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> EXIT_SUCCESS;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>运行结果<br><figure class="highlight applescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Before create son, <span class="keyword">the</span> father's <span class="built_in">count</span> <span class="keyword">is</span>:<span class="number">1</span></div><div class="line">This <span class="keyword">is</span> son, his <span class="built_in">count</span> <span class="keyword">is</span>: <span class="number">2</span> (<span class="number">0x7ffe4b965058</span>). <span class="keyword">and</span> his pid <span class="keyword">is</span>: <span class="number">12998</span></div><div class="line">After son, This <span class="keyword">is</span> father, his <span class="built_in">count</span> <span class="keyword">is</span>: <span class="number">3</span> (<span class="number">0x7ffe4b965058</span>), his pid <span class="keyword">is</span>: <span class="number">12997</span></div></pre></td></tr></table></figure></p>
 <h3 id="clone"><a href="#clone" class="headerlink" title="clone"></a>clone</h3><p>clone是libc中的函数，不是系统调用，一般是用来创建线程的，可以通过clone的方式来创建以上fork或者vfork的方式的创建进程</p>
 <p>参考链接：<a href="https://blog.csdn.net/gatieme/article/details/51417488" target="_blank" rel="external">Linux中fork，vfork和clone详解（区别与联系）</a></p>
 <h2 id="进程的退出"><a href="#进程的退出" class="headerlink" title="进程的退出"></a>进程的退出</h2><p>进程的退出有两种：</p>
