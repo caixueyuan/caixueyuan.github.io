@@ -320,6 +320,28 @@
           </span>
 
           
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
 
           
             
@@ -346,8 +368,16 @@
       
         
           
-          
-          
+          概念
+
+临界区：访问和操作共享数据的代码段
+
+竞态条件：当有多个线程同时进入临界区时，执行结果取决于线程的执行顺序。也就是说多个线程如果不受控制的话，那么产生的结果不一定是我们想要的
+
+
+
+内核锁锁是有开销的，内核锁的关键的开销在于CPU访问内存的时间，正常情况下CPU都是访问寄存器，寄存器的速度更
+          ...
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2019/05/26/锁和进程间通讯/#more" rel="contents">
