@@ -77,7 +77,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="MySQL," />
+  <meta name="keywords" content="Hexo, NexT" />
 
 
 
@@ -95,17 +95,16 @@
 
 
 
-<meta name="description" content="InnoDB体系结构后台线程：负责刷新内存池中的数据，保证缓冲池中的内存缓存的是最近的数据，将已修改的数据文件刷新到磁盘文件，同时保证在数据库发生异常的情况下InnoDB能恢复到正常运行状态 线程分类  Master Thread负责将缓冲池中的数据异步刷新到磁盘，保证数据的一致性，包括脏页的刷新、合并插入缓冲和UNDO页的回收 IO Thread负责异步IO请求的回调  Purge Thread">
-<meta name="keywords" content="MySQL">
+<meta name="description" content="Java后台开发程序员">
 <meta property="og:type" content="article">
-<meta property="og:title" content="InnoDB存储引擎">
-<meta property="og:url" content="https://caixueyuan.github.io/2018/08/12/InnoDB存储引擎/index.html">
+<meta property="og:title" content="锁和进程间通讯">
+<meta property="og:url" content="https://caixueyuan.github.io/2019/05/26/锁和进程间通讯/index.html">
 <meta property="og:site_name" content="caixueyuan">
-<meta property="og:description" content="InnoDB体系结构后台线程：负责刷新内存池中的数据，保证缓冲池中的内存缓存的是最近的数据，将已修改的数据文件刷新到磁盘文件，同时保证在数据库发生异常的情况下InnoDB能恢复到正常运行状态 线程分类  Master Thread负责将缓冲池中的数据异步刷新到磁盘，保证数据的一致性，包括脏页的刷新、合并插入缓冲和UNDO页的回收 IO Thread负责异步IO请求的回调  Purge Thread">
-<meta property="og:updated_time" content="2018-08-12T09:42:12.459Z">
+<meta property="og:description" content="Java后台开发程序员">
+<meta property="og:updated_time" content="2019-05-26T04:20:46.268Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="InnoDB存储引擎">
-<meta name="twitter:description" content="InnoDB体系结构后台线程：负责刷新内存池中的数据，保证缓冲池中的内存缓存的是最近的数据，将已修改的数据文件刷新到磁盘文件，同时保证在数据库发生异常的情况下InnoDB能恢复到正常运行状态 线程分类  Master Thread负责将缓冲池中的数据异步刷新到磁盘，保证数据的一致性，包括脏页的刷新、合并插入缓冲和UNDO页的回收 IO Thread负责异步IO请求的回调  Purge Thread">
+<meta name="twitter:title" content="锁和进程间通讯">
+<meta name="twitter:description" content="Java后台开发程序员">
 
 
 
@@ -133,13 +132,13 @@
 
 
 
-  <link rel="canonical" href="https://caixueyuan.github.io/2018/08/12/InnoDB存储引擎/"/>
+  <link rel="canonical" href="https://caixueyuan.github.io/2019/05/26/锁和进程间通讯/"/>
 
 
 
 
 
-  <title>InnoDB存储引擎 | caixueyuan</title>
+  <title>锁和进程间通讯 | caixueyuan</title>
   
 
 
@@ -278,7 +277,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://caixueyuan.github.io/2018/08/12/InnoDB存储引擎/">
+    <link itemprop="mainEntityOfPage" href="https://caixueyuan.github.io/2019/05/26/锁和进程间通讯/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="caixueyuan">
@@ -295,7 +294,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">InnoDB存储引擎</h1>
+          <h1 class="post-title" itemprop="name headline">锁和进程间通讯</h1>
         
 
         <div class="post-meta">
@@ -307,8 +306,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-12T16:12:23+08:00">
-                2018-08-12
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-26T12:20:46+08:00">
+                2019-05-26
               </time>
             
 
@@ -317,28 +316,6 @@
             
           </span>
 
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/数据库/" itemprop="url" rel="index">
-                    <span itemprop="name">数据库</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
           
 
           
@@ -364,39 +341,7 @@
       
 
       
-        <h2 id="InnoDB体系结构"><a href="#InnoDB体系结构" class="headerlink" title="InnoDB体系结构"></a>InnoDB体系结构</h2><p><strong>后台线程</strong>：负责刷新内存池中的数据，保证缓冲池中的内存缓存的是最近的数据，将已修改的数据文件刷新到磁盘文件，同时保证在数据库发生异常的情况下InnoDB能恢复到正常运行状态</p>
-<h3 id="线程分类"><a href="#线程分类" class="headerlink" title="线程分类"></a>线程分类</h3><blockquote>
-<ul>
-<li>Master Thread<br>负责将缓冲池中的数据异步刷新到磁盘，保证数据的一致性，包括脏页的刷新、合并插入缓冲和UNDO页的回收</li>
-<li><p>IO Thread<br>负责异步IO请求的回调</p>
-</li>
-<li><p>Purge Thread<br>在事务被提交后，所使用的undolog可能不需要，负责来回收已经使用并分配的undo页。</p>
-</li>
-<li><p>Page Cleaner Thread<br>将之前版本中脏页的刷新操作都放入到单独的线程中来完成，减轻Master Thread的工作和对于用户查询线程的阻塞。</p>
-</li>
-</ul>
-</blockquote>
-<h3 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h3><blockquote>
-<ul>
-<li><p>缓冲池：使用CheckPoint的机制刷新内存页，缓存的数据包括：索引页、数据页、undo页、插入缓冲、自适应哈希索引、InnoDB存储的锁信息、数据字典信息。</p>
-</li>
-<li><p>LRU List、Free List和Flush List</p>
-</li>
-<li><p>重做日志缓冲</p>
-</li>
-</ul>
-</blockquote>
-<h3 id="InnoDB关键特性"><a href="#InnoDB关键特性" class="headerlink" title="InnoDB关键特性"></a>InnoDB关键特性</h3><blockquote>
-<ul>
-<li><p>插入缓冲：<br><strong>Insert Buffer</strong>：当索引是辅助索引，索引不是唯一的<br><strong>Change Buffer</strong>：对DML操作（INSERT,DELETE,UPDATE)进行缓冲<br><strong>Merge Insert Buffer</strong>：合并插入缓存到磁盘中</p>
-</li>
-<li><p>两次写：两次写入提高效率</p>
-</li>
-<li>自适应哈希索引：提高查询的效率，比B+树的查找更快</li>
-<li>异步IO：将多个IO合并为1个IO请求</li>
-</ul>
-</blockquote>
-
+        
       
     </div>
 
@@ -423,12 +368,6 @@
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/MySQL/" rel="tag"># MySQL</a>
-          
-        </div>
-      
 
       
       
@@ -438,8 +377,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/08/06/MySQL-学习笔记（一）/" rel="next" title="MySQL 学习笔记（一）">
-                <i class="fa fa-chevron-left"></i> MySQL 学习笔记（一）
+              <a href="/2019/05/19/Linux进程管理/" rel="next" title="Linux进程管理">
+                <i class="fa fa-chevron-left"></i> Linux进程管理
               </a>
             
           </div>
@@ -447,10 +386,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/08/12/MySQL文件/" rel="prev" title="MySQL文件">
-                MySQL文件 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -497,17 +432,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview sidebar-panel">
+      <section class="site-overview sidebar-panel sidebar-panel-active">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -576,22 +502,6 @@
 
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#InnoDB体系结构"><span class="nav-number">1.</span> <span class="nav-text">InnoDB体系结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#线程分类"><span class="nav-number">1.1.</span> <span class="nav-text">线程分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#内存"><span class="nav-number">1.2.</span> <span class="nav-text">内存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#InnoDB关键特性"><span class="nav-number">1.3.</span> <span class="nav-text">InnoDB关键特性</span></a></li></ol></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       

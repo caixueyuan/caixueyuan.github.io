@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://caixueyuan.github.io/"/>
-  <updated>2019-05-22T16:57:12.690Z</updated>
+  <updated>2019-05-26T04:20:46.268Z</updated>
   <id>https://caixueyuan.github.io/</id>
   
   <author>
@@ -16,11 +16,25 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>锁和进程间通讯</title>
+    <link href="https://caixueyuan.github.io/2019/05/26/%E9%94%81%E5%92%8C%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E8%AE%AF/"/>
+    <id>https://caixueyuan.github.io/2019/05/26/锁和进程间通讯/</id>
+    <published>2019-05-26T04:20:46.000Z</published>
+    <updated>2019-05-26T04:20:46.268Z</updated>
+    
+    <summary type="html">
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
     <title>Linux进程管理</title>
     <link href="https://caixueyuan.github.io/2019/05/19/Linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/"/>
     <id>https://caixueyuan.github.io/2019/05/19/Linux进程管理/</id>
     <published>2019-05-19T14:31:59.000Z</published>
-    <updated>2019-05-22T16:57:12.690Z</updated>
+    <updated>2019-05-26T04:22:59.222Z</updated>
     
     <content type="html"><![CDATA[<h2 id="进程优先级"><a href="#进程优先级" class="headerlink" title="进程优先级"></a>进程优先级</h2><h3 id="进程优先级-1"><a href="#进程优先级-1" class="headerlink" title="进程优先级"></a>进程优先级</h3><p>进程可以分为实时线程和普通线程，一般情况下咱们运行的微服务的进程都是普通线程。<br>实时进程的优先级大于普通线程，在CPU调度中优先执行，采用先进先出的原则进行调度；<br>普通线程的优先级：影响进程的优先级有两个值：动态优先级（PRI）和静态优先级（NI），静态优先级可以影响进程的优先级。<br>使用ps -l的方式进行查询</p>
 <p>NICE有40个优先级，以-20（最高优先级）到19（最低优先级），默认有限级为0,<br>使用renice能够改变进程的优先级，只有root用户才能够提高进程的优先级，而普通用户只能够减低进程的优先级<br>使用的命令如下：</p>
@@ -902,45 +916,6 @@
     <summary type="html">
     
       &lt;h2 id=&quot;脚本化图片&quot;&gt;&lt;a href=&quot;#脚本化图片&quot; class=&quot;headerlink&quot; title=&quot;脚本化图片&quot;&gt;&lt;/a&gt;脚本化图片&lt;/h2&gt;&lt;figure class=&quot;highlight html&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;
-    
-    </summary>
-    
-      <category term="JavaScript学习笔记" scheme="https://caixueyuan.github.io/categories/JavaScript%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
-    
-    
-      <category term="JavaScript学习笔记" scheme="https://caixueyuan.github.io/tags/JavaScript%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>客户端存储</title>
-    <link href="https://caixueyuan.github.io/2018/04/02/%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%AD%98%E5%82%A8/"/>
-    <id>https://caixueyuan.github.io/2018/04/02/客户端存储/</id>
-    <published>2018-04-02T07:09:36.000Z</published>
-    <updated>2018-04-02T08:36:55.832Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="客户端存储"><a href="#客户端存储" class="headerlink" title="客户端存储"></a>客户端存储</h2><p>客户端存储遵循“同源策略”，不同站点的页面是无法互相读取对方存储的数据，而同一个站点的不同页面之间是可以互相存储数据的，它为我们提供了一种通信机制。</p>
-<p>所有的数据都是以字符串的形式来存储的<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">localStorage.x =<span class="number">10</span>;</div><div class="line"><span class="keyword">var</span> x= <span class="built_in">parseInt</span>(localStorage.x);</div><div class="line"></div><div class="line">localStorage.lastRead = (<span class="keyword">new</span> <span class="built_in">Date</span>()).toUTCString();</div><div class="line"><span class="keyword">var</span> lastRead = <span class="keyword">new</span> <span class="built_in">Date</span>(<span class="built_in">Date</span>.parse(localStorage.lastRead));</div><div class="line"></div><div class="line">localStorage.data = <span class="built_in">JSON</span>.stringify(data);</div><div class="line"><span class="keyword">var</span> data = <span class="built_in">JSON</span>.parse(localStorage.data);</div></pre></td></tr></table></figure></p>
-<h3 id="localStorage和sessionStorage"><a href="#localStorage和sessionStorage" class="headerlink" title="localStorage和sessionStorage"></a>localStorage和sessionStorage</h3><blockquote>
-<ul>
-<li>localStorage:存储的数据是永久的，限定在文档源，同源的文档同享同样的localStorage数据，都是采用广播机制的，浏览器会对目前正在访问同样站点的所有的窗口发送消息</li>
-<li>sessionStorage:有效期和存储数据的脚本所在的最顶层的窗口或者浏览器标签页是一样的，一旦窗口被关闭或者标签页被永远关闭，就删除数据，限定在文档源的级别，sessionStorage的改变只有相牵连的窗口的时候才会触发存储时间</li>
-</ul>
-</blockquote>
-<p><strong>Cookie</strong><br>在JavaScript中，cookie用于保存状态以及能够为Web浏览器提供一种身份识别机制</p>
-<blockquote>
-<ul>
-<li>检测Cookie是否启用：<code>navigator.cookieEnabled</code></li>
-<li>Cookie属性：只能够持续到Web浏览器的会话期间，一旦用户关闭浏览器，Cookie保存的数据就会丢失Cookie的作用期并不是局限在浏览器的单个窗口，它的有效期和整个浏览器进程而不是单个浏览器窗口（sessionStorage）</li>
-<li>JavaScript核心的全局函数encodeURIComponent()对值进行编码，读取cookie值的时候需要采用decodeURIComponent()函数解码</li>
-</ul>
-</blockquote>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getCookie</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> cookie = &#123;&#125;;</div><div class="line">    <span class="keyword">var</span> all = <span class="built_in">document</span>.cookie;</div><div class="line">    <span class="keyword">if</span>(all === <span class="string">''</span>)</div><div class="line">        <span class="keyword">return</span> cookie;</div><div class="line">    <span class="keyword">var</span> list = all.split(<span class="string">"; "</span>);</div><div class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>;i&lt;list.length;i++)&#123;</div><div class="line">        <span class="keyword">var</span> cookie = list[i];</div><div class="line">        <span class="keyword">var</span> p = cookie.indexOf(<span class="string">"="</span>);</div><div class="line">        <span class="keyword">var</span> p = cookie.substring(<span class="number">0</span>,p):</div><div class="line">        <span class="keyword">var</span> value = cookie.substring(p+<span class="number">1</span>);</div><div class="line">        value = <span class="built_in">decodeURIComponent</span>(value);</div><div class="line">        cookie[name] = value;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> cookie;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;客户端存储&quot;&gt;&lt;a href=&quot;#客户端存储&quot; class=&quot;headerlink&quot; title=&quot;客户端存储&quot;&gt;&lt;/a&gt;客户端存储&lt;/h2&gt;&lt;p&gt;客户端存储遵循“同源策略”，不同站点的页面是无法互相读取对方存储的数据，而同一个站点的不同页面之间是可以互相存储数据
     
     </summary>
     
