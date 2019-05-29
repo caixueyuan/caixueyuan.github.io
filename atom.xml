@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://caixueyuan.github.io/"/>
-  <updated>2019-05-26T13:09:30.207Z</updated>
+  <updated>2019-05-29T16:35:49.991Z</updated>
   <id>https://caixueyuan.github.io/</id>
   
   <author>
@@ -14,6 +14,48 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>linux设备驱动程序</title>
+    <link href="https://caixueyuan.github.io/2019/05/29/linux%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8%E7%A8%8B%E5%BA%8F/"/>
+    <id>https://caixueyuan.github.io/2019/05/29/linux设备驱动程序/</id>
+    <published>2019-05-29T15:58:36.000Z</published>
+    <updated>2019-05-29T16:35:49.991Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="I-O体系结构"><a href="#I-O体系结构" class="headerlink" title="I/O体系结构"></a>I/O体系结构</h2><p><img src="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/linux/base/%E6%80%BB%E7%BA%BF.gif" alt="总线"></p>
+<p>两条高速总线用于在内存芯片上来回传送数据：前端总线将CPU连接到RAM控制器上，而后端总线将CPU连接到外部硬件的高速缓存上。</p>
+<p>主机上的桥将系统总线和前端总线连接在一起。</p>
+<p>任何设备只能够连接到一条总线上。</p>
+<p><img src="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/linux/base/PC%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84.gif" alt="IO体系结构"></p>
+<h3 id="I-O端口"><a href="#I-O端口" class="headerlink" title="I/O端口"></a>I/O端口</h3><p><img src="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/linux/base/%E4%B8%93%E7%94%A8IO%E7%AB%AF%E5%8F%A3.gif" alt="专用接口"></p>
+<p>I/O端口有两种方式：既可以使用为独立的I/O地址空间，又可以被映射到物理地址空间，这样就可以通过内存来访问I/O端口啦。不过一般情况下，都是作为独立的I/O地址空间。</p>
+<p>一般情况下，I/O有四个汇编指令，分别为in、out、ins、outs</p>
+<p>对于I/O端口，有特殊的数据结构来对应（resource），主要的作用是唯一性地指定I/O地址空间，让地址不重复</p>
+<h3 id="I-O接口"><a href="#I-O接口" class="headerlink" title="I/O接口"></a>I/O接口</h3><p>它起翻译器的作用，即把I/O端口中的值转换成设备所需要的命令和数据。在相反方向上，它检测设备状态的变化，并对起状态寄存器作用的I/O端口进行相应的更新。（也就是说将值转换为数据，并监控I/O状态)</p>
+<h3 id="控制器"><a href="#控制器" class="headerlink" title="控制器"></a>控制器</h3><blockquote>
+<ul>
+<li><p>对从I/O接口收到的高级命令进行解释，并通过向设备发送适当的电信号序列强制设备执行特定的操作。</p>
+</li>
+<li><p>对从设备接收到的电信号进行转换和适当的解释，并修改（通过I/O接口）状态寄存器的值。</p>
+</li>
+</ul>
+</blockquote>
+<h3 id="sysfs文件系统"><a href="#sysfs文件系统" class="headerlink" title="sysfs文件系统"></a>sysfs文件系统</h3><p>sysfs文件系统的目标是展现设备驱动程序模型组件间的层次关系，允许用户态应用程序访问内核内部数据结构的一种文件系统</p>
+<p><img src="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/linux/base/%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8.PNG" alt="sysfs文件系统"></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;I-O体系结构&quot;&gt;&lt;a href=&quot;#I-O体系结构&quot; class=&quot;headerlink&quot; title=&quot;I/O体系结构&quot;&gt;&lt;/a&gt;I/O体系结构&lt;/h2&gt;&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/caixue
+    
+    </summary>
+    
+      <category term="Linux" scheme="https://caixueyuan.github.io/categories/Linux/"/>
+    
+    
+      <category term="Linux基础知识" scheme="https://caixueyuan.github.io/tags/Linux%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/"/>
+    
+  </entry>
   
   <entry>
     <title>锁和进程间通讯</title>
@@ -916,61 +958,6 @@
     <summary type="html">
     
       &lt;h2 id=&quot;地理位置&quot;&gt;&lt;a href=&quot;#地理位置&quot; class=&quot;headerlink&quot; title=&quot;地理位置&quot;&gt;&lt;/a&gt;地理位置&lt;/h2&gt;&lt;p&gt;&lt;code&gt;navigator.geolocation.getCurrentPosition()&lt;/code&gt;获取用户当前位
-    
-    </summary>
-    
-      <category term="JavaScript学习笔记" scheme="https://caixueyuan.github.io/categories/JavaScript%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
-    
-    
-      <category term="JavaScript学习笔记" scheme="https://caixueyuan.github.io/tags/JavaScript%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>JavaScript多媒体和图形编程</title>
-    <link href="https://caixueyuan.github.io/2018/04/02/JavaScript%E5%A4%9A%E5%AA%92%E4%BD%93%E5%92%8C%E5%9B%BE%E5%BD%A2%E7%BC%96%E7%A8%8B/"/>
-    <id>https://caixueyuan.github.io/2018/04/02/JavaScript多媒体和图形编程/</id>
-    <published>2018-04-02T08:39:15.000Z</published>
-    <updated>2018-04-02T12:33:04.879Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="脚本化图片"><a href="#脚本化图片" class="headerlink" title="脚本化图片"></a>脚本化图片</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="actionscript">(<span class="keyword">new</span> Image()).src = <span class="string">"images/help_rollover.gif"</span>;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span>//预加载图片</div><div class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span> = <span class="string">"images/help.gif"</span></span></div><div class="line">    <span class="attr">onmouseover</span> = <span class="string">"this.src = 'images/help_rollover.gif'"</span></div><div class="line">    <span class="attr">onmouseout</span> = <span class="string">"this.src = 'images/help_rollout.gif'"</span>&gt;</div></pre></td></tr></table></figure>
-<h3 id="优雅的图片翻转实现方式"><a href="#优雅的图片翻转实现方式" class="headerlink" title="优雅的图片翻转实现方式"></a>优雅的图片翻转实现方式</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 要创建图片翻转效果，将次此模块引入HTML文件中，然后在任意&lt;img&gt;元素上使用data-rollover属性来指定翻转图片的URL即可</div><div class="line"> */</div><div class="line"></div><div class="line">onLoad(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>;i&lt; <span class="built_in">document</span>.images.length; i++)&#123;</div><div class="line">        <span class="keyword">var</span> img = <span class="built_in">document</span>.images[i];</div><div class="line">        <span class="keyword">var</span> rollover = img.getAttribute(<span class="string">"data_rollover"</span>);</div><div class="line">        <span class="keyword">if</span>(!rollover)</div><div class="line">            <span class="keyword">continue</span>;</div><div class="line">        (<span class="keyword">new</span> Image()).src = rollover;</div><div class="line">        img.setAttribute(<span class="string">"data-rollout"</span>,img.src);</div><div class="line">        img.onmouseover = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">            <span class="keyword">this</span>.src = <span class="keyword">this</span>.getAttribute(<span class="string">"data_rollover"</span>);</div><div class="line">        &#125;;</div><div class="line">        img.onmouseout = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">            <span class="keyword">this</span>.src = <span class="keyword">this</span>.getAttribute(<span class="string">"data_rollout"</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-<h3 id="脚本化音频或者视频"><a href="#脚本化音频或者视频" class="headerlink" title="脚本化音频或者视频"></a>脚本化音频或者视频</h3><p><strong><code>&lt;audio&gt;</code></strong>和<strong><code>&lt;video</code></strong></p>
-<blockquote>
-<ul>
-<li>controls属性：将会显示一系列播放控件</li>
-</ul>
-</blockquote>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> a = <span class="keyword">new</span> Audio();</div><div class="line"><span class="keyword">if</span>(a.canPlayType(<span class="string">"audio/wav"</span>))&#123;</div><div class="line">    a.src = <span class="string">"soundeffect.wav"</span>;</div><div class="line">    a.play();</div><div class="line">&#125;</div><div class="line"><span class="built_in">window</span>.addEventListener(<span class="string">"load"</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="built_in">document</span>.getElementById(<span class="string">"music"</span>).play();</div><div class="line">&#125;,<span class="literal">false</span>);</div></pre></td></tr></table></figure>
-<h3 id="SVG-可伸缩的矢量图形"><a href="#SVG-可伸缩的矢量图形" class="headerlink" title="SVG:可伸缩的矢量图形"></a>SVG:可伸缩的矢量图形</h3><p>SVG是一种用于描述图形的XML语法<br><figure class="highlight xhtml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="php"><span class="meta">&lt;?</span>xml version = <span class="string">"1.0"</span>&gt;</span></div><div class="line">&lt;html xmlns = <span class="string">"http://www.w3.org/1999/xhtml"</span></div><div class="line">    xmls:svg = <span class="string">"http://www.w3.ogr/2000/svg"</span>&gt;</div><div class="line">&lt;body&gt;</div><div class="line">    &lt;svg:svg width = <span class="string">"10"</span> height = <span class="string">"10"</span>&gt;</div><div class="line">        &lt;svg:rec x = <span class="string">"0"</span> y =<span class="string">"0"</span> width = <span class="string">"10"</span> height = <span class="string">"10"</span> fill =<span class="string">"red"</span>/&gt;</div><div class="line">    &lt;/svg:svg&gt;</div><div class="line">&lt;/body&gt;</div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure></p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">width</span> = <span class="string">"10"</span> <span class="attr">height</span> = <span class="string">"10"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">rect</span> <span class="attr">x</span> = <span class="string">"0"</span> <span class="attr">y</span> =<span class="string">"0"</span> <span class="attr">width</span> =<span class="string">"10"</span> <span class="attr">height</span> = <span class="string">"10"</span> <span class="attr">fill</span> =<span class="string">"red"</span>/&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">svg</span>&gt;</span></div></pre></td></tr></table></figure>
-<h3 id="中的图形"><a href="#中的图形" class="headerlink" title="中的图形"></a><canvas>中的图形</canvas></h3><p><code>&lt;canvas&gt;</code>元素和SVG之间的一个重要的区别是：使用canvas来绘制图形是通过调用它提供的方法而使用SVG绘制图形是通过构建一个XML元素树来实现的<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> canvas = <span class="built_in">document</span>.getElementById(<span class="string">"my_canvas_id"</span>);</div><div class="line"><span class="keyword">var</span> c = canvas.getContext(<span class="string">"2d"</span>);</div></pre></td></tr></table></figure></p>
-<blockquote>
-<ul>
-<li>c.beginPath();开始一条新的路径</li>
-<li>c.moveTo()开始定义一条新的路径</li>
-<li>c.lineTo()绘制一条路径</li>
-<li>c.stroke()绘制边</li>
-<li>c.fill()填充图形</li>
-<li>c.closePath()起点和终点连接</li>
-<li>restore()恢复最后一次保存的图形状态</li>
-<li>save()保存图形状态</li>
-<li>translate()将坐标原点进行上下左右移动</li>
-<li>rotate()将坐标轴根据指定角度进行顺时针旋转</li>
-<li>scale()实现对X轴和Y轴上的距离进行延长或者缩短</li>
-<li>arc()添加圆弧</li>
-<li>arcTo()添加圆弧和一条直线</li>
-<li>fillRect()使用当前的fillStyle来填充指定的矩阵</li>
-<li>strokeRect()使用当前的strokeStyle和其他线段的属性来勾勒指定矩阵的外边框</li>
-<li>clearRect()忽略当前填充样式</li>
-<li>rect()画矩阵路线</li>
-</ul>
-</blockquote>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;脚本化图片&quot;&gt;&lt;a href=&quot;#脚本化图片&quot; class=&quot;headerlink&quot; title=&quot;脚本化图片&quot;&gt;&lt;/a&gt;脚本化图片&lt;/h2&gt;&lt;figure class=&quot;highlight html&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;
     
     </summary>
     

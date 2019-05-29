@@ -77,7 +77,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="JavaScript学习笔记," />
+  <meta name="keywords" content="Linux基础知识," />
 
 
 
@@ -95,17 +95,22 @@
 
 
 
-<meta name="description" content="地理位置navigator.geolocation.getCurrentPosition()获取用户当前位置navigator.geolocation.watchPosition()获取当前位置，同时不断地检视当前位置navigator.gerlocation.clearWatch()停止检视用户位置 123456//获取经纬度navigator.geolocation.getCurrentPos">
-<meta name="keywords" content="JavaScript学习笔记">
+<meta name="description" content="I/O体系结构 两条高速总线用于在内存芯片上来回传送数据：前端总线将CPU连接到RAM控制器上，而后端总线将CPU连接到外部硬件的高速缓存上。 主机上的桥将系统总线和前端总线连接在一起。 任何设备只能够连接到一条总线上。  I/O端口 I/O端口有两种方式：既可以使用为独立的I/O地址空间，又可以被映射到物理地址空间，这样就可以通过内存来访问I/O端口啦。不过一般情况下，都是作为独立的I/O地址空">
+<meta name="keywords" content="Linux基础知识">
 <meta property="og:type" content="article">
-<meta property="og:title" content="HTML5 API">
-<meta property="og:url" content="https://caixueyuan.github.io/2018/04/02/HTML5-API/index.html">
+<meta property="og:title" content="linux设备驱动程序">
+<meta property="og:url" content="https://caixueyuan.github.io/2019/05/29/linux设备驱动程序/index.html">
 <meta property="og:site_name" content="caixueyuan">
-<meta property="og:description" content="地理位置navigator.geolocation.getCurrentPosition()获取用户当前位置navigator.geolocation.watchPosition()获取当前位置，同时不断地检视当前位置navigator.gerlocation.clearWatch()停止检视用户位置 123456//获取经纬度navigator.geolocation.getCurrentPos">
-<meta property="og:updated_time" content="2018-04-11T08:50:25.884Z">
+<meta property="og:description" content="I/O体系结构 两条高速总线用于在内存芯片上来回传送数据：前端总线将CPU连接到RAM控制器上，而后端总线将CPU连接到外部硬件的高速缓存上。 主机上的桥将系统总线和前端总线连接在一起。 任何设备只能够连接到一条总线上。  I/O端口 I/O端口有两种方式：既可以使用为独立的I/O地址空间，又可以被映射到物理地址空间，这样就可以通过内存来访问I/O端口啦。不过一般情况下，都是作为独立的I/O地址空">
+<meta property="og:image" content="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/linux/base/%E6%80%BB%E7%BA%BF.gif">
+<meta property="og:image" content="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/linux/base/PC%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84.gif">
+<meta property="og:image" content="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/linux/base/%E4%B8%93%E7%94%A8IO%E7%AB%AF%E5%8F%A3.gif">
+<meta property="og:image" content="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/linux/base/%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8.PNG">
+<meta property="og:updated_time" content="2019-05-29T16:35:49.991Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="HTML5 API">
-<meta name="twitter:description" content="地理位置navigator.geolocation.getCurrentPosition()获取用户当前位置navigator.geolocation.watchPosition()获取当前位置，同时不断地检视当前位置navigator.gerlocation.clearWatch()停止检视用户位置 123456//获取经纬度navigator.geolocation.getCurrentPos">
+<meta name="twitter:title" content="linux设备驱动程序">
+<meta name="twitter:description" content="I/O体系结构 两条高速总线用于在内存芯片上来回传送数据：前端总线将CPU连接到RAM控制器上，而后端总线将CPU连接到外部硬件的高速缓存上。 主机上的桥将系统总线和前端总线连接在一起。 任何设备只能够连接到一条总线上。  I/O端口 I/O端口有两种方式：既可以使用为独立的I/O地址空间，又可以被映射到物理地址空间，这样就可以通过内存来访问I/O端口啦。不过一般情况下，都是作为独立的I/O地址空">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/linux/base/%E6%80%BB%E7%BA%BF.gif">
 
 
 
@@ -133,13 +138,13 @@
 
 
 
-  <link rel="canonical" href="https://caixueyuan.github.io/2018/04/02/HTML5-API/"/>
+  <link rel="canonical" href="https://caixueyuan.github.io/2019/05/29/linux设备驱动程序/"/>
 
 
 
 
 
-  <title>HTML5 API | caixueyuan</title>
+  <title>linux设备驱动程序 | caixueyuan</title>
   
 
 
@@ -278,7 +283,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://caixueyuan.github.io/2018/04/02/HTML5-API/">
+    <link itemprop="mainEntityOfPage" href="https://caixueyuan.github.io/2019/05/29/linux设备驱动程序/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="caixueyuan">
@@ -295,7 +300,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">HTML5 API</h1>
+          <h1 class="post-title" itemprop="name headline">linux设备驱动程序</h1>
         
 
         <div class="post-meta">
@@ -307,8 +312,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-02T20:33:51+08:00">
-                2018-04-02
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-29T23:58:36+08:00">
+                2019-05-29
               </time>
             
 
@@ -330,8 +335,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaScript学习笔记/" itemprop="url" rel="index">
-                    <span itemprop="name">JavaScript学习笔记</span>
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
                   </a>
                 </span>
 
@@ -364,16 +369,26 @@
       
 
       
-        <h2 id="地理位置"><a href="#地理位置" class="headerlink" title="地理位置"></a>地理位置</h2><p><code>navigator.geolocation.getCurrentPosition()</code>获取用户当前位置<br><code>navigator.geolocation.watchPosition()</code>获取当前位置，同时不断地检视当前位置<br><code>navigator.gerlocation.clearWatch()</code>停止检视用户位置</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//获取经纬度</span></div><div class="line">navigator.geolocation.getCurrentPosition(<span class="function"><span class="keyword">function</span>(<span class="params">pos</span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> latitude = pos.coords.latitude;</div><div class="line">    <span class="keyword">var</span> longitude = pos.coords.longitude;</div><div class="line">    alert(<span class="string">"Your position:"</span> + latitude+<span class="string">", "</span>+longitude);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//通过获取地理位置信息在地图上显示当前位置</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getmap</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">if</span>(!navigator.geolocation)</div><div class="line">        <span class="keyword">throw</span> <span class="string">"Geolocation not supported"</span>;</div><div class="line">    <span class="keyword">var</span> image = <span class="built_in">document</span>.createElement(<span class="string">"img"</span>);</div><div class="line">    navigator.geolocation.getCurrentPosition(setMapURL);</div><div class="line">    <span class="keyword">return</span> image;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">setMapURL</span>(<span class="params">pos</span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> latitude = pos.coords.latitude;</div><div class="line">    <span class="keyword">var</span> longitude = pos.coords.longitude;</div><div class="line">    <span class="keyword">var</span> accuracy = pos.coords.accuracy;</div><div class="line"></div><div class="line">    <span class="keyword">var</span> url = <span class="string">"http://maps.google.com/maps/api/staticmap"</span>+</div><div class="line">        <span class="string">"?center = "</span>+latitude + <span class="string">", "</span>+longitude +<span class="string">"&amp;size = 640*640&amp;sensor=true"</span>;</div><div class="line"></div><div class="line">    <span class="keyword">var</span> zoomlevel = <span class="number">20</span>;</div><div class="line">    <span class="keyword">if</span>(accuracy &gt; <span class="number">80</span>)</div><div class="line">        zoomlevel -= <span class="built_in">Math</span>.round(<span class="built_in">Math</span>.log(accuracy/<span class="number">50</span>)/<span class="built_in">Math</span>.LN2);</div><div class="line">        url += <span class="string">"&amp;zoom="</span>+zoomlevel;</div><div class="line"></div><div class="line">        image.src= url;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="历史记录管理"><a href="#历史记录管理" class="headerlink" title="历史记录管理"></a>历史记录管理</h2><p><code>location.hash</code>会更新显示在地址栏中的URL，同时会在浏览器的历史记录中添加一条记录。hash属性设置URL的片段标识符，通过是用于指定要滚动到的文档中的某一部分的ID，它可以设置成任何的字符串</p>
-<p>支持HTML5的浏览器一旦发现片段标识符发生了改变，就会在Window对象上触发一个hashchange事件，可以通过设置onhashChange为一个处理程序函数</p>
-<p>HTML5，该方法包含了history.pushStatus()方法和popstate事件，当一个Web应用进入一个新的状态的时候，会调用history.pushState()方法将该状态添加到浏览器的浏览历史记录中。</p>
-<p>还有另外一个方法，history.replaceState()，用新的状态来代替当前的历史状态</p>
-<h2 id="Web-Worker"><a href="#Web-Worker" class="headerlink" title="Web Worker"></a>Web Worker</h2><p>客户端JavaScript都是单线程</p>
-<p>Web Workers处在一个自包含的执行环境中，无法访问Window对象和Document对象，和主线程之间的童心也只能通过异步消息传递机制来实现，并行改变DOM是不可能的</p>
-<h3 id="Worker对象"><a href="#Worker对象" class="headerlink" title="Worker对象"></a>Worker对象</h3><p><code>var loader = new Worker(&quot;utils/loader.js&quot;);</code><br>如果指定的URL采用的是绝对路径，要保证该脚本的文档是同源的</p>
+        <h2 id="I-O体系结构"><a href="#I-O体系结构" class="headerlink" title="I/O体系结构"></a>I/O体系结构</h2><p><img src="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/linux/base/%E6%80%BB%E7%BA%BF.gif" alt="总线"></p>
+<p>两条高速总线用于在内存芯片上来回传送数据：前端总线将CPU连接到RAM控制器上，而后端总线将CPU连接到外部硬件的高速缓存上。</p>
+<p>主机上的桥将系统总线和前端总线连接在一起。</p>
+<p>任何设备只能够连接到一条总线上。</p>
+<p><img src="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/linux/base/PC%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84.gif" alt="IO体系结构"></p>
+<h3 id="I-O端口"><a href="#I-O端口" class="headerlink" title="I/O端口"></a>I/O端口</h3><p><img src="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/linux/base/%E4%B8%93%E7%94%A8IO%E7%AB%AF%E5%8F%A3.gif" alt="专用接口"></p>
+<p>I/O端口有两种方式：既可以使用为独立的I/O地址空间，又可以被映射到物理地址空间，这样就可以通过内存来访问I/O端口啦。不过一般情况下，都是作为独立的I/O地址空间。</p>
+<p>一般情况下，I/O有四个汇编指令，分别为in、out、ins、outs</p>
+<p>对于I/O端口，有特殊的数据结构来对应（resource），主要的作用是唯一性地指定I/O地址空间，让地址不重复</p>
+<h3 id="I-O接口"><a href="#I-O接口" class="headerlink" title="I/O接口"></a>I/O接口</h3><p>它起翻译器的作用，即把I/O端口中的值转换成设备所需要的命令和数据。在相反方向上，它检测设备状态的变化，并对起状态寄存器作用的I/O端口进行相应的更新。（也就是说将值转换为数据，并监控I/O状态)</p>
+<h3 id="控制器"><a href="#控制器" class="headerlink" title="控制器"></a>控制器</h3><blockquote>
+<ul>
+<li><p>对从I/O接口收到的高级命令进行解释，并通过向设备发送适当的电信号序列强制设备执行特定的操作。</p>
+</li>
+<li><p>对从设备接收到的电信号进行转换和适当的解释，并修改（通过I/O接口）状态寄存器的值。</p>
+</li>
+</ul>
+</blockquote>
+<h3 id="sysfs文件系统"><a href="#sysfs文件系统" class="headerlink" title="sysfs文件系统"></a>sysfs文件系统</h3><p>sysfs文件系统的目标是展现设备驱动程序模型组件间的层次关系，允许用户态应用程序访问内核内部数据结构的一种文件系统</p>
+<p><img src="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/linux/base/%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8.PNG" alt="sysfs文件系统"></p>
 
       
     </div>
@@ -403,7 +418,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/JavaScript学习笔记/" rel="tag"># JavaScript学习笔记</a>
+            <a href="/tags/Linux基础知识/" rel="tag"># Linux基础知识</a>
           
         </div>
       
@@ -416,8 +431,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/04/02/JavaScript多媒体和图形编程/" rel="next" title="JavaScript多媒体和图形编程">
-                <i class="fa fa-chevron-left"></i> JavaScript多媒体和图形编程
+              <a href="/2019/05/26/锁和进程间通讯/" rel="next" title="锁和进程间通讯">
+                <i class="fa fa-chevron-left"></i> 锁和进程间通讯
               </a>
             
           </div>
@@ -425,10 +440,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/04/06/JQuery基础知识/" rel="prev" title="JQuery基础知识">
-                JQuery基础知识 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -564,7 +575,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#地理位置"><span class="nav-number">1.</span> <span class="nav-text">地理位置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#历史记录管理"><span class="nav-number">2.</span> <span class="nav-text">历史记录管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Web-Worker"><span class="nav-number">3.</span> <span class="nav-text">Web Worker</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Worker对象"><span class="nav-number">3.1.</span> <span class="nav-text">Worker对象</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#I-O体系结构"><span class="nav-number">1.</span> <span class="nav-text">I/O体系结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#I-O端口"><span class="nav-number">1.1.</span> <span class="nav-text">I/O端口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#I-O接口"><span class="nav-number">1.2.</span> <span class="nav-text">I/O接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#控制器"><span class="nav-number">1.3.</span> <span class="nav-text">控制器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sysfs文件系统"><span class="nav-number">1.4.</span> <span class="nav-text">sysfs文件系统</span></a></li></ol></li></ol></div>
             
 
           </div>
