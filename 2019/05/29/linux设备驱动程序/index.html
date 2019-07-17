@@ -106,7 +106,8 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/linux/base/PC%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84.gif">
 <meta property="og:image" content="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/linux/base/%E4%B8%93%E7%94%A8IO%E7%AB%AF%E5%8F%A3.gif">
 <meta property="og:image" content="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/linux/base/%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8.PNG">
-<meta property="og:updated_time" content="2019-05-29T16:35:49.991Z">
+<meta property="og:image" content="https://blog.csdn.net/zqixiao_09/article/details/50864489">
+<meta property="og:updated_time" content="2019-06-09T16:11:16.546Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="linux设备驱动程序">
 <meta name="twitter:description" content="I/O体系结构 两条高速总线用于在内存芯片上来回传送数据：前端总线将CPU连接到RAM控制器上，而后端总线将CPU连接到外部硬件的高速缓存上。 主机上的桥将系统总线和前端总线连接在一起。 任何设备只能够连接到一条总线上。  I/O端口 I/O端口有两种方式：既可以使用为独立的I/O地址空间，又可以被映射到物理地址空间，这样就可以通过内存来访问I/O端口啦。不过一般情况下，都是作为独立的I/O地址空">
@@ -389,6 +390,8 @@
 </blockquote>
 <h3 id="sysfs文件系统"><a href="#sysfs文件系统" class="headerlink" title="sysfs文件系统"></a>sysfs文件系统</h3><p>sysfs文件系统的目标是展现设备驱动程序模型组件间的层次关系，允许用户态应用程序访问内核内部数据结构的一种文件系统</p>
 <p><img src="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/linux/base/%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8.PNG" alt="sysfs文件系统"></p>
+<p><code>sysfs是一个基于内存的文件系统，它的作用是将内核信息以文件的方式提供给用户程序使用；sysfs把连接在系统上的设备和总线组织成为一个分级的文件，它们可以由用户空间存取，向用户空间导出内核的数据结构以及它们的属性</code></p>
+<p><img src="https://blog.csdn.net/zqixiao_09/article/details/50864489" alt="详细信息"></p>
 
       
     </div>
@@ -440,6 +443,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/07/08/C-学习笔记/" rel="prev" title="C++学习笔记(变量和基础类型)">
+                C++学习笔记(变量和基础类型) <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -511,7 +518,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">50</span>
+                <span class="site-state-item-count">52</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -533,7 +540,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">30</span>
+                <span class="site-state-item-count">31</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

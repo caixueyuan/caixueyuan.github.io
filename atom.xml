@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://caixueyuan.github.io/"/>
-  <updated>2019-05-29T16:35:49.991Z</updated>
+  <updated>2019-07-17T16:44:51.466Z</updated>
   <id>https://caixueyuan.github.io/</id>
   
   <author>
@@ -16,11 +16,104 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>C++ Prime第四章</title>
+    <link href="https://caixueyuan.github.io/2019/07/18/C-Prime%E7%AC%AC%E5%9B%9B%E7%AB%A0/"/>
+    <id>https://caixueyuan.github.io/2019/07/18/C-Prime第四章/</id>
+    <published>2019-07-17T16:08:00.000Z</published>
+    <updated>2019-07-17T16:44:51.466Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="基本内置类型"><a href="#基本内置类型" class="headerlink" title="基本内置类型"></a>基本内置类型</h2><ol>
+<li>不要混用带符号类型和无符号类型（能不用无符号整数的可以不用）</li>
+<li>初始化不是赋值，初始化的含义是创建变量时赋予一个初始值，而赋值的含义是把对象的当前值擦除，而以一个新值来替代</li>
+</ol>
+<h2 id="声明和定义"><a href="#声明和定义" class="headerlink" title="声明和定义"></a>声明和定义</h2><ol>
+<li><strong>声明使得名字为程序所知，一个文件如果想要使用到别处定义的名字则必须包含对那个名字的声明，而定义负责创建与名字关联的实体（变量声明规定了变量的类型和名字，而定义还申请存储空间，也可能创建与名字关联的实体</strong></li>
+<li><strong>变量能且只能够定义一次，而可以被多次声明</strong></li>
+</ol>
+<h2 id="复合类型"><a href="#复合类型" class="headerlink" title="复合类型"></a>复合类型</h2><ol>
+<li><strong>引用:</strong>引用并非对象，它只是为一个已经存在的对象所起的另外一个名字。引用的对象必须是一个对象，不能够是一个字面量</li>
+<li><strong>引用必须被初始化</strong></li>
+<li><strong>如果想要在多个文件之间共享</strong>const对象，必须在变量的定义之前添加extern关键字。</li>
+</ol>
+<h2 id="常量引用"><a href="#常量引用" class="headerlink" title="常量引用"></a>常量引用</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> i=<span class="number">2</span>;</div><div class="line"></div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> &amp;i2 = i;</div><div class="line"></div><div class="line">r2 = <span class="number">1</span><span class="comment">//错误</span></div></pre></td></tr></table></figure>
+<p>注意：</p>
+<p><strong>常量引用仅是对引用可参与的操作做出了限定，对于引用的对象本身是不是一个变量未做限定</strong></p>
+<p><strong>指向常量的指针也没有规定其所指的对象必须是一个对象，仅仅要求不能够通过该指针改变对象的值</strong></p>
+<p><strong>概念</strong>：常量表达式：值不会改变并且在编译过程就能够得到计算结果的表达式</p>
+<p><strong>auto</strong>：auto一般会忽略顶层const，保留底层const</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> SALES_DATA_H<span class="comment">//当且仅当变量未定义时为真</span></span></div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> SALES_DATA_H<span class="comment">//将一个名字作为预处理变量</span></span></div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string&gt;</span></span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Sales_data</span>&#123;</span></div><div class="line"></div><div class="line">​    <span class="built_in">std</span>::<span class="built_in">string</span> bookNo;</div><div class="line"></div><div class="line">​    <span class="keyword">unsigned</span> units_sold = <span class="number">0</span>;</div><div class="line"></div><div class="line">​    <span class="keyword">double</span> revenue = <span class="number">0.0</span>;</div><div class="line"></div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span><span class="comment">//结束定义</span></span></div></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> *ptr[<span class="number">10</span>];<span class="comment">//10个整形数组的指针</span></div><div class="line"></div><div class="line"><span class="keyword">int</span> (*ptr)[<span class="number">10</span>] = &amp;ptr;<span class="comment">//一个指针指向有10个元素的数组</span></div><div class="line"></div><div class="line"><span class="keyword">int</span> (&amp;ptr)[<span class="number">10</span>] = ptr;<span class="comment">//一个引用，引用了有10个元素的数组</span></div></pre></td></tr></table></figure>
+<h2 id="C语句风格的数组"><a href="#C语句风格的数组" class="headerlink" title="C语句风格的数组:"></a>C语句风格的数组:</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> <span class="keyword">char</span> ca1[] = <span class="string">"A string example"</span>;</div><div class="line"></div><div class="line"><span class="keyword">const</span> <span class="keyword">char</span> ca2[] = <span class="string">"A different string"</span>;</div><div class="line"></div><div class="line"><span class="keyword">if</span>(<span class="built_in">strcmp</span>(ca1,ca2) &lt; <span class="number">0</span>)<span class="comment">//比较两个数组的大小</span></div></pre></td></tr></table></figure>
+<p>这样可以创建一个数组（将数组转换为vector）</p>
+<p><img src="1563380478962.png" alt="1563380478962"></p>
+<p>使用别名来代替类型</p>
+<p><img src="/使用别名来代替类型.png" alt="1563381827930"></p>
+<p>第一行和第二行是等价的</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;基本内置类型&quot;&gt;&lt;a href=&quot;#基本内置类型&quot; class=&quot;headerlink&quot; title=&quot;基本内置类型&quot;&gt;&lt;/a&gt;基本内置类型&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;不要混用带符号类型和无符号类型（能不用无符号整数的可以不用）&lt;/li&gt;
+&lt;li&gt;初始化不是赋值，
+    
+    </summary>
+    
+      <category term="C++" scheme="https://caixueyuan.github.io/categories/C/"/>
+    
+    
+      <category term="C++基础" scheme="https://caixueyuan.github.io/tags/C-%E5%9F%BA%E7%A1%80/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>C++学习笔记(变量和基础类型)</title>
+    <link href="https://caixueyuan.github.io/2019/07/08/C-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    <id>https://caixueyuan.github.io/2019/07/08/C-学习笔记/</id>
+    <published>2019-07-08T15:37:50.000Z</published>
+    <updated>2019-07-17T15:52:13.388Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="基本内置类型"><a href="#基本内置类型" class="headerlink" title="基本内置类型"></a>基本内置类型</h2><blockquote>
+<p>不要混用带符号类型和无符号类型（能不用无符号整数的可以不用）</p>
+<p>初始化不是赋值，初始化的含义是创建变量时赋予一个初始值，而赋值的含义是把对象的当前值擦除，而以一个新值来替代</p>
+</blockquote>
+<h3 id="声明和定义"><a href="#声明和定义" class="headerlink" title="声明和定义"></a>声明和定义</h3><p>声明使得名字为程序所知，一个文件如果想要使用到别处定义的名字则必须包含对那个名字的声明，而定义负责创建与名字关联的实体（变量声明规定了变量的类型和名字，而定义还申请存储空间，也可能创建与名字关联的实体</p>
+<p><strong>变量能且只能够定义一次，而可以被多次声明</strong></p>
+<h3 id="复合类型"><a href="#复合类型" class="headerlink" title="复合类型"></a>复合类型</h3><p><strong>引用</strong>：引用并非对象，它只是为一个已经存在的对象所起的另外一个名字。引用的对象必须是一个对象，不能够是一个字面量</p>
+<p><strong>引用必须被初始化</strong></p>
+<p>如果想要在多个文件之间共享const对象，必须在变量的定义之前添加extern关键字。</p>
+<h3 id="常量引用"><a href="#常量引用" class="headerlink" title="常量引用"></a>常量引用</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> i=<span class="number">2</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> &amp;i2 = i;</div><div class="line">r2 = <span class="number">1</span><span class="comment">//错误</span></div></pre></td></tr></table></figure>
+<p>注意：</p>
+<p><strong>常量引用仅是对引用可参与的操作做出了限定，对于引用的对象本身是不是一个变量未做限定</strong></p>
+<p><strong>指向常量的指针也没有规定其所指的对象必须是一个对象，仅仅要求不能够通过该指针改变对象的值</strong></p>
+<p><strong>概念</strong>：常量表达式：值不会改变并且在编译过程就能够得到计算结果的表达式</p>
+<p><strong>auto</strong>:auto一般会忽略顶层const，保留底层const</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> SALES_DATA_H<span class="comment">//当且仅当变量未定义时为真</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> SALES_DATA_H<span class="comment">//将一个名字作为预处理变量</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string&gt;</span></span></div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Sales_data</span>&#123;</span></div><div class="line">    <span class="built_in">std</span>::<span class="built_in">string</span> bookNo;</div><div class="line">    <span class="keyword">unsigned</span> units_sold = <span class="number">0</span>;</div><div class="line">    <span class="keyword">double</span> revenue = <span class="number">0.0</span>;</div><div class="line">&#125;;</div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span><span class="comment">//结束定义</span></span></div></pre></td></tr></table></figure>
+<figure class="highlight autoit"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">int</span> *<span class="built_in">ptr</span>[<span class="number">10</span>]<span class="comment">;//10个整形数组的指针</span></div><div class="line"><span class="built_in">int</span> (*<span class="built_in">ptr</span>)[<span class="number">10</span>] = &amp;<span class="built_in">ptr</span><span class="comment">;//一个指针指向有10个元素的数组</span></div><div class="line"><span class="built_in">int</span> (&amp;<span class="built_in">ptr</span>)[<span class="number">10</span>] = <span class="built_in">ptr</span><span class="comment">;//一个引用，引用了有10个元素的数组</span></div></pre></td></tr></table></figure>
+<p><em>C语句风格的数组</em>:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> <span class="keyword">char</span> ca1[] = <span class="string">"A string example"</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">char</span> ca2[] = <span class="string">"A different string"</span>;</div><div class="line"><span class="keyword">if</span>(<span class="built_in">strcmp</span>(ca1,ca2) &lt; <span class="number">0</span>)<span class="comment">//比较两个数组的大小</span></div></pre></td></tr></table></figure></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;基本内置类型&quot;&gt;&lt;a href=&quot;#基本内置类型&quot; class=&quot;headerlink&quot; title=&quot;基本内置类型&quot;&gt;&lt;/a&gt;基本内置类型&lt;/h2&gt;&lt;blockquote&gt;
+&lt;p&gt;不要混用带符号类型和无符号类型（能不用无符号整数的可以不用）&lt;/p&gt;
+&lt;p&gt;初始化
+    
+    </summary>
+    
+      <category term="C++" scheme="https://caixueyuan.github.io/categories/C/"/>
+    
+    
+      <category term="C++学习笔记" scheme="https://caixueyuan.github.io/tags/C-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+  </entry>
+  
+  <entry>
     <title>linux设备驱动程序</title>
     <link href="https://caixueyuan.github.io/2019/05/29/linux%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8%E7%A8%8B%E5%BA%8F/"/>
     <id>https://caixueyuan.github.io/2019/05/29/linux设备驱动程序/</id>
     <published>2019-05-29T15:58:36.000Z</published>
-    <updated>2019-05-29T16:35:49.991Z</updated>
+    <updated>2019-06-09T16:11:16.546Z</updated>
     
     <content type="html"><![CDATA[<h2 id="I-O体系结构"><a href="#I-O体系结构" class="headerlink" title="I/O体系结构"></a>I/O体系结构</h2><p><img src="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/linux/base/%E6%80%BB%E7%BA%BF.gif" alt="总线"></p>
 <p>两条高速总线用于在内存芯片上来回传送数据：前端总线将CPU连接到RAM控制器上，而后端总线将CPU连接到外部硬件的高速缓存上。</p>
@@ -42,6 +135,8 @@
 </blockquote>
 <h3 id="sysfs文件系统"><a href="#sysfs文件系统" class="headerlink" title="sysfs文件系统"></a>sysfs文件系统</h3><p>sysfs文件系统的目标是展现设备驱动程序模型组件间的层次关系，允许用户态应用程序访问内核内部数据结构的一种文件系统</p>
 <p><img src="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/linux/base/%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8.PNG" alt="sysfs文件系统"></p>
+<p><code>sysfs是一个基于内存的文件系统，它的作用是将内核信息以文件的方式提供给用户程序使用；sysfs把连接在系统上的设备和总线组织成为一个分级的文件，它们可以由用户空间存取，向用户空间导出内核的数据结构以及它们的属性</code></p>
+<p><img src="https://blog.csdn.net/zqixiao_09/article/details/50864489" alt="详细信息"></p>
 ]]></content>
     
     <summary type="html">
@@ -835,136 +930,6 @@
     
     
       <category term="毕业设计" scheme="https://caixueyuan.github.io/tags/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>JQuery基础知识</title>
-    <link href="https://caixueyuan.github.io/2018/04/06/JQuery%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/"/>
-    <id>https://caixueyuan.github.io/2018/04/06/JQuery基础知识/</id>
-    <published>2018-04-06T07:26:55.000Z</published>
-    <updated>2018-04-11T08:50:22.391Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="认识JQuery"><a href="#认识JQuery" class="headerlink" title="认识JQuery"></a>认识JQuery</h2><h3 id="JQuery和JavaScript的转换"><a href="#JQuery和JavaScript的转换" class="headerlink" title="JQuery和JavaScript的转换"></a>JQuery和JavaScript的转换</h3><hr>
-<p>JQuery对象转换为DOM对象</p>
-<blockquote>
-<ul>
-<li><p>通过[index]的方法得到相应的DOM对象</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> $cr = $(<span class="string">"#cr"</span>);</div><div class="line"><span class="keyword">var</span> cr = $cr[<span class="number">0</span>];</div></pre></td></tr></table></figure>
-</li>
-<li><p>通过get(index)方法得到相应的DOM对象</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> $cr = $(<span class="string">"#cr"</span>);</div><div class="line"><span class="keyword">var</span> cr = $cr.get(<span class="number">0</span>);</div></pre></td></tr></table></figure>
-</li>
-</ul>
-</blockquote>
-<hr>
-<hr>
-<p>DOM对象转化为JQuery对象<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> cr = <span class="built_in">document</span>.getElementById(<span class="string">"cr"</span>);</div><div class="line"><span class="keyword">var</span> $cr = $(cr);</div></pre></td></tr></table></figure></p>
-<hr>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> cr = $cr[<span class="number">0</span>];</div><div class="line">cr.checked</div><div class="line"></div><div class="line">$cr.is(<span class="string">":checked"</span>)</div></pre></td></tr></table></figure>
-<h3 id="解决jQuery和其他库的冲突"><a href="#解决jQuery和其他库的冲突" class="headerlink" title="解决jQuery和其他库的冲突"></a>解决jQuery和其他库的冲突</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//(1)自定义快捷方式</span></div><div class="line"><span class="keyword">var</span> $j = jQuery.noConflict();</div><div class="line"></div><div class="line"><span class="comment">//(2)在函数内部默认都是指定jQuery</span></div><div class="line">jQuery.noconflict();</div><div class="line">jQuery(<span class="function"><span class="keyword">function</span>(<span class="params">$</span>)</span>&#123;</div><div class="line">    $(<span class="string">"p"</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">        alert($(<span class="keyword">this</span>).text));</div><div class="line">    &#125;)</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
-<h2 id="jQuery选择器"><a href="#jQuery选择器" class="headerlink" title="jQuery选择器"></a>jQuery选择器</h2><h3 id="jQuery选择器的优势"><a href="#jQuery选择器的优势" class="headerlink" title="jQuery选择器的优势"></a>jQuery选择器的优势</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span> = <span class="string">"text/javascript"</span>&gt;</span><span class="javascript"></span></div><div class="line">    $(<span class="string">'#tt'</span>).css(<span class="string">"color"</span>,<span class="string">"red"</span>);<span class="comment">//如果没有元素tt的话，就不会执行下面的语句</span></div><div class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div></pre></td></tr></table></figure>
-<h3 id="jQuery选择器-1"><a href="#jQuery选择器-1" class="headerlink" title="jQuery选择器"></a>jQuery选择器</h3><p><strong>层次选择器</strong>：</p>
-<p><code>$(&quot;body div&quot;).css(&quot;background&quot;,&quot;#bbffaa&quot;);</code>改变<body>内所有<div>的背景色，将整个div的都改变背景色<br><code>$(&#39;body &gt; div&#39;).css(&#39;background&#39;,&quot;#bbffaa&quot;)</code>改变<body>内子<div>元素的背景色，将整个div中不包括子元素的空白部分改变背景色</div></body></div></body></p>
-<p><strong>过滤选择器</strong><br><code>$(&#39;:header&#39;)</code>选取网页中的所有的</p><h1>，<h2>,<h3><br><code>$(&#39;:animated&#39;)</code>选取当前正在执行动画的所有元素<br><code>$(&#39;:focus&#39;)</code>选取当前获取焦点的元素<p></p>
-<p><strong>内容过滤选择器</strong><br><code>$(&quot;div:parent&quot;)</code>选择拥有子元素的<div>元素</div></p>
-<p><strong>可见性过滤选择器</strong><br><code>$(&quot;:hidden&quot;)</code>选取所有不可见的元素。包括<code>&lt;input type=&quot;hidden&quot;/&gt;</code>,<code>&lt;div style=&quot;display:none;&quot;&gt;</code>和<code>&lt;div style=&quot;visibility:hidden;&quot;&gt;</code><br><code>$(&#39;:visible)</code>选取所有可见的元素</p>
-<p><strong>属性过滤选择器</strong><br><code>$(&quot;div[title|= &#39;en&#39;]&quot;).css(&quot;background&quot;,&quot;#bbffaa&quot;);</code>改变属性title等于en或者以en为前缀的元素的背景色<br><code>$(&quot;div[title ~= &#39;uk&#39;]&quot;).css(&quot;background&quot;,&quot;#bbffaa&quot;);</code>改变属性title用空格分隔的值中包含uk的元素的背景色</p>
-<p><strong>子元素过滤选择器</strong><br><code>:nth-child(index/even/odd/equation)</code>选取每个父元素下的第index个子元素或者奇偶元素（index从1算起）</p>
-<p><strong>表单对象属性过滤选择器</strong><br><code>:selected</code>:选取所有被选中的选项元素,下拉列表<br><code>:checked</code>:选取所有被选中的元素，单选框和复选框</p>
-<h2 id="jQuery中的DOM操作"><a href="#jQuery中的DOM操作" class="headerlink" title="jQuery中的DOM操作"></a>jQuery中的DOM操作</h2><blockquote>
-<ul>
-<li><p><strong>remove()</strong>和<strong>detach()</strong>：都是从DOM中去掉所有匹配的元素，这个方法不会把匹配的元素从jQuery对象中删除，因而可以在将来再使用这些匹配的元素，与remove()不同的是，所有绑定的事件、附加的数据都会保留下来</p>
-</li>
-<li><p><strong>empty()</strong>：清空节点，清空元素中的所有后代节点</p>
-</li>
-<li><p><strong>clone()</strong>复制节点后，被复制的新元素并不具有任何行为，如果需要新元素也具有复制功能（绑定在元素中的事件），应该加上true</p>
-</li>
-<li>replaceWith()将所有匹配的元素都替换成指定的HTML或者DOM元素</li>
-<li>wrapAll()将所有匹配的元素用一个元素包裹起来</li>
-<li>wrapInner()将每一个匹配的元素的子内容（包括文本节点）用其他结构的标记包裹起来</li>
-<li>attr()可以获取或者设置元素的属性</li>
-<li><p>toggle()交替执行代码3和代码4，如果元素原来是显示的，那么隐藏她，如果是隐藏的，那么显示它。也就是控制行为上的重复切换</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$toggleBtn.toggle(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="comment">//3</span></div><div class="line">&#125;,<span class="function"><span class="keyword">function</span>(<span class="params"></span></span></div><div class="line">    <span class="regexp">//</span><span class="number">4</span></div><div class="line">));</div></pre></td></tr></table></figure>
-</li>
-<li><p>html()读取或者设置某个元素中的HTML内容，相当于innerHTML</p>
-</li>
-<li>text()读取或者设置某个元素中的文本内容，相当于innerText属性</li>
-<li>this.defaultValue就是当前文本框的默认值</li>
-<li><p>val()不仅能设置元素的值，通过也能够获取元素的值，还能够使得select，checkbox，radio相应的选项被选中</p>
-</li>
-<li><p>children()获取匹配元素的所有子元素的个数</p>
-</li>
-<li>next(),prev()匹配元素前面近邻的同辈元素</li>
-<li>siblings()获取匹配元素的所有兄弟节点</li>
-<li>closest()取得最近的匹配元素，首先检查当前元素是否匹配的，如果匹配则直接返回元素本身，如果不匹配，向上查找父元素，逐渐向上直到找到匹配选择器的元素。</li>
-<li>offset()获取元素在当前视窗的相对偏移</li>
-<li>position()获取元素相对于最近的一个position样式设置为relative或者absolute的祖先节点的相对偏移</li>
-<li>scrollTop()和scrollLeft()获取元素的滚动条据顶端的距离和距离左侧的距离</li>
-</ul>
-</blockquote>
-<hr>
-<p><strong>parent()</strong>和<strong>parents()</strong>和<strong>closest</strong>的区别<br><strong>parent</strong>获取集合中的每个匹配元素的父级元素<br><strong>parents</strong>获取集合中的每个匹配元素的祖先元素，包括父级，父级以上</p>
-<h2 id="closest：从元素本身开始，逐渐向上级元素匹配，并返回最先匹配的祖先元素"><a href="#closest：从元素本身开始，逐渐向上级元素匹配，并返回最先匹配的祖先元素" class="headerlink" title="closest：从元素本身开始，逐渐向上级元素匹配，并返回最先匹配的祖先元素"></a><strong>closest</strong>：从元素本身开始，逐渐向上级元素匹配，并返回最先匹配的祖先元素</h2><h2 id="jQuery中的事件和动画"><a href="#jQuery中的事件和动画" class="headerlink" title="jQuery中的事件和动画"></a>jQuery中的事件和动画</h2><h3 id="jQuery中的事件"><a href="#jQuery中的事件" class="headerlink" title="jQuery中的事件"></a>jQuery中的事件</h3><p><strong>$(document).ready()</strong>和<strong>window.onload</strong></p>
-<blockquote>
-<ul>
-<li>window.onload方法是在$(document).ready()网页中所有元素完全加载到浏览器后才执行，即JavaScript此时才可以访问网页中的任何元素<br>$(document).ready()在DOM完全就绪时就可以被调用，此时，网页中所有元素对jQuery而言都是可以访问的，但是，并不意味着这些元素关联按的文件都已经下载完备</li>
-<li>window.onload事件一次只能够保存对一个函数的引用，因此不能在现有的行为上添加新的行为，<br>$(document).ready()会在现有的行为上追加新的行为，会根据注册的顺序依次执行</li>
-</ul>
-</blockquote>
-<p><strong>event.stopPropagation()</strong>:停止事件冒泡<br><strong>event.preventDefault</strong>：阻止元素的默认行为<br><strong>event.type</strong>:获取到事件的类型<br><strong>event.target</strong>:获取到触发事件的元素<br><strong>event.pageX</strong>:获取到光标相对于页面的x坐标和y坐标<br><strong>event.which</strong>:在鼠标单击事件中获取到鼠标的左右中键<br><strong>event.metaKey</strong>:获取<ctrl>按键</ctrl></p>
-<p><strong>trigger()</strong>:模拟操作，比如模拟单击按钮来触发click事件，或者触发自定义事件<br><strong>triggerHandler()</strong>触发事件而不是触发默认事件<br><strong>trigger(“click”)</strong>:匹配所有不包含在命名空间中的click方法</p>
-<h3 id="jQuery动画"><a href="#jQuery动画" class="headerlink" title="jQuery动画"></a>jQuery动画</h3><p><strong>fadeIn()</strong>和<strong>fadeOut()</strong>只改变元素的不透明度，直到元素完全消失<br><strong>slideUp()</strong>和<strong>slideDown()</strong>:只会改变元素的高度，down是由上向下延伸显示，而up是由下到上缩短隐藏</p>
-<p><strong>stop()</strong>:第一个参数设置为true，会吧当前元素接下来的动画队列都清空，第二个参数可以用于让正在执行的动画直接到达结束时刻的状态，通常用于后一个动画需要基于前一个动画的末状态的情况<br><strong><code>:animatd</code></strong>:判断元素是否正处于动画状态<br><strong><code>decay()</code></strong>:延迟操作</p>
-<h2 id="jQuery对表单、表格的操作及更多应用"><a href="#jQuery对表单、表格的操作及更多应用" class="headerlink" title="jQuery对表单、表格的操作及更多应用"></a>jQuery对表单、表格的操作及更多应用</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="selector-class">.focus</span>&#123;</div><div class="line">    <span class="attribute">border</span>:<span class="number">1px</span> solid <span class="number">#f00</span>;</div><div class="line">    <span class="attribute">background</span>: <span class="number">#fcc</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">$<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    $(<span class="string">":input"</span>).focus(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">        $(<span class="keyword">this</span>).addClass(<span class="string">"focus"</span>);</div><div class="line">    &#125;)</div><div class="line">    .blur(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">        $(<span class="keyword">this</span>).removeClass(<span class="string">"focus"</span>);</div><div class="line">    &#125;);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><code>keyup</code>事件能在用户每次松开按键时触发，实现即时提醒</p>
-<p><code>$(&quot;tr:odd&quot;)</code>和<code>$(&quot;tr:even&quot;)</code>选择器中索引是从0开始的，因为第1行是偶数</p>
-<p>load()方法通常用来从Web服务器上获取静态的数据文件</p>
-</h3></h2></h1>]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;认识JQuery&quot;&gt;&lt;a href=&quot;#认识JQuery&quot; class=&quot;headerlink&quot; title=&quot;认识JQuery&quot;&gt;&lt;/a&gt;认识JQuery&lt;/h2&gt;&lt;h3 id=&quot;JQuery和JavaScript的转换&quot;&gt;&lt;a href=&quot;#JQuery和Ja
-    
-    </summary>
-    
-      <category term="JQuery学习笔记" scheme="https://caixueyuan.github.io/categories/JQuery%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
-    
-    
-      <category term="JQuery学习笔记" scheme="https://caixueyuan.github.io/tags/JQuery%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>HTML5 API</title>
-    <link href="https://caixueyuan.github.io/2018/04/02/HTML5-API/"/>
-    <id>https://caixueyuan.github.io/2018/04/02/HTML5-API/</id>
-    <published>2018-04-02T12:33:51.000Z</published>
-    <updated>2018-04-11T08:50:25.884Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="地理位置"><a href="#地理位置" class="headerlink" title="地理位置"></a>地理位置</h2><p><code>navigator.geolocation.getCurrentPosition()</code>获取用户当前位置<br><code>navigator.geolocation.watchPosition()</code>获取当前位置，同时不断地检视当前位置<br><code>navigator.gerlocation.clearWatch()</code>停止检视用户位置</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//获取经纬度</span></div><div class="line">navigator.geolocation.getCurrentPosition(<span class="function"><span class="keyword">function</span>(<span class="params">pos</span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> latitude = pos.coords.latitude;</div><div class="line">    <span class="keyword">var</span> longitude = pos.coords.longitude;</div><div class="line">    alert(<span class="string">"Your position:"</span> + latitude+<span class="string">", "</span>+longitude);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//通过获取地理位置信息在地图上显示当前位置</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getmap</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">if</span>(!navigator.geolocation)</div><div class="line">        <span class="keyword">throw</span> <span class="string">"Geolocation not supported"</span>;</div><div class="line">    <span class="keyword">var</span> image = <span class="built_in">document</span>.createElement(<span class="string">"img"</span>);</div><div class="line">    navigator.geolocation.getCurrentPosition(setMapURL);</div><div class="line">    <span class="keyword">return</span> image;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">setMapURL</span>(<span class="params">pos</span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> latitude = pos.coords.latitude;</div><div class="line">    <span class="keyword">var</span> longitude = pos.coords.longitude;</div><div class="line">    <span class="keyword">var</span> accuracy = pos.coords.accuracy;</div><div class="line"></div><div class="line">    <span class="keyword">var</span> url = <span class="string">"http://maps.google.com/maps/api/staticmap"</span>+</div><div class="line">        <span class="string">"?center = "</span>+latitude + <span class="string">", "</span>+longitude +<span class="string">"&amp;size = 640*640&amp;sensor=true"</span>;</div><div class="line"></div><div class="line">    <span class="keyword">var</span> zoomlevel = <span class="number">20</span>;</div><div class="line">    <span class="keyword">if</span>(accuracy &gt; <span class="number">80</span>)</div><div class="line">        zoomlevel -= <span class="built_in">Math</span>.round(<span class="built_in">Math</span>.log(accuracy/<span class="number">50</span>)/<span class="built_in">Math</span>.LN2);</div><div class="line">        url += <span class="string">"&amp;zoom="</span>+zoomlevel;</div><div class="line"></div><div class="line">        image.src= url;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="历史记录管理"><a href="#历史记录管理" class="headerlink" title="历史记录管理"></a>历史记录管理</h2><p><code>location.hash</code>会更新显示在地址栏中的URL，同时会在浏览器的历史记录中添加一条记录。hash属性设置URL的片段标识符，通过是用于指定要滚动到的文档中的某一部分的ID，它可以设置成任何的字符串</p>
-<p>支持HTML5的浏览器一旦发现片段标识符发生了改变，就会在Window对象上触发一个hashchange事件，可以通过设置onhashChange为一个处理程序函数</p>
-<p>HTML5，该方法包含了history.pushStatus()方法和popstate事件，当一个Web应用进入一个新的状态的时候，会调用history.pushState()方法将该状态添加到浏览器的浏览历史记录中。</p>
-<p>还有另外一个方法，history.replaceState()，用新的状态来代替当前的历史状态</p>
-<h2 id="Web-Worker"><a href="#Web-Worker" class="headerlink" title="Web Worker"></a>Web Worker</h2><p>客户端JavaScript都是单线程</p>
-<p>Web Workers处在一个自包含的执行环境中，无法访问Window对象和Document对象，和主线程之间的童心也只能通过异步消息传递机制来实现，并行改变DOM是不可能的</p>
-<h3 id="Worker对象"><a href="#Worker对象" class="headerlink" title="Worker对象"></a>Worker对象</h3><p><code>var loader = new Worker(&quot;utils/loader.js&quot;);</code><br>如果指定的URL采用的是绝对路径，要保证该脚本的文档是同源的</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;地理位置&quot;&gt;&lt;a href=&quot;#地理位置&quot; class=&quot;headerlink&quot; title=&quot;地理位置&quot;&gt;&lt;/a&gt;地理位置&lt;/h2&gt;&lt;p&gt;&lt;code&gt;navigator.geolocation.getCurrentPosition()&lt;/code&gt;获取用户当前位
-    
-    </summary>
-    
-      <category term="JavaScript学习笔记" scheme="https://caixueyuan.github.io/categories/JavaScript%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
-    
-    
-      <category term="JavaScript学习笔记" scheme="https://caixueyuan.github.io/tags/JavaScript%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
     
   </entry>
   
