@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://caixueyuan.github.io/"/>
-  <updated>2019-07-17T16:44:51.466Z</updated>
+  <updated>2019-07-17T16:53:22.462Z</updated>
   <id>https://caixueyuan.github.io/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="https://caixueyuan.github.io/2019/07/18/C-Prime%E7%AC%AC%E5%9B%9B%E7%AB%A0/"/>
     <id>https://caixueyuan.github.io/2019/07/18/C-Prime第四章/</id>
     <published>2019-07-17T16:08:00.000Z</published>
-    <updated>2019-07-17T16:44:51.466Z</updated>
+    <updated>2019-07-17T16:53:22.462Z</updated>
     
     <content type="html"><![CDATA[<h2 id="基本内置类型"><a href="#基本内置类型" class="headerlink" title="基本内置类型"></a>基本内置类型</h2><ol>
 <li>不要混用带符号类型和无符号类型（能不用无符号整数的可以不用）</li>
@@ -47,7 +47,7 @@
 <p>这样可以创建一个数组（将数组转换为vector）</p>
 <p><img src="1563380478962.png" alt="1563380478962"></p>
 <p>使用别名来代替类型</p>
-<p><img src="/使用别名来代替类型.png" alt="1563381827930"></p>
+<p><img src="使用别名来代替类型.png" alt="使用别名来代替类型"></p>
 <p>第一行和第二行是等价的</p>
 ]]></content>
     
