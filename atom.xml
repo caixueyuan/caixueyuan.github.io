@@ -56,7 +56,7 @@
     <link href="https://caixueyuan.github.io/2019/07/21/C-%E5%9F%BA%E7%A1%80/"/>
     <id>https://caixueyuan.github.io/2019/07/21/C-基础/</id>
     <published>2019-07-21T15:17:43.000Z</published>
-    <updated>2019-07-22T16:22:31.646Z</updated>
+    <updated>2019-07-23T16:23:39.956Z</updated>
     
     <content type="html"><![CDATA[<h2 id="表达式"><a href="#表达式" class="headerlink" title="表达式"></a>表达式</h2><p><strong>sizeof</strong>返回的是表达式结果类型的大小，而不是实际对象值的内存的大小</p>
 <p><img src="1563722534600.png" alt="1563722534600"></p>
@@ -69,6 +69,23 @@
 <h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><h3 id="局部静态成员"><a href="#局部静态成员" class="headerlink" title="局部静态成员"></a>局部静态成员</h3><p><strong>局部静态成员</strong>：在程序执行路径第一次经过此对象定义语句的时候初始化，直到程序终止才被销毁，在此期间即使对象所在的函数结束执行也不会对其有影响</p>
 <p><img src="1563811767670.png" alt="1563811767670"></p>
 <p>定义函数的源文件应该把含有函数声明的头文件包含进来，编译器负责验证函数的定义和声明是否匹配</p>
+<p><strong>initializer_list</strong>:可变参数列表</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//expect和actual是string对象</span></div><div class="line"><span class="keyword">if</span>(expected != actual)</div><div class="line">    error_msg(&#123;<span class="string">"function"</span>,expected,actual&#125;);</div><div class="line"><span class="keyword">else</span></div><div class="line">    error_msg(&#123;<span class="string">"functionX"</span>,<span class="string">"OKAY"</span>&#125;);</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">error_msg</span><span class="params">(ErrCode e,<span class="built_in">initializer_list</span>&lt;<span class="built_in">string</span>&gt; il)</span></span>&#123;</div><div class="line">    <span class="built_in">cout</span> &lt;&lt; e.msg() &lt;&lt; <span class="string">":"</span>;</div><div class="line">    <span class="keyword">for</span>(<span class="keyword">const</span> <span class="keyword">auto</span> &amp;elem:il)</div><div class="line">        <span class="built_in">cout</span> &lt;&lt; elem &lt;&lt; <span class="string">" "</span>;</div><div class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="返回值："><a href="#返回值：" class="headerlink" title="返回值："></a><strong>返回值</strong>：</h3><ol>
+<li>不要返回局部对象的引用和指针。因为如果返回局部对象的引用时，由于函数运行结束之后局部对象会被析构，导致返回值为未知对象。</li>
+<li>引用返回左值，返回值可以作为左值，如果返回的是引用的话</li>
+</ol>
+<p><strong>重载函数</strong>：</p>
+<p>C++重载的是不区分顶层，区分底层</p>
+<p>C++中名字查找发生在类型检查之前</p>
+<p><img src="重载.png" alt="1563897046529"></p>
+<p><strong>内联函数</strong>：内联函数只是向编译器发出的一个请求，编译器可以忽略这个请求。通常就是在每个调用点内联展开。</p>
+<p><strong>constexpr函数</strong>：函数的返回值以及所有形参的类型都是字面值类型，而且函数体内必须有且只有一条return语句。constexpr为内联函数，不一定返回常量表达式。</p>
+<h3 id="调试帮助"><a href="#调试帮助" class="headerlink" title="调试帮助"></a>调试帮助</h3><p>assert预处理宏：是预处理器，而不是编译器检查的。用来检查不可能的情况</p>
+<p><strong>NDEBUG预处理变量</strong>：assert的行为依赖于这个预处理变量的状态，如果定义了这个预处理变量，就什么都不做。</p>
+<p><img src="预处理1.png" alt="1563898004510"></p>
+<p><img src="预处理2.png" alt="1563898033745"></p>
+<h3 id="函数指针"><a href="#函数指针" class="headerlink" title="函数指针"></a>函数指针</h3><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">bool lengthCompare(const string &amp;,const string &amp;);</div><div class="line">bool (*pf)(const string&amp;,const string &amp;);</div><div class="line">pf = lengthCompare;</div><div class="line">pf = &amp;lengthCompare;</div><div class="line">bool b1 = pf("a","b");</div><div class="line">bool b2 = (*pf)("a","b");</div><div class="line"></div><div class="line">//声明函数指针</div><div class="line">int (*f1(int))(int*,int);</div><div class="line">auto f1(int) -&gt; int(*)(int*,int);</div><div class="line"></div><div class="line">//使用decltype简化书写函数返回类型的过程，第三个函数接受一个string类型的参数，返回一个指针，该指针指向前两个函数中的一个。</div><div class="line">string:size_type sumLength(const string&amp; ,const string &amp;);</div><div class="line">string:size_type largeLength(const string&amp;,const string &amp;);</div><div class="line">decltype (sumLength) *getLength(const string &amp;);//*表示返回指针类型</div></pre></td></tr></table></figure>
 ]]></content>
     
     <summary type="html">
