@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://caixueyuan.github.io/"/>
-  <updated>2019-07-22T16:41:16.814Z</updated>
+  <updated>2019-07-26T16:18:10.512Z</updated>
   <id>https://caixueyuan.github.io/</id>
   
   <author>
@@ -14,6 +14,109 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>C语句编译与链接</title>
+    <link href="https://caixueyuan.github.io/2019/07/25/C%E8%AF%AD%E5%8F%A5%E7%BC%96%E8%AF%91%E4%B8%8E%E9%93%BE%E6%8E%A5/"/>
+    <id>https://caixueyuan.github.io/2019/07/25/C语句编译与链接/</id>
+    <published>2019-07-25T15:17:34.000Z</published>
+    <updated>2019-07-26T16:18:10.512Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h2><p><img src="运行库.png" alt="1564068683784"></p>
+<p><strong>操作系统应用程序编程接口</strong>：应用程序的接口的提供者是运行库（Runtime Library），运行库使用操作系统提供的系统调用接口。</p>
+<p><strong>直接使用物理内存的坏处</strong>：</p>
+<ol>
+<li>地址空间不连续</li>
+<li>内存使用效率低</li>
+<li>程序运行的地址不确定</li>
+</ol>
+<p><strong>使用虚拟地址</strong>：</p>
+<p><img src="虚拟地址.png" alt="1564069609677"></p>
+<p>程序只能够访问到虚拟地址，不感知物理地址，一个程序可以分为好多段，好多页，页分为虚拟页，物理页和磁盘页。程序访问的是虚拟地址，如果虚拟地址映射的物理页不在物理内存中，会出现缺页中断，由操作系统进行接管，来处理缺页中断，所以呢，程序并不感知物理地址。</p>
+<p>用户线程和内核线程并不总是一对一，又可能是多对一或者是多对多。</p>
+<h2 id="静态编译"><a href="#静态编译" class="headerlink" title="静态编译"></a>静态编译</h2><p><img src="编译链接过程.png" alt="1564071456112"></p>
+<p>预处理（processing)，编译（Compilation），汇编（Assembled），链接（Linking）</p>
+<p><strong>预编译</strong>：</p>
+<ol>
+<li>展开所有的宏定义”#define”</li>
+<li>处理所有条件预编译指令,”#if”,”#ifdef”,”elif”,”#else”,”#endif”</li>
+<li>处理”#include”预编译指令，递归地将包含的文件插入到该编译指令的位置</li>
+<li>删除所有的注释</li>
+<li>添加行号和文件名标识</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">gcc -E main.c -o main.i</div></pre></td></tr></table></figure>
+<p><strong>编译</strong>：</p>
+<p>将预编译之后的代码进行编译，得到汇编代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">gcc -s main.i -o main.s</div></pre></td></tr></table></figure>
+<p><strong>汇编</strong>：</p>
+<p>将汇编代码转换为机器指令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">gcc -c main.s -o main.o</div></pre></td></tr></table></figure>
+<p><strong>链接</strong>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ld -static /usr/lib/crt1.o /usr/lib/crti.o /usr/lib/gcc/i486-linux-gnu/4.1.3/crtbeginT.o -L /usr/lib/gcc/i486-linux-gnu/4.1.3 -L /usr/lib/ -L /lib hello.o --start-group -lgcc -l gcc_eh -lc --end-group /usr/lib/gcc/i486-linux-gnu/4.1.3/crtend.o /usr/lib/crtn/o</div></pre></td></tr></table></figure>
+<h3 id="编译过程"><a href="#编译过程" class="headerlink" title="编译过程"></a>编译过程</h3><p><img src="编译过程.png" alt="1564147367310"></p>
+<ol>
+<li><strong>词法</strong>：lex程序，将源代码的字符序列分割成一系列的记号</li>
+<li><strong>语法分析</strong>：根据记号进行分析，产生语法树</li>
+<li><strong>语义分析</strong>：分为静态语义和动态语义，对语法树中进行标识</li>
+<li><strong>中间代码生成</strong>：将语法树转为中间代码。中间代码使得编译器可以被分为前端和后端，前端可以负责产生机器无关的中间代码，后端将中间代码转换为目标机器代码。<strong>三地址码</strong>：就是对于中间代码，操作都是三个地址+一个操作</li>
+<li><strong>目标代码生成与优化</strong>：通过代码生成器来生成目标机器代码</li>
+</ol>
+<h3 id="链接器"><a href="#链接器" class="headerlink" title="链接器"></a>链接器</h3><p><strong>符号</strong>：用来表示一个地址，这个地址可以是一个子程序的起始地址，也可以是变量的起始地址。    </p>
+<p>链接的主要内容是把各个模块之间的相互引用的部分处理好，使得各个模块之间能够正常链接好，“程序员人工调整地址”，包括地址和空间分配，符号决议和重定位。</p>
+<p><strong>静态链接</strong>：每次函数调用都必须确切知道函数的地址，但是由于每个模块都是单独编译的，在编译器编译的时候并不知道函数的地址，所以等到链接的时候由链接器将这些指令的目标地址来修正，得到函数的地址。对于全局变量和定义在其他文件的变量也是一样的道理。</p>
+<p><strong>重定位</strong>：给程序中每个引用到其他文件的地址打补丁，让他们引用到正确的绝对地址。、</p>
+<h2 id="目标文件"><a href="#目标文件" class="headerlink" title="目标文件"></a>目标文件</h2><h3 id="目标文件格式"><a href="#目标文件格式" class="headerlink" title="目标文件格式"></a>目标文件格式</h3><ol>
+<li><strong>可重定位文件</strong>（relocatable file)：包含代码和数据，可以被用来链接成可执行文件和共享目标文件。包括静态链接文件</li>
+<li>可执行文件（executable file）：可执行文件</li>
+<li>共享目标文件（Shared Object File）：包含代码和数据，有两个作用：跟可重定位文件生成新的可执行文件，或者可以与可执行文件结合来运行程序</li>
+<li>核心转储文件（core dump file):core文件</li>
+</ol>
+<h3 id="目标文件格式-1"><a href="#目标文件格式-1" class="headerlink" title="目标文件格式"></a>目标文件格式</h3><ol>
+<li><strong>文件头</strong>:描述整个文件的文件属性，包括文件是否可执行，是静态链接还是动态链接以及入口地址，目标硬件和目标操作系统等信息，还包括一个段表，描述我呢见中各个段在文件中的偏移位置及段的属性</li>
+<li><strong>text段</strong>：机器代码（在内存都是只读）</li>
+<li><strong>data段</strong>：已初始化的全局变量和局部变量</li>
+<li><strong>bss段</strong>：未初始化的全局变量和局部静态变量</li>
+</ol>
+<h3 id="挖掘"><a href="#挖掘" class="headerlink" title="挖掘"></a>挖掘</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">gcc -c test.c</div><div class="line">objdump -h test.o</div><div class="line">size test.o</div></pre></td></tr></table></figure>
+<p><img src="编译目标文件.png" alt="1564155339409"></p>
+<p><img src="编译内存段.png" alt="1564155384053"></p>
+<ol>
+<li><p><strong>代码段</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">objdump -s -d test.o</div></pre></td></tr></table></figure>
+</li>
+<li><p><strong>数据段和只读数据段</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">objdump -x -s -d test.o</div></pre></td></tr></table></figure>
+<p>.rodata为只读数据段，存储程序中的只读变量和字符串变量</p>
+</li>
+<li><p><strong>BSS段</strong></p>
+<p>未初始化的变量</p>
+</li>
+</ol>
+<p>其他小技巧：</p>
+<p><strong>分析mp3等其他文件</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">objcopy -I binary -O elf32-i386 -B i386 image.jpg image.o</div><div class="line">objdump -ht image.o</div></pre></td></tr></table></figure>
+<p><strong>自定义段</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">__attribute__((section(<span class="string">"FOO"</span>)))<span class="keyword">int</span> global = <span class="number">42</span>;<span class="comment">//变量将放在FOO段中</span></div></pre></td></tr></table></figure>
+<h3 id="ELF文件结构描述"><a href="#ELF文件结构描述" class="headerlink" title="ELF文件结构描述"></a>ELF文件结构描述</h3><figure class="highlight stata"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">readelf -<span class="keyword">h</span> <span class="keyword">test</span>.o<span class="comment">//查看文件头</span></div><div class="line">readelf -S <span class="keyword">test</span>.o<span class="comment">//查看段表</span></div></pre></td></tr></table></figure>
+<ol>
+<li>.rel.text:重定位表</li>
+<li>.shstrtab:字符串表</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;基础知识&quot;&gt;&lt;a href=&quot;#基础知识&quot; class=&quot;headerlink&quot; title=&quot;基础知识&quot;&gt;&lt;/a&gt;基础知识&lt;/h2&gt;&lt;p&gt;&lt;img src=&quot;运行库.png&quot; alt=&quot;1564068683784&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;操作系统应用程
+    
+    </summary>
+    
+      <category term="学习笔记" scheme="https://caixueyuan.github.io/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+    
+      <category term="Linux,C++" scheme="https://caixueyuan.github.io/tags/Linux-C/"/>
+    
+  </entry>
   
   <entry>
     <title>C++程序概述</title>
@@ -889,43 +992,6 @@
     
     
       <category term="Oracle" scheme="https://caixueyuan.github.io/tags/Oracle/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>T-SQL</title>
-    <link href="https://caixueyuan.github.io/2018/07/29/T-SQL/"/>
-    <id>https://caixueyuan.github.io/2018/07/29/T-SQL/</id>
-    <published>2018-07-29T08:49:12.000Z</published>
-    <updated>2018-07-29T16:07:45.282Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="基本操作"><a href="#基本操作" class="headerlink" title="基本操作"></a>基本操作</h2><h3 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h3><p>定义用户数据类型<br><figure class="highlight ada"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sp_addtype dbname2,<span class="symbol">'varchar</span>(<span class="number">10</span>)<span class="string">','</span><span class="keyword">not</span> null'</div></pre></td></tr></table></figure></p>
-<p>显示用户定义的数据类型<strong>sp_help</strong><br>删除用户定义的数据类型<strong>sp_droptype dbname2</strong></p>
-<h3 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h3><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">declare</span> <span class="meta">@var</span>1 <span class="keyword">int</span><span class="comment">//定义局部变量</span></div><div class="line"><span class="keyword">declare</span> @<span class="meta">@var</span>2 <span class="keyword">int</span><span class="comment">//定义全局变量</span></div></pre></td></tr></table></figure>
-<h3 id="数据库设备"><a href="#数据库设备" class="headerlink" title="数据库设备"></a>数据库设备</h3><p>使用SQL命令创建数据库设备<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">Disk Init</div><div class="line">name = 'mydev2',</div><div class="line">physname = 'e:\devices\mydev2.dat',</div><div class="line">vdevno = 2,</div><div class="line">size = 1024</div><div class="line">go</div></pre></td></tr></table></figure></p>
-<p>指定默认的数据库设备<br><figure class="highlight nginx"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">sp_diskdefault</span> mydev,defaulton</div></pre></td></tr></table></figure></p>
-<p>显示数据库设别的信息<br><figure class="highlight nginx"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">sp_diskdefault</span> mydev,defaultoff</div></pre></td></tr></table></figure></p>
-<p>删设备<br><figure class="highlight nginx"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">sp_dropdevice</span> logical_name</div></pre></td></tr></table></figure></p>
-<h3 id="表"><a href="#表" class="headerlink" title="表"></a>表</h3><figure class="highlight gams"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">sp_rename objname,newname<span class="comment">//修改名字</span></div><div class="line">Alter <span class="keyword">table</span> newroysched <span class="comment">partition 4</span>//将表所在的段分割表</div><div class="line">sp_help,sp_helpartition.<span class="comment">//查看表的分割信息</span></div><div class="line">alter <span class="keyword">table</span> newroysched <span class="comment">unpartition</span>//删除表的分割</div></pre></td></tr></table></figure>
-<hr>
-<figure class="highlight n1ql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">create</span> <span class="keyword">unique</span>(clustered) <span class="keyword">index</span> <span class="keyword">on</span> tablename.columnname//创建索引</div><div class="line"><span class="keyword">drop</span> <span class="keyword">index</span> tablename.columnname//删除索引</div></pre></td></tr></table></figure>
-<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">create <span class="keyword">default</span> datefault <span class="keyword">as</span> getdate()<span class="comment">//创建默认值</span></div><div class="line">sp_binddefault datefault,<span class="string">"sale.date"</span><span class="comment">//对列关联默认值</span></div></pre></td></tr></table></figure>
-<p><strong>规则</strong>：当进行insert或者update操作时，自动用关联的规则，检查所输入的数据的有效性</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">create</span> Rule daterule <span class="keyword">as</span> @pub_id <span class="keyword">between</span> <span class="string">"1900.1.1"</span> <span class="keyword">and</span> <span class="keyword">getdate</span>()//创建故障</div><div class="line">sp_birdrule Rule_Name <span class="string">"sale.date"</span>//对列关联规则</div></pre></td></tr></table></figure>
-<p><strong>视图</strong>：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">create</span> <span class="keyword">view</span> pub_view <span class="keyword">as</span></div><div class="line"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">table</span></div></pre></td></tr></table></figure></p>
-<p>使用With Check Option选项允许检查视图的数据，有利于从视图中删除不良的DML语句</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;基本操作&quot;&gt;&lt;a href=&quot;#基本操作&quot; class=&quot;headerlink&quot; title=&quot;基本操作&quot;&gt;&lt;/a&gt;基本操作&lt;/h2&gt;&lt;h3 id=&quot;数据类型&quot;&gt;&lt;a href=&quot;#数据类型&quot; class=&quot;headerlink&quot; title=&quot;数据类型&quot;&gt;&lt;/a
-    
-    </summary>
-    
-      <category term="数据库" scheme="https://caixueyuan.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
-    
-    
-      <category term="数据库" scheme="https://caixueyuan.github.io/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
     
   </entry>
   
