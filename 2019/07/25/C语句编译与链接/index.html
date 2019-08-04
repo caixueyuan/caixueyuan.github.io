@@ -108,7 +108,7 @@
 <meta property="og:image" content="https://caixueyuan.github.io/2019/07/25/C语句编译与链接/编译过程.png">
 <meta property="og:image" content="https://caixueyuan.github.io/2019/07/25/C语句编译与链接/编译目标文件.png">
 <meta property="og:image" content="https://caixueyuan.github.io/2019/07/25/C语句编译与链接/编译内存段.png">
-<meta property="og:updated_time" content="2019-07-26T16:18:10.512Z">
+<meta property="og:updated_time" content="2019-07-30T16:01:06.653Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="C语句编译与链接">
 <meta name="twitter:description" content="基础知识 操作系统应用程序编程接口：应用程序的接口的提供者是运行库（Runtime Library），运行库使用操作系统提供的系统调用接口。 直接使用物理内存的坏处：  地址空间不连续 内存使用效率低 程序运行的地址不确定  使用虚拟地址：  程序只能够访问到虚拟地址，不感知物理地址，一个程序可以分为好多段，好多页，页分为虚拟页，物理页和磁盘页。程序访问的是虚拟地址，如果虚拟地址映射的物理页不在物">
@@ -451,6 +451,15 @@
 <li>.rel.text:重定位表</li>
 <li>.shstrtab:字符串表</li>
 </ol>
+<h3 id="链接的接口：符号"><a href="#链接的接口：符号" class="headerlink" title="链接的接口：符号"></a>链接的接口：符号</h3><p>定义C++宏，只有在C++程序中才能够进行编译</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> __cplusplus</span></div><div class="line"><span class="keyword">extern</span> <span class="string">"C"</span>&#123;</div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> *<span class="title">memset</span><span class="params">(<span class="keyword">void</span>*,<span class="keyword">int</span>,<span class="keyword">size_t</span>)</span></span>;</div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> __cplusplus</span></div><div class="line">&#125;</div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div></pre></td></tr></table></figure>
+<h3 id="强符号和弱符号"><a href="#强符号和弱符号" class="headerlink" title="强符号和弱符号"></a>强符号和弱符号</h3><p><strong>强符号</strong>：默认函数和初始化的全局变量</p>
+<p><strong>弱符号</strong>：未初始化的全局变量</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">extern</span> <span class="keyword">int</span> ext;<span class="comment">//啥都不是</span></div><div class="line"><span class="keyword">int</span> weak;<span class="comment">//弱符号</span></div><div class="line"><span class="keyword">int</span> strong = <span class="number">1</span>;<span class="comment">//强符号</span></div><div class="line">__attribute__((weak)) weak2=<span class="number">2</span><span class="comment">//弱符号</span></div></pre></td></tr></table></figure>
+<p><strong>强引用</strong>：对外部目标文件的符号引用在目标文件被最终链接到可执行文件时，要被正确决议，如果没有找到错误，要报编译错误</p>
+<p><strong>弱引用</strong>：如果符号没有被定义不报错误</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">__attribute__((weakref)) <span class="function"><span class="keyword">void</span> <span class="title">foo</span><span class="params">()</span></span>;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">	<span class="keyword">if</span>(foo)</div><div class="line">		foo();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>gcc中生成调试段：加上-g</p>
 
       
     </div>
@@ -502,6 +511,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/07/31/C-Prime-Plus第9章/" rel="prev" title="C++ Prime Plus第9章">
+                C++ Prime Plus第9章 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -573,7 +586,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">55</span>
+                <span class="site-state-item-count">57</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -637,7 +650,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基础知识"><span class="nav-number">1.</span> <span class="nav-text">基础知识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#静态编译"><span class="nav-number">2.</span> <span class="nav-text">静态编译</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#编译过程"><span class="nav-number">2.1.</span> <span class="nav-text">编译过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#链接器"><span class="nav-number">2.2.</span> <span class="nav-text">链接器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#目标文件"><span class="nav-number">3.</span> <span class="nav-text">目标文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#目标文件格式"><span class="nav-number">3.1.</span> <span class="nav-text">目标文件格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#目标文件格式-1"><span class="nav-number">3.2.</span> <span class="nav-text">目标文件格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#挖掘"><span class="nav-number">3.3.</span> <span class="nav-text">挖掘</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ELF文件结构描述"><span class="nav-number">3.4.</span> <span class="nav-text">ELF文件结构描述</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基础知识"><span class="nav-number">1.</span> <span class="nav-text">基础知识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#静态编译"><span class="nav-number">2.</span> <span class="nav-text">静态编译</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#编译过程"><span class="nav-number">2.1.</span> <span class="nav-text">编译过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#链接器"><span class="nav-number">2.2.</span> <span class="nav-text">链接器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#目标文件"><span class="nav-number">3.</span> <span class="nav-text">目标文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#目标文件格式"><span class="nav-number">3.1.</span> <span class="nav-text">目标文件格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#目标文件格式-1"><span class="nav-number">3.2.</span> <span class="nav-text">目标文件格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#挖掘"><span class="nav-number">3.3.</span> <span class="nav-text">挖掘</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ELF文件结构描述"><span class="nav-number">3.4.</span> <span class="nav-text">ELF文件结构描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#链接的接口：符号"><span class="nav-number">3.5.</span> <span class="nav-text">链接的接口：符号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#强符号和弱符号"><span class="nav-number">3.6.</span> <span class="nav-text">强符号和弱符号</span></a></li></ol></li></ol></div>
             
 
           </div>

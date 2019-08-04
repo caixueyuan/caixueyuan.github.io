@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://caixueyuan.github.io/"/>
-  <updated>2019-07-26T16:18:10.512Z</updated>
+  <updated>2019-08-04T04:34:40.402Z</updated>
   <id>https://caixueyuan.github.io/</id>
   
   <author>
@@ -16,11 +16,102 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>C++PrimePlus第9章</title>
+    <link href="https://caixueyuan.github.io/2019/08/04/C-PrimePlus%E7%AC%AC10%E7%AB%A0/"/>
+    <id>https://caixueyuan.github.io/2019/08/04/C-PrimePlus第10章/</id>
+    <published>2019-08-04T03:29:08.000Z</published>
+    <updated>2019-08-04T04:34:40.402Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="内存模型和名称空间"><a href="#内存模型和名称空间" class="headerlink" title="内存模型和名称空间"></a>内存模型和名称空间</h2><h3 id="include的使用"><a href="#include的使用" class="headerlink" title="#include的使用"></a>#include的使用</h3><ol>
+<li><p><code>#include&lt;iostream&gt;</code>如果文件包含在尖括号中，则C++编译器将在存储标准头文件的主机系统的文件系统中查找</p>
+</li>
+<li><p><code>#include&quot;stdio.h&quot;</code> 如果文件是包含在双引号中，则编译器将首先查找当前的工作目录或源代码目录，如果没有的话，则在标准位置中查找</p>
+</li>
+<li><p>在编码的过程中，不要使用#include一个CPP代码，会导致多重定义</p>
+</li>
+<li><p>尽量使用这种方式来定义头文件</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> CORRORDIN_H_</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> CORRORDIN_H_</span></div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span> CORRORDIN_H_</span></div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="定义和声明"><a href="#定义和声明" class="headerlink" title="定义和声明"></a>定义和声明</h3><p><strong>概念</strong>：</p>
+<ol>
+<li>定义是有分配存储空间的，只能够定义一次<code>int a;</code></li>
+<li>声明是引用声明，不用给变量分配存储空间，可以多次被引用<code>a=1;</code></li>
+</ol>
+<h3 id="链接性"><a href="#链接性" class="headerlink" title="链接性"></a>链接性</h3><p>主要分为两种：</p>
+<ol>
+<li>外部链接性：不只是当前文件可以使用，其他别的文件也可以引用声明到</li>
+<li>内部链接性：一般都是静态变量，只能够在当前文件中使用，其他别的文件不能够引用声明到</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> external = <span class="number">10</span>;<span class="comment">//外部链接性，在当前文件中定义，其他文件如果要使用该变量，必须加上extern int external;进行引用声明</span></div><div class="line"><span class="keyword">static</span> <span class="keyword">int</span> inside = <span class="number">11</span>;<span class="comment">//内部链接性，因为是内部链接性，只在当前的文件中起作用，不用担心跟其他文件的全局变量冲突</span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">int</span> count;<span class="comment">//局部变量</span></div><div class="line">    <span class="keyword">static</span> <span class="keyword">int</span> count1;<span class="comment">//作用域还是在该代码块中，但是呢，每次运行该代码块该变量都会一致存在，跟全局变量没啥子区别，就是声明作用域小了一些</span></div><div class="line">&#125;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> const_number=<span class="number">0</span>;<span class="comment">//内部链接性，由const定义的变量都不是外部链接性</span></div><div class="line"><span class="keyword">extern</span> <span class="keyword">const</span> <span class="keyword">int</span> const_number1=<span class="number">10</span>;<span class="comment">//如果想使用外部链接性的const变量的话，就要加上extern进行定义。但是呢，一般情况下，如果想使用外部链接性的const变量，可以将变量定义在头文件中，然后使用#include"header.h"将变量加入到该文件中比较好</span></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">func1</span><span class="params">()</span></span>&#123;&#125;<span class="comment">//函数默认是外部链接性，其他文件默认就可以引用到</span></div><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">func2</span><span class="params">()</span></span>&#123;&#125;<span class="comment">//static修饰的函数为内部链接性，只能够在本文件中使用</span></div></pre></td></tr></table></figure>
+<h3 id="语句链接性："><a href="#语句链接性：" class="headerlink" title="语句链接性："></a>语句链接性：</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">extern</span> <span class="string">"C"</span> <span class="function"><span class="keyword">void</span> <span class="title">spiff</span><span class="params">(<span class="keyword">int</span>)</span></span>;<span class="comment">//使用C语句获取函数描述符号去查找函数</span></div><div class="line"><span class="keyword">extern</span> <span class="string">"C++"</span> <span class="function"><span class="keyword">void</span> <span class="title">spiff</span><span class="params">(<span class="keyword">int</span>)</span></span>;<span class="comment">//使用C++语句获取函数描述符号去查找函数</span></div></pre></td></tr></table></figure>
+<h3 id="命名空间使用"><a href="#命名空间使用" class="headerlink" title="命名空间使用"></a>命名空间使用</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;<span class="comment">//这种是using编译指令</span></div><div class="line"><span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;<span class="comment">//使用using声明</span></div><div class="line"><span class="keyword">namespace</span> MEF= <span class="built_in">std</span>;<span class="comment">//有些时候可以使用名称空间别名的方式来缩短名称空间</span></div></pre></td></tr></table></figure>
+<h3 id="小知识"><a href="#小知识" class="headerlink" title="小知识"></a>小知识</h3><p><strong>const和mutable</strong>：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">data</span>&#123;</span></div><div class="line">    <span class="keyword">char</span> name[<span class="number">30</span>];</div><div class="line">    <span class="keyword">mutable</span> <span class="keyword">int</span> accesses;<span class="comment">//可以修改，不受const的限制</span></div><div class="line">&#125;</div><div class="line"><span class="keyword">const</span> data veep = &#123;<span class="string">"abc"</span>,<span class="number">1</span>&#125;;</div><div class="line">veep.name = <span class="string">""</span>;<span class="comment">//错误，不能够修改</span></div><div class="line">veep.accesses = <span class="number">1</span>;<span class="comment">//可以修改</span></div></pre></td></tr></table></figure>
+<p><strong>函数搜索顺序</strong>：</p>
+<p>首先是本文件，然后才是程序员编写的其他的文件，然后再是库函数。所以有些时候可以使用覆盖的方式来覆盖库函数来实现比库函数更多的功能。</p>
+<p><strong>const函数</strong>：</p>
+<p>void stock::show() const一般在不修改类的成员变量的时候都要将函数声明为const，这样可以起到保护类的成员变量的作用</p>
+<h2 id="类的声明和使用"><a href="#类的声明和使用" class="headerlink" title="类的声明和使用"></a>类的声明和使用</h2><h3 id="作用域为类的常量的方法"><a href="#作用域为类的常量的方法" class="headerlink" title="作用域为类的常量的方法"></a>作用域为类的常量的方法</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Bakery</span></span></div><div class="line">&#123;</div><div class="line"><span class="keyword">private</span>:</div><div class="line">    <span class="keyword">const</span> <span class="keyword">int</span> Months = <span class="number">12</span>;</div><div class="line">    <span class="keyword">double</span> consts[Months];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这是错误的，因为声明只是描述对象形式，并没有创建对象，所以在创建对象之前，并没有用于存储对象的空间，而const int Months = 12;在运行的时候就需要空间进行存储空间，所以这种的对象声明是错误</p>
+<p><strong>解决方法</strong>：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Bakery</span></span></div><div class="line">&#123;</div><div class="line"><span class="keyword">private</span>:</div><div class="line">    <span class="keyword">enum</span>&#123;Months = <span class="number">12</span>&#125;;</div><div class="line">    <span class="keyword">double</span> consts[Months];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>用这种方法声明枚举的时候并不会创建类数据成员，所有对象都不包含枚举，Months只是一个符号名称，在声明的时候不需要空间</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Bakery</span></span></div><div class="line">&#123;</div><div class="line"><span class="keyword">private</span>:</div><div class="line">    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> Months = <span class="number">12</span>;</div><div class="line">    <span class="keyword">double</span> consts[Months];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>该变量将于其他静态静态变量一样，在运行的时候存放在文件中</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;内存模型和名称空间&quot;&gt;&lt;a href=&quot;#内存模型和名称空间&quot; class=&quot;headerlink&quot; title=&quot;内存模型和名称空间&quot;&gt;&lt;/a&gt;内存模型和名称空间&lt;/h2&gt;&lt;h3 id=&quot;include的使用&quot;&gt;&lt;a href=&quot;#include的使用&quot; cla
+    
+    </summary>
+    
+      <category term="学习笔记" scheme="https://caixueyuan.github.io/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+    
+      <category term="linux,C++" scheme="https://caixueyuan.github.io/tags/linux-C/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>C++ Prime Plus第9章</title>
+    <link href="https://caixueyuan.github.io/2019/07/31/C-Prime-Plus%E7%AC%AC9%E7%AB%A0/"/>
+    <id>https://caixueyuan.github.io/2019/07/31/C-Prime-Plus第9章/</id>
+    <published>2019-07-30T16:02:06.000Z</published>
+    <updated>2019-07-30T16:25:28.804Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><p><strong>重载</strong>：</p>
+<ol>
+<li>重载不区分const和非const变量</li>
+<li>重载不区分引用和非引用</li>
+<li>重载不区分返回值</li>
+</ol>
+<p><strong>模板函数</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">Swap</span><span class="params">(T&amp; a,T&amp; b)</span></span>;<span class="comment">//常规模板</span></div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;&gt; <span class="keyword">void</span> Swap&lt;job&gt;(job&amp; a,job&amp; b);<span class="comment">//具体化</span></div></pre></td></tr></table></figure>
+<p>具体函数优于具体化，优于常规模板</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;函数&quot;&gt;&lt;a href=&quot;#函数&quot; class=&quot;headerlink&quot; title=&quot;函数&quot;&gt;&lt;/a&gt;函数&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;重载&lt;/strong&gt;：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;重载不区分const和非const变量&lt;/li&gt;
+&lt;li&gt;重载不区分引用
+    
+    </summary>
+    
+      <category term="学习笔记" scheme="https://caixueyuan.github.io/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+    
+  </entry>
+  
+  <entry>
     <title>C语句编译与链接</title>
     <link href="https://caixueyuan.github.io/2019/07/25/C%E8%AF%AD%E5%8F%A5%E7%BC%96%E8%AF%91%E4%B8%8E%E9%93%BE%E6%8E%A5/"/>
     <id>https://caixueyuan.github.io/2019/07/25/C语句编译与链接/</id>
     <published>2019-07-25T15:17:34.000Z</published>
-    <updated>2019-07-26T16:18:10.512Z</updated>
+    <updated>2019-07-30T16:01:06.653Z</updated>
     
     <content type="html"><![CDATA[<h2 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h2><p><img src="运行库.png" alt="1564068683784"></p>
 <p><strong>操作系统应用程序编程接口</strong>：应用程序的接口的提供者是运行库（Runtime Library），运行库使用操作系统提供的系统调用接口。</p>
@@ -102,6 +193,15 @@
 <li>.rel.text:重定位表</li>
 <li>.shstrtab:字符串表</li>
 </ol>
+<h3 id="链接的接口：符号"><a href="#链接的接口：符号" class="headerlink" title="链接的接口：符号"></a>链接的接口：符号</h3><p>定义C++宏，只有在C++程序中才能够进行编译</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> __cplusplus</span></div><div class="line"><span class="keyword">extern</span> <span class="string">"C"</span>&#123;</div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> *<span class="title">memset</span><span class="params">(<span class="keyword">void</span>*,<span class="keyword">int</span>,<span class="keyword">size_t</span>)</span></span>;</div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> __cplusplus</span></div><div class="line">&#125;</div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div></pre></td></tr></table></figure>
+<h3 id="强符号和弱符号"><a href="#强符号和弱符号" class="headerlink" title="强符号和弱符号"></a>强符号和弱符号</h3><p><strong>强符号</strong>：默认函数和初始化的全局变量</p>
+<p><strong>弱符号</strong>：未初始化的全局变量</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">extern</span> <span class="keyword">int</span> ext;<span class="comment">//啥都不是</span></div><div class="line"><span class="keyword">int</span> weak;<span class="comment">//弱符号</span></div><div class="line"><span class="keyword">int</span> strong = <span class="number">1</span>;<span class="comment">//强符号</span></div><div class="line">__attribute__((weak)) weak2=<span class="number">2</span><span class="comment">//弱符号</span></div></pre></td></tr></table></figure>
+<p><strong>强引用</strong>：对外部目标文件的符号引用在目标文件被最终链接到可执行文件时，要被正确决议，如果没有找到错误，要报编译错误</p>
+<p><strong>弱引用</strong>：如果符号没有被定义不报错误</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">__attribute__((weakref)) <span class="function"><span class="keyword">void</span> <span class="title">foo</span><span class="params">()</span></span>;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">	<span class="keyword">if</span>(foo)</div><div class="line">		foo();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>gcc中生成调试段：加上-g</p>
 ]]></content>
     
     <summary type="html">
@@ -916,82 +1016,6 @@
     
     
       <category term="MySQL" scheme="https://caixueyuan.github.io/tags/MySQL/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>MySQL 学习笔记（一）</title>
-    <link href="https://caixueyuan.github.io/2018/08/06/MySQL-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/"/>
-    <id>https://caixueyuan.github.io/2018/08/06/MySQL-学习笔记（一）/</id>
-    <published>2018-08-06T15:38:46.000Z</published>
-    <updated>2018-08-06T16:05:52.919Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="数据库与实例"><a href="#数据库与实例" class="headerlink" title="数据库与实例"></a>数据库与实例</h2><blockquote>
-<ul>
-<li>数据库：物理操作系统文件或者其他文件类型的集合</li>
-<li>实例: 应用程序，数据库程序真正操作与数据库文件</li>
-</ul>
-</blockquote>
-<p><strong>注意</strong>：MySQL是一个单进程多线程的数据库，使用代码来查找<br><figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">ps</span> -ef | <span class="keyword">grep</span> mysqld</div></pre></td></tr></table></figure></p>
-<p>查看配置文件的位置，用mysql–help.</p>
-<p>数据库是文件的集合，是依照某种数据模型组织起来并存放于二级存储器中的数据集合，数据库实例是应用程序，是位于用户与操作系统之间的一层数据管理软件，用户对数据库数据的任何操作，包括数据库定义等等都是在数据库实例下进行的，应用程序只有通过数据库实例才能够与数据库打交道</p>
-<p><img src="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/sql/MySQL%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84.png" alt="MySQL体系结构"></p>
-<h2 id="存储引擎"><a href="#存储引擎" class="headerlink" title="存储引擎"></a>存储引擎</h2><p>存储引擎对于MySQL来说是可插拔的</p>
-<h3 id="InnoDB存储引擎"><a href="#InnoDB存储引擎" class="headerlink" title="InnoDB存储引擎"></a>InnoDB存储引擎</h3><p>特点：支持事务，行级锁，支持外键，非锁定读（也就是说默认读取活动不会产生锁）<br>每张表的存储都是按照主键的顺序来存储的</p>
-<h3 id="MyISAM存储引擎"><a href="#MyISAM存储引擎" class="headerlink" title="MyISAM存储引擎"></a>MyISAM存储引擎</h3><p>特点：不支持事务，表锁设计，支持全文索引，同时有一个大的不同就是只缓存索引文件而不缓存数据文件</p>
-<p>可以使用<code>show engines</code>来显示所用的存储引擎</p>
-<h2 id="链接MySQL的方式"><a href="#链接MySQL的方式" class="headerlink" title="链接MySQL的方式"></a>链接MySQL的方式</h2><h2 id="TCP-IP"><a href="#TCP-IP" class="headerlink" title="TCP/IP"></a>TCP/IP</h2><p>这是默认的方式，<br><figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">mysql</span> <span class="selector-tag">-h</span> 192<span class="selector-class">.168</span><span class="selector-class">.1</span><span class="selector-class">.1</span> <span class="selector-tag">-u</span> <span class="selector-tag">dbuser</span> <span class="selector-tag">-p</span></div></pre></td></tr></table></figure></p>
-<p>可以使用mysql数据库下的user表来查看用户的信息</p>
-<h3 id="命名管道或者共享内存"><a href="#命名管道或者共享内存" class="headerlink" title="命名管道或者共享内存"></a>命名管道或者共享内存</h3><p>Windows中的，只要使用–enable-named-pipe</p>
-<h3 id="Unix-域套接字"><a href="#Unix-域套接字" class="headerlink" title="Unix 域套接字"></a>Unix 域套接字</h3><figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mysql -u dbuser -s <span class="regexp">/tmp/my</span>sql.sock</div></pre></td></tr></table></figure>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;数据库与实例&quot;&gt;&lt;a href=&quot;#数据库与实例&quot; class=&quot;headerlink&quot; title=&quot;数据库与实例&quot;&gt;&lt;/a&gt;数据库与实例&lt;/h2&gt;&lt;blockquote&gt;
-&lt;ul&gt;
-&lt;li&gt;数据库：物理操作系统文件或者其他文件类型的集合&lt;/li&gt;
-&lt;li&gt;实例
-    
-    </summary>
-    
-      <category term="数据库" scheme="https://caixueyuan.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
-    
-    
-      <category term="MySQL" scheme="https://caixueyuan.github.io/tags/MySQL/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Oracle</title>
-    <link href="https://caixueyuan.github.io/2018/08/01/Oracle/"/>
-    <id>https://caixueyuan.github.io/2018/08/01/Oracle/</id>
-    <published>2018-07-31T16:01:18.000Z</published>
-    <updated>2018-08-06T16:05:02.545Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="基本语句"><a href="#基本语句" class="headerlink" title="基本语句"></a>基本语句</h2><h3 id="insert"><a href="#insert" class="headerlink" title="insert"></a>insert</h3><p><strong>多表插入</strong>：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">insert</span> all</div><div class="line"> <span class="keyword">when</span> sum_order &lt;<span class="number">10000</span> <span class="keyword">then</span></div><div class="line"> <span class="built_in">int</span> small_customers</div><div class="line"> <span class="keyword">when</span> sum_orders &gt;= <span class="number">10000</span> <span class="keyword">and</span> sum_orders &lt; <span class="number">100000</span> <span class="keyword">then</span></div><div class="line"> <span class="built_in">int</span> medium_customers</div><div class="line"> <span class="keyword">else</span></div><div class="line"> <span class="keyword">into</span> large_customers</div><div class="line"> <span class="keyword">select</span> customer_id,<span class="keyword">sum</span>(order_total)</div><div class="line"> <span class="keyword">from</span> oe.orders</div><div class="line"> <span class="keyword">group</span> <span class="keyword">by</span> customer_id;</div></pre></td></tr></table></figure></p>
-<h2 id="SQL执行"><a href="#SQL执行" class="headerlink" title="SQL执行"></a>SQL执行</h2><h3 id="共享池"><a href="#共享池" class="headerlink" title="共享池"></a>共享池</h3><p>就是内存中缓存用户进行SQL查询的一块空间。不管有多少个用户想要执行同样的SQL语句，Oracle都会只解析该语句一次，然后在想要使用的用户之间共享。</p>
-<p>在执行每一句SQL语句时必然会发生的事情是它必须被解析并载入到库高速缓存中，库高速缓存是共享池中用来保存之前已经解析过的语句区域。当解析通过之后，就要确定这个语句是否执行过。如果已经执行过，那就是软解析，直接得到解析的过程。如果没有找到语句，那就要生成执行计划，这叫做硬解析。<br>锁存器是为了检查你要执行的SQL语句是否已经存在而要在库高速缓存中获取一个锁存器。而互斥锁是为了阻止多个线程同时访问一个共享结构。</p>
-<p>绑定变量能够很好地减少硬编码，提高效率</p>
-<p><strong>重要</strong>：</p>
-<blockquote>
-<ul>
-<li>数据的写入器不会阻塞数据读取器。重复一遍：写入不阻塞读取。这和其他大部分数据库从根本上是不同的，其他数据库写入阻塞读取。</li>
-<li>用OPEN 命令返回<br>的结果集，当打开表时，接触的已不是表中的单块数据，而是已经确定好的结果。在提取数据之前，并不知道结果。然而从游标上看，结果是不会变的。打开游标时，Oracle 并不是把上面所有数据复制到其他地方；实际上是delete命令把数据复制到一个称为回滚段的数据区域保存。</li>
-</ul>
-</blockquote>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;基本语句&quot;&gt;&lt;a href=&quot;#基本语句&quot; class=&quot;headerlink&quot; title=&quot;基本语句&quot;&gt;&lt;/a&gt;基本语句&lt;/h2&gt;&lt;h3 id=&quot;insert&quot;&gt;&lt;a href=&quot;#insert&quot; class=&quot;headerlink&quot; title=&quot;inser
-    
-    </summary>
-    
-      <category term="数据库" scheme="https://caixueyuan.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
-    
-    
-      <category term="Oracle" scheme="https://caixueyuan.github.io/tags/Oracle/"/>
     
   </entry>
   
