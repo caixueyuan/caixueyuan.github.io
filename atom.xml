@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://caixueyuan.github.io/"/>
-  <updated>2019-08-04T16:10:42.686Z</updated>
+  <updated>2019-08-07T16:38:01.327Z</updated>
   <id>https://caixueyuan.github.io/</id>
   
   <author>
@@ -14,6 +14,33 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Linux基础命令</title>
+    <link href="https://caixueyuan.github.io/2019/08/06/Linux%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4/"/>
+    <id>https://caixueyuan.github.io/2019/08/06/Linux基础命令/</id>
+    <published>2019-08-05T16:23:23.000Z</published>
+    <updated>2019-08-07T16:38:01.327Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="linux用户管理"><a href="#linux用户管理" class="headerlink" title="linux用户管理"></a>linux用户管理</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span><span class="bash">新增用户</span></div><div class="line">useradd -m cxy -d /home/cxy -g group -u uid</div><div class="line"><span class="meta">#</span><span class="bash">修改用户的根目录</span></div><div class="line">usermod -d /home/cxy_new -m cxy</div><div class="line"><span class="meta">#</span><span class="bash">锁住用户</span></div><div class="line">usermod -L cxy</div><div class="line"><span class="meta">#</span><span class="bash">解锁用户</span></div><div class="line">usermod -U cxy</div><div class="line"><span class="meta">#</span><span class="bash">删除用户</span></div><div class="line">userdel cxy</div><div class="line"><span class="meta">#</span><span class="bash">添加用户组</span></div><div class="line">groupadd group1</div><div class="line"><span class="meta">#</span><span class="bash">删除用户组</span></div><div class="line">groupdel group1</div><div class="line"><span class="meta">#</span><span class="bash">查看用户的详细信息</span></div><div class="line">w</div><div class="line"><span class="meta"></span></div><div class="line">#<span class="bash">查看定时任务后台程序是否启动</span></div><div class="line">systemctl | grep cron</div><div class="line">systemctl | grep crond</div><div class="line"><span class="meta">#</span><span class="bash">将定时任务加入到前台程序中</span></div><div class="line">crontab job1.cron</div><div class="line"><span class="meta">#</span><span class="bash">查看程序中的定时任务</span></div><div class="line">crontab -l</div><div class="line"><span class="meta">#</span><span class="bash">查看程序中的定时任务</span></div><div class="line">crontab -r</div><div class="line"><span class="meta">#</span><span class="bash">只能够有一个定时任务</span></div></pre></td></tr></table></figure>
+<h2 id="Linux用户管理"><a href="#Linux用户管理" class="headerlink" title="Linux用户管理"></a>Linux用户管理</h2><h3 id="文件目录管理"><a href="#文件目录管理" class="headerlink" title="文件目录管理"></a>文件目录管理</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span><span class="bash">查看目录下所有问题，包括隐藏文件</span></div><div class="line">ls -la</div><div class="line"><span class="meta">#</span><span class="bash">加上-n参数可以显示每行的行数</span></div><div class="line">cat -n file.log</div><div class="line"><span class="meta">#</span><span class="bash">查看文件的头20行</span></div><div class="line">head -n 20 file.log</div><div class="line"><span class="meta">#</span><span class="bash">查看文件的尾20行</span></div><div class="line">tail -n 20 file.log</div><div class="line"><span class="meta">#</span><span class="bash">动态查看文件的尾部10行</span></div><div class="line">tail -f file.log</div><div class="line"><span class="meta">#</span><span class="bash">将window文件转换为linux文件</span></div><div class="line">dos2unix file.log</div><div class="line"><span class="meta">#</span><span class="bash">创建目录</span></div><div class="line">mkdir -p /opt/oss/caixueyuan</div></pre></td></tr></table></figure>
+<h3 id="文件和目录的权限"><a href="#文件和目录的权限" class="headerlink" title="文件和目录的权限"></a>文件和目录的权限</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span><span class="bash">设置文件为隐藏文件</span></div><div class="line">chattr +a a.log</div><div class="line"><span class="meta">#</span><span class="bash">设置文件为非隐藏文件</span></div><div class="line">chattr -a a.log</div><div class="line"><span class="meta">#</span><span class="bash">设置SUID权限，这样普通用户可以使用root的身份来执行这个命令</span></div><div class="line">chmod u+s filename</div><div class="line"><span class="meta">#</span><span class="bash"><span class="built_in">which</span>用于从系统的PATH变量所定义的目录中查找可执行文件的绝对路径</span></div><div class="line">which filename</div><div class="line"><span class="meta">#</span><span class="bash">whereis用于从系统的PATH变量所定义的目录中查找二进制文件和man文件</span></div><div class="line">whereis filename</div><div class="line"><span class="meta">#</span><span class="bash">指定解压后的位置</span></div><div class="line">tar -zxvf boot.tgz -C /tmp</div></pre></td></tr></table></figure>
+<p><strong>find命令</strong></p>
+<p><img src="find.png" alt="1565195424826"></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;linux用户管理&quot;&gt;&lt;a href=&quot;#linux用户管理&quot; class=&quot;headerlink&quot; title=&quot;linux用户管理&quot;&gt;&lt;/a&gt;linux用户管理&lt;/h2&gt;&lt;figure class=&quot;highlight shell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;t
+    
+    </summary>
+    
+      <category term="学习笔记" scheme="https://caixueyuan.github.io/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+    
+      <category term="linux,命令" scheme="https://caixueyuan.github.io/tags/linux-%E5%91%BD%E4%BB%A4/"/>
+    
+  </entry>
   
   <entry>
     <title>C++PrimePlus第9章</title>
@@ -963,60 +990,6 @@
     
       &lt;h2 id=&quot;参数文件&quot;&gt;&lt;a href=&quot;#参数文件&quot; class=&quot;headerlink&quot; title=&quot;参数文件&quot;&gt;&lt;/a&gt;参数文件&lt;/h2&gt;&lt;p&gt;告诉MySQL实例启动时在哪里，指定初始化参数，定义某些内存结构的大小&lt;/p&gt;
 &lt;figure class=&quot;highlig
-    
-    </summary>
-    
-      <category term="数据库" scheme="https://caixueyuan.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
-    
-    
-      <category term="MySQL" scheme="https://caixueyuan.github.io/tags/MySQL/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>InnoDB存储引擎</title>
-    <link href="https://caixueyuan.github.io/2018/08/12/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/"/>
-    <id>https://caixueyuan.github.io/2018/08/12/InnoDB存储引擎/</id>
-    <published>2018-08-12T08:12:23.000Z</published>
-    <updated>2018-08-12T09:42:12.459Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="InnoDB体系结构"><a href="#InnoDB体系结构" class="headerlink" title="InnoDB体系结构"></a>InnoDB体系结构</h2><p><strong>后台线程</strong>：负责刷新内存池中的数据，保证缓冲池中的内存缓存的是最近的数据，将已修改的数据文件刷新到磁盘文件，同时保证在数据库发生异常的情况下InnoDB能恢复到正常运行状态</p>
-<h3 id="线程分类"><a href="#线程分类" class="headerlink" title="线程分类"></a>线程分类</h3><blockquote>
-<ul>
-<li>Master Thread<br>负责将缓冲池中的数据异步刷新到磁盘，保证数据的一致性，包括脏页的刷新、合并插入缓冲和UNDO页的回收</li>
-<li><p>IO Thread<br>负责异步IO请求的回调</p>
-</li>
-<li><p>Purge Thread<br>在事务被提交后，所使用的undolog可能不需要，负责来回收已经使用并分配的undo页。</p>
-</li>
-<li><p>Page Cleaner Thread<br>将之前版本中脏页的刷新操作都放入到单独的线程中来完成，减轻Master Thread的工作和对于用户查询线程的阻塞。</p>
-</li>
-</ul>
-</blockquote>
-<h3 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h3><blockquote>
-<ul>
-<li><p>缓冲池：使用CheckPoint的机制刷新内存页，缓存的数据包括：索引页、数据页、undo页、插入缓冲、自适应哈希索引、InnoDB存储的锁信息、数据字典信息。</p>
-</li>
-<li><p>LRU List、Free List和Flush List</p>
-</li>
-<li><p>重做日志缓冲</p>
-</li>
-</ul>
-</blockquote>
-<h3 id="InnoDB关键特性"><a href="#InnoDB关键特性" class="headerlink" title="InnoDB关键特性"></a>InnoDB关键特性</h3><blockquote>
-<ul>
-<li><p>插入缓冲：<br><strong>Insert Buffer</strong>：当索引是辅助索引，索引不是唯一的<br><strong>Change Buffer</strong>：对DML操作（INSERT,DELETE,UPDATE)进行缓冲<br><strong>Merge Insert Buffer</strong>：合并插入缓存到磁盘中</p>
-</li>
-<li><p>两次写：两次写入提高效率</p>
-</li>
-<li>自适应哈希索引：提高查询的效率，比B+树的查找更快</li>
-<li>异步IO：将多个IO合并为1个IO请求</li>
-</ul>
-</blockquote>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;InnoDB体系结构&quot;&gt;&lt;a href=&quot;#InnoDB体系结构&quot; class=&quot;headerlink&quot; title=&quot;InnoDB体系结构&quot;&gt;&lt;/a&gt;InnoDB体系结构&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;后台线程&lt;/strong&gt;：负责刷新内存池中的数据，保证缓冲
     
     </summary>
     
