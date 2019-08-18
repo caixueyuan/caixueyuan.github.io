@@ -105,7 +105,11 @@
 <meta property="og:image" content="https://caixueyuan.github.io/2019/08/06/Linux基础命令/find.png">
 <meta property="og:image" content="https://caixueyuan.github.io/2019/08/06/Linux基础命令/修改分区代码.png">
 <meta property="og:image" content="https://caixueyuan.github.io/2019/08/06/Linux基础命令/硬链接.png">
-<meta property="og:updated_time" content="2019-08-15T16:40:59.575Z">
+<meta property="og:image" content="https://caixueyuan.github.io/2019/08/06/Linux基础命令/top.png">
+<meta property="og:image" content="https://caixueyuan.github.io/2019/08/06/Linux基础命令/top1.png">
+<meta property="og:image" content="https://caixueyuan.github.io/rpm.png">
+<meta property="og:image" content="https://caixueyuan.github.io/2019/08/06/Linux基础命令/替换用法.png">
+<meta property="og:updated_time" content="2019-08-18T16:43:17.503Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux基础命令">
 <meta name="twitter:description" content="linux用户管理123456789101112131415161718192021222324252627#新增用户useradd -m cxy -d /home/cxy -g group -u uid#修改用户的根目录usermod -d /home/cxy_new -m cxy#锁住用户usermod -L cxy#解锁用户usermod -U cxy#删除用户userdel cxy#添加用">
@@ -405,6 +409,47 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span>tr命令使用</div><div class="line"><span class="meta">#</span>小写转为大小</div><div class="line">cat file.txt | tr '[a-z]' '[A-Z]'</div><div class="line"><span class="meta">#</span>删除字符:</div><div class="line">cat file.txt | tr -d ':'</div></pre></td></tr></table></figure>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span>paste合并文件</div><div class="line"><span class="meta">#</span>将1.txt和2.txt文件按照行进行合并，中间用tab分割</div><div class="line">paste 1.txt 2.txt</div><div class="line">paste 1.txt 2.txt -d :</div></pre></td></tr></table></figure>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span>split分割文件</div><div class="line"><span class="meta">#</span>以500行为一个文件进行分割</div><div class="line">split -l 500 big.txt small_file_</div><div class="line"><span class="meta">#</span>以大小进行划分</div><div class="line">split -b 64M big.bin small_file_</div></pre></td></tr></table></figure>
+<h2 id="网络管理"><a href="#网络管理" class="headerlink" title="网络管理"></a>网络管理</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span>查看和设置网络网卡</div><div class="line">ifconfig</div><div class="line"><span class="meta">#</span>启停网卡</div><div class="line">ifup eth0</div><div class="line">ifdown eth0</div><div class="line">ifconfig eth0 down</div><div class="line">ifconfig eth0 up</div><div class="line"><span class="meta">#</span>重启网络服务</div><div class="line">service network restart</div><div class="line"><span class="meta">#</span>查看系统当前的路由</div><div class="line">route -n</div><div class="line"><span class="meta">#</span>traceroute查看请求所经过的路由器的路径</div><div class="line">traceroute 14.215.177.38</div></pre></td></tr></table></figure>
+<h2 id="进程管理"><a href="#进程管理" class="headerlink" title="进程管理"></a>进程管理</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span>ps </div><div class="line"><span class="meta">#</span>-A 列出所有的进程</div><div class="line"><span class="meta">#</span>-a 列出不和本终端有关的所有进程</div><div class="line"><span class="meta">#</span>-aux显示所有其他包含其他使用者的进程</div><div class="line"><span class="meta">#</span>RSS 显示进程占用的内存的大小</div><div class="line"><span class="meta">#</span>VSZ 显示进程占用的虚拟内存的大小</div><div class="line"><span class="meta">#</span>查看进程号</div><div class="line">pidof Nemgr</div><div class="line"><span class="meta">#</span>kill</div><div class="line">kill -9 1001#强制停止进程，并没有释放内存</div><div class="line">kill -15 1001#使进程正常退出</div><div class="line"><span class="meta">#</span>lsof 查看进程打开的文件</div><div class="line">lsof -p pid</div><div class="line">lsof -i:22</div><div class="line"><span class="meta">#</span>nice，renice修改进程的优先级</div><div class="line">nice -n -10 ./run.sh</div><div class="line">renice -10 -p pid</div></pre></td></tr></table></figure>
+<p><img src="top.png" alt="1566142036437"></p>
+<p><img src="top1.png" alt="1566142284292"></p>
+<h2 id="Linux软件安装"><a href="#Linux软件安装" class="headerlink" title="Linux软件安装"></a>Linux软件安装</h2><p><img src="/rpm.png" alt="1566144649678"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span>rpm安装软件</div><div class="line">rpm -ivh packege.rpm</div><div class="line"><span class="meta">#</span>安装软件包，并重新定义安装路径</div><div class="line">rpm -ivh --relocate /=/usr/local/package_name package_name-version.rpm</div><div class="line"><span class="meta">#</span>升级软件包</div><div class="line">rpm -Uvh package_name-version.rpm</div><div class="line"><span class="meta">#</span>删除软件</div><div class="line">rpm -e package_name --nodeps</div><div class="line"><span class="meta">#</span>查看系统中所有已经安装的包</div><div class="line">rpm -qa</div><div class="line"><span class="meta">#</span>查看某个包的依赖关系</div><div class="line">rpm -qpR package_name-version.rpm</div><div class="line"><span class="meta">#</span>yum安装操作</div><div class="line">yum install package</div><div class="line"><span class="meta">#</span>更新系统中所有需要更新的包</div><div class="line">yum update</div><div class="line"><span class="meta">#</span>查找操作</div><div class="line">yum list</div><div class="line">yum list installed</div><div class="line">yum info package</div><div class="line"><span class="meta">#</span>删除操作</div><div class="line">yum remove package</div><div class="line"><span class="meta">#</span>清除操作</div><div class="line">yum clean</div><div class="line">yum clean all &amp;&amp; yum makecache</div></pre></td></tr></table></figure>
+<h2 id="编辑器"><a href="#编辑器" class="headerlink" title="编辑器"></a>编辑器</h2><table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Shift+$</td>
+<td>到当前行的末尾</td>
+</tr>
+<tr>
+<td>u</td>
+<td>撤销操作</td>
+</tr>
+<tr>
+<td>:n</td>
+<td>跳转到第n行</td>
+</tr>
+<tr>
+<td>p</td>
+<td>黏贴</td>
+</tr>
+<tr>
+<td>Ctrl+r</td>
+<td>重做操作</td>
+</tr>
+<tr>
+<td>yy</td>
+<td>复制当前行</td>
+</tr>
+</tbody>
+</table>
+<p><img src="替换用法.png" alt="1566146582848"></p>
 
       
     </div>
@@ -595,7 +640,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#linux用户管理"><span class="nav-number">1.</span> <span class="nav-text">linux用户管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux用户管理"><span class="nav-number">2.</span> <span class="nav-text">Linux用户管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#文件目录管理"><span class="nav-number">2.1.</span> <span class="nav-text">文件目录管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文件和目录的权限"><span class="nav-number">2.2.</span> <span class="nav-text">文件和目录的权限</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#linux文件系统"><span class="nav-number">3.</span> <span class="nav-text">linux文件系统</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#文件系统"><span class="nav-number">3.1.</span> <span class="nav-text">文件系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#逻辑卷（Logic-Volume-Manager）"><span class="nav-number">3.2.</span> <span class="nav-text">逻辑卷（Logic Volume Manager）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#硬链接和软连接"><span class="nav-number">3.3.</span> <span class="nav-text">硬链接和软连接</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#字符处理"><span class="nav-number">4.</span> <span class="nav-text">字符处理</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#linux用户管理"><span class="nav-number">1.</span> <span class="nav-text">linux用户管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux用户管理"><span class="nav-number">2.</span> <span class="nav-text">Linux用户管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#文件目录管理"><span class="nav-number">2.1.</span> <span class="nav-text">文件目录管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文件和目录的权限"><span class="nav-number">2.2.</span> <span class="nav-text">文件和目录的权限</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#linux文件系统"><span class="nav-number">3.</span> <span class="nav-text">linux文件系统</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#文件系统"><span class="nav-number">3.1.</span> <span class="nav-text">文件系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#逻辑卷（Logic-Volume-Manager）"><span class="nav-number">3.2.</span> <span class="nav-text">逻辑卷（Logic Volume Manager）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#硬链接和软连接"><span class="nav-number">3.3.</span> <span class="nav-text">硬链接和软连接</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#字符处理"><span class="nav-number">4.</span> <span class="nav-text">字符处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网络管理"><span class="nav-number">5.</span> <span class="nav-text">网络管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#进程管理"><span class="nav-number">6.</span> <span class="nav-text">进程管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux软件安装"><span class="nav-number">7.</span> <span class="nav-text">Linux软件安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编辑器"><span class="nav-number">8.</span> <span class="nav-text">编辑器</span></a></li></ol></div>
             
 
           </div>
