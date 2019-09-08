@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://caixueyuan.github.io/"/>
-  <updated>2019-08-11T16:57:58.598Z</updated>
+  <updated>2019-09-08T16:41:01.479Z</updated>
   <id>https://caixueyuan.github.io/</id>
   
   <author>
@@ -14,6 +14,148 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>powershell学习笔记</title>
+    <link href="https://caixueyuan.github.io/2019/09/08/powershell%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    <id>https://caixueyuan.github.io/2019/09/08/powershell学习笔记/</id>
+    <published>2019-09-08T04:41:58.000Z</published>
+    <updated>2019-09-08T16:41:01.479Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="powershell交互式"><a href="#powershell交互式" class="headerlink" title="powershell交互式"></a>powershell交互式</h2><h3 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h3><figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 查询别名所指的真实cmdlet命令。</span></div><div class="line"><span class="built_in">Get-Alias</span> -name ls</div><div class="line"><span class="comment"># 查看所有以Remove打头的cmdlet命令的别名</span></div><div class="line">ls alias: | where &#123;<span class="variable">$_</span>.Definition.Startswith(<span class="string">"Remove"</span>)&#125;</div><div class="line"><span class="comment"># 设置别名</span></div><div class="line"><span class="built_in">Set-Alias</span> -Name edit -Value notepad</div><div class="line"><span class="comment"># 显示别名</span></div><div class="line">echo <span class="variable">$alias:edit</span></div><div class="line"><span class="comment">#删除别名</span></div><div class="line">del-Alias alias:edit</div><div class="line"><span class="comment">#保存别名</span></div><div class="line"><span class="built_in">Import-Alias</span> alias.ps1</div><div class="line"><span class="comment">#导入别名</span></div><div class="line"><span class="built_in">Export-Alias</span> -force alias.ps1</div><div class="line"><span class="comment">#使用函数</span></div><div class="line"><span class="keyword">function</span> test-conn</div><div class="line">&#123;</div><div class="line"><span class="built_in">Test-Connection</span> -Count <span class="number">2</span> -ComputerName <span class="variable">$args</span></div><div class="line">&#125;</div><div class="line"><span class="built_in">Set-Alias</span> tc test-conn</div><div class="line">tc <span class="number">127.0</span>.<span class="number">0.1</span></div><div class="line"><span class="comment"># 获取文件的内容</span></div><div class="line"><span class="built_in">Get-Content</span> test.ps1</div></pre></td></tr></table></figure>
+<p>powershell解析命令的顺序</p>
+<ol>
+<li>别名</li>
+<li>函数</li>
+<li>cmdlets，内置命令</li>
+<li>外部的ps1文件</li>
+<li>外部的普通文件</li>
+</ol>
+<h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#创建只读变量</span></div><div class="line"><span class="built_in">New-Variable</span> num -Value <span class="number">100</span> -Force -Option readonly</div><div class="line"><span class="comment">#删除变量</span></div><div class="line">del Variable:num -Force</div><div class="line"><span class="comment">#声明常量</span></div><div class="line"><span class="built_in">new-variable</span> num -Value <span class="string">"strong"</span> -Option constant</div><div class="line"><span class="comment">#查看变量表述</span></div><div class="line"><span class="built_in">new-variable</span> name -Value <span class="string">"me"</span> -Description <span class="string">"This is my name"</span></div></pre></td></tr></table></figure>
+<h3 id="特殊变量说明"><a href="#特殊变量说明" class="headerlink" title="特殊变量说明"></a>特殊变量说明</h3><table>
+<thead>
+<tr>
+<th>$$</th>
+<th>包含会话所收到的最后一行的最后一个令牌</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$?</td>
+<td>包含最后一个操作的执行状态</td>
+</tr>
+<tr>
+<td>$^</td>
+<td>包含会话所收到的最后一行的第一个令牌</td>
+</tr>
+<tr>
+<td>$_</td>
+<td>包含管道对象中的当前对象</td>
+</tr>
+<tr>
+<td>$Args</td>
+<td>包含由未声明参数或传递给函数，脚本或脚本块的参数值组成的数组</td>
+</tr>
+<tr>
+<td>$LastExitCode</td>
+<td>包含运行的最后一个基于windows的程序的退出代码</td>
+</tr>
+</tbody>
+</table>
+<p><strong>环境变量</strong>：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 查找环境变量</span></div><div class="line">ls env:</div><div class="line"><span class="comment"># 创建新的环境变量</span></div><div class="line"><span class="variable">$env:mytest</span> = <span class="string">"This is my test"</span></div><div class="line"><span class="comment"># 对当前用户设置环境变量，重新打开powershell仍然有效</span></div><div class="line">[environment]::SetEnvironmentvariable(<span class="string">"Path"</span>, <span class="string">";c:\powershellscript"</span>, <span class="string">"User"</span>)</div><div class="line">[environment]::GetEnvironmentvariable(<span class="string">"Path"</span>, <span class="string">"User"</span>)</div></pre></td></tr></table></figure>
+<p><strong>更改变量的可见性</strong>：在运行脚本时使用一个原点和空格，powershell不会给脚本创建自己的变量作用域，它会共享当前控制台的作用域。</p>
+<h3 id="变量作用域"><a href="#变量作用域" class="headerlink" title="变量作用域"></a>变量作用域</h3><table>
+<thead>
+<tr>
+<th>变量</th>
+<th>作用域</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$global</td>
+<td>全局变量，在所有的作用域中有效</td>
+</tr>
+<tr>
+<td>$script</td>
+<td>脚本变量，只会在脚本内部有效，包括脚本中的函数，一旦脚本运行结束，就会被回收</td>
+</tr>
+<tr>
+<td>$private</td>
+<td>只在当前作用域有效</td>
+</tr>
+<tr>
+<td>$local</td>
+<td>默认变量，在当前作用域有效，其他作用域只对它有只读权限</td>
+</tr>
+</tbody>
+</table>
+<p>$private限制的变量不能够再$global修改，不但不能够修改，还会删除当前的值</p>
+<p>$local修饰的变量可以通过$global在函数内部更改</p>
+<p><strong>变量类型</strong></p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 定义强类型变量</span></div><div class="line">[byte]<span class="variable">$b</span>=<span class="number">101</span></div><div class="line">[ XML ]<span class="variable">$xml</span>=(<span class="built_in">Get-Content</span> .LogoTestConfig.xml)</div><div class="line"><span class="comment"># 修改变量的属性</span></div><div class="line">(<span class="built_in">Get-Variable</span> str).Description=<span class="string">"变量的描述已经改变"</span></div><div class="line"><span class="built_in">Get-Variable</span> str | <span class="built_in">format-table</span> Name,Description</div><div class="line"><span class="built_in">Set-Variable</span> var -Option <span class="string">"ReadOnly"</span></div><div class="line">(<span class="built_in">Get-Variable</span> var).Options</div><div class="line"><span class="comment"># Attributes属性</span></div><div class="line"><span class="variable">$var</span>=<span class="string">"限制变量"</span></div><div class="line"><span class="variable">$condition</span>= <span class="built_in">New-Object</span> System.Management.Automation.ValidateLengthAttribute -ArgumentList <span class="number">2</span>,<span class="number">5</span></div><div class="line">(<span class="built_in">Get-Variable</span> var).Attributes.Add(<span class="variable">$condition</span>)</div></pre></td></tr></table></figure>
+<p>Attributes[System.Management.Automation.PSVariableAttributeCollection]属性，如果这个Attributes为空，可以给这个变量存放任何 类型的数据，Powershell会自己选择合适的类型。一旦这个Attributes属性确定下来，就不能随意存放数据了</p>
+<h2 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h2><figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 判断变量的类型</span></div><div class="line"><span class="variable">$ip</span> -is [array]</div><div class="line"><span class="variable">$ip</span>.ToCharArray() -is [array]</div><div class="line">ipconfig | <span class="built_in">Select-String</span> <span class="string">"IP"</span></div><div class="line"><span class="comment"># 创建空数组</span></div><div class="line"><span class="variable">$a</span>=@()</div><div class="line"><span class="comment"># 创建一个元素的数组</span></div><div class="line"><span class="variable">$a</span>=,<span class="string">"moss"</span></div><div class="line"><span class="comment">#访问数组</span></div><div class="line"><span class="variable">$result</span>[result.count(<span class="number">0</span>-<span class="number">1</span>)]</div><div class="line"><span class="comment">#逆序输出数组</span></div><div class="line"><span class="variable">$books</span>[(<span class="variable">$books</span>.count)..<span class="number">0</span>]</div><div class="line"><span class="comment">#添加元素</span></div><div class="line"><span class="variable">$books</span>+=<span class="string">"元素4"</span></div><div class="line"><span class="comment">#复制数组</span></div><div class="line"><span class="variable">$chsBak</span>=<span class="variable">$chs</span> <span class="comment">#浅复制</span></div><div class="line"><span class="variable">$chsBak</span>=<span class="variable">$chs</span>.Clone() <span class="comment">#深复制</span></div><div class="line"><span class="comment">#查看和验证变量的数据类型</span></div><div class="line"><span class="variable">$result</span>.gettype().name</div><div class="line"><span class="comment">#int类型的最大值</span></div><div class="line">([int32]::MaxValue)</div><div class="line"><span class="comment">#强类型数组</span></div><div class="line">[int[]] <span class="variable">$nums</span>=@()</div><div class="line"><span class="comment">#哈希表</span></div><div class="line"><span class="variable">$str</span>=@&#123;Name=<span class="string">"小明"</span>;Age=<span class="string">"12"</span>&#125;</div><div class="line"><span class="variable">$str</span>.Keys</div><div class="line"><span class="variable">$str</span>.Values</div><div class="line"><span class="variable">$str</span>.Remove(<span class="string">"Name"</span>)</div></pre></td></tr></table></figure>
+<h2 id="管道"><a href="#管道" class="headerlink" title="管道"></a>管道</h2><p><img src="管道.png" alt="1567933553288"></p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#遍历C盘的所有文件</span></div><div class="line">Dir C: -recurse</div><div class="line"><span class="comment">#以脚本块作为属性</span></div><div class="line">ls | <span class="built_in">Format-Table</span> Name,&#123; [int](<span class="variable">$_</span>.Length/<span class="number">1</span>kb) &#125;</div><div class="line"><span class="variable">$column</span> = @&#123;Expression=&#123; [int](<span class="variable">$_</span>.Length/<span class="number">1</span>KB) &#125;; Label=<span class="string">"KB"</span> &#125;</div><div class="line">Dir | <span class="built_in">Format-Table</span> Name, <span class="variable">$column</span></div><div class="line">ls | <span class="built_in">Format-Table</span> -AutoSize</div><div class="line"><span class="comment">#排序</span></div><div class="line">ls | <span class="built_in">Sort-Object</span> Length -Descending</div><div class="line">Dir | <span class="built_in">Sort-Object</span> @&#123;expression=<span class="string">"Length"</span>;Descending=<span class="literal">$true</span>&#125;,@&#123;ex</div><div class="line">pression=<span class="string">"Name"</span>;Ascending=<span class="literal">$true</span>&#125;</div><div class="line"><span class="comment">#分组</span></div><div class="line">ls | <span class="built_in">Group-Object</span> Extension <span class="comment">#按照扩展名进行分组</span></div><div class="line">ls | <span class="built_in">Group-Object</span> &#123;<span class="variable">$_</span>.name.SubString(<span class="number">0</span>,<span class="number">1</span>).toUpper()&#125; <span class="comment">#按照首字母来排序</span></div><div class="line"><span class="built_in">Get-Process</span> | <span class="built_in">Group-Object</span> Company -NoElement <span class="comment">#根据当前应用程序的发布者分组</span></div><div class="line"><span class="built_in">Get-service</span> | <span class="built_in">Select-Object</span> -First <span class="number">1</span> | <span class="built_in">format-list</span> *</div><div class="line"><span class="built_in">Get-service</span> | <span class="built_in">Select-Object</span> -First <span class="number">1</span> | <span class="built_in">Get-Member</span> -MemberType</div><div class="line"><span class="built_in">get-service</span> | <span class="built_in">Where-Object</span> &#123;<span class="variable">$_</span>.Status <span class="nomarkup">-eq</span> <span class="string">"Running"</span>&#125;</div><div class="line"><span class="comment"># 流出最后修改的5个文件</span></div><div class="line">Dir | <span class="built_in">Select-Object</span> -ExcludeProperty <span class="string">"*N*"</span> -First <span class="number">5</span></div><div class="line"><span class="comment">#统计和计算</span></div><div class="line">ls | measure length -Average -Sum -Maximum -Minimum</div></pre></td></tr></table></figure>
+<h2 id="使用对象"><a href="#使用对象" class="headerlink" title="使用对象"></a>使用对象</h2><figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 创建对象</span></div><div class="line"><span class="variable">$pocketknife</span>=<span class="built_in">New-Object</span> object</div><div class="line"><span class="comment"># 并向对象逐个增加属性</span></div><div class="line"><span class="built_in">Add-Member</span> -InputObject <span class="variable">$pocketknife</span> -Name Color -Value <span class="string">"Red"</span> -MemberType NoteProperty</div><div class="line"><span class="variable">$pocketknife</span> | <span class="built_in">Add-Member</span> NoteProperty Blades <span class="number">3</span></div><div class="line"><span class="built_in">Add-Member</span> -memberType ScriptMethod <span class="nomarkup">-In</span> <span class="variable">$pocketknife</span> -name cut -Value &#123; <span class="string">"I'm whittling now"</span> &#125;</div><div class="line"><span class="variable">$pocketknife</span> | <span class="built_in">Add-Member</span> ScriptMethod corkscrew &#123; <span class="string">"Pop! Cheers!"</span> &#125;</div><div class="line"><span class="comment">#调用方法时一定要加上原括号，方法不会执行，但是可以返回方法的基本信息</span></div><div class="line"><span class="variable">$pocketknife</span>.cut()</div><div class="line"><span class="comment"># 获取枚举变量的值</span></div><div class="line">[System.Enum]::GetNames([System.ConsoleColor])</div><div class="line"><span class="comment"># 查看所有属性，返回成员详细信息，如果只显示属性可以使用参数memberType为"Porperty"</span></div><div class="line"><span class="variable">$host</span> | <span class="built_in">Get-Member</span> -memberType property</div><div class="line"><span class="comment"># 列出一个对象的所有方法</span></div><div class="line"><span class="variable">$Host</span> | <span class="built_in">Get-Member</span> -MemberType Method</div><div class="line"><span class="variable">$Host</span>.UI.RawUI | <span class="built_in">Get-Member</span> -me method | where &#123;<span class="variable">$_</span>.Name <span class="nomarkup">-notlike</span> <span class="string">'*_*'</span>&#125;</div><div class="line"><span class="comment">#列出静态方法</span></div><div class="line">[System.DateTime] | <span class="built_in">Get-Member</span> -static -memberType *Method</div><div class="line"><span class="comment"># 调用静态方法</span></div><div class="line">[System.DateTime]::Parse(<span class="string">"2012-10-13 23:42:55"</span>)</div><div class="line">[String].GetConstructors() | <span class="keyword">foreach</span> &#123;<span class="variable">$_</span>.tostring()&#125;</div></pre></td></tr></table></figure>
+<p>MemberType包括</p>
+<p><strong>AliasProperty</strong>：另外一个属性的别名<br><strong>CodeProperty</strong>：通过静态的.Net方法返回属性的内容<br><strong>Property</strong>：真正的属性<br><strong>NoteProperty</strong>：随后增加的属性<br><strong>ScriptProperty</strong>：通过脚本执行返回一个属性的值<br><strong>ParameterizedProperty</strong>：需要传递参数的属性</p>
+<h2 id="循环和判断"><a href="#循环和判断" class="headerlink" title="循环和判断"></a>循环和判断</h2><figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 获取进程名称为notepad的进程</span></div><div class="line"><span class="built_in">Get-Process</span> | <span class="built_in">Where-Object</span> &#123;<span class="variable">$_</span>.Name <span class="nomarkup">-eq</span> <span class="string">"notepad"</span>&#125;</div><div class="line"><span class="comment"># switch使用方式</span></div><div class="line"><span class="keyword">switch</span>(<span class="variable">$value</span>)</div><div class="line">&#123;</div><div class="line">    <span class="number">1</span> &#123;<span class="string">"Beijing"</span>&#125;</div><div class="line">    <span class="number">2</span> &#123;<span class="string">"Shanghai"</span>&#125;</div><div class="line">    <span class="number">3</span> &#123;<span class="string">"Tianjin"</span>&#125;</div><div class="line">    <span class="number">4</span> &#123;<span class="string">"Chongqing"</span>&#125;</div><div class="line">&#125;</div><div class="line"><span class="comment">#foreach-object方法</span></div><div class="line"><span class="built_in">Get-WmiObject</span> Win32_Service | <span class="built_in">ForEach-Object</span> &#123;</div><div class="line">    <span class="keyword">if</span> (<span class="variable">$_</span>.ProcessId <span class="nomarkup">-gt</span> <span class="number">3000</span>)</div><div class="line">    &#123; <span class="string">"&#123;0&#125;(&#123;1&#125;)"</span> -f <span class="variable">$_</span>.DisplayName,<span class="variable">$_</span>.ProcessID&#125;</div><div class="line">&#125;</div><div class="line"><span class="comment"># 对管道结果逐个处理</span></div><div class="line"><span class="keyword">foreach</span>(<span class="variable">$file</span> <span class="keyword">in</span> dir c:\windows)</div><div class="line">&#123;</div><div class="line">    <span class="keyword">if</span>(<span class="variable">$file</span>.Length <span class="nomarkup">-gt</span> <span class="number">1</span>mb)</div><div class="line">    &#123;</div><div class="line">        <span class="variable">$File</span>.Name</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="comment"># 逐行读取文件</span></div><div class="line"><span class="keyword">for</span>(<span class="variable">$file</span>=[IO.File]::OpenText(<span class="string">"c:autoexec.bat"</span>) ; !(<span class="variable">$file</span>.EndOfStream);<span class="variable">$line</span>=<span class="variable">$file</span>.ReadLine() )</div><div class="line">&#123;</div><div class="line">    <span class="variable">$line</span>;</div><div class="line">&#125;</div><div class="line"><span class="variable">$file</span>.Close()</div><div class="line"><span class="comment">#函数</span></div><div class="line"><span class="keyword">Function</span> FuncName （args[]）</div><div class="line">&#123;</div><div class="line">      code;</div><div class="line">&#125;</div><div class="line">del <span class="keyword">function</span>:funcName</div><div class="line"><span class="comment"># 定义输入参数类型</span></div><div class="line"><span class="keyword">function</span> subtract([int]<span class="variable">$value1</span>=<span class="number">0</span>,[int]<span class="variable">$value2</span>=<span class="number">0</span>)</div><div class="line">&#123;</div><div class="line">    <span class="keyword">return</span> <span class="variable">$value1</span>-<span class="variable">$value2</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">#从这里开始隐藏所有的错误信息</span></div><div class="line"><span class="variable">$ErrorActionPreference</span>=<span class="string">"SilentlyContinue"</span> <span class="comment"># 关闭错误输出</span></div><div class="line"><span class="variable">$ErrorActionPreference</span>=<span class="string">"Continue"</span> <span class="comment">#开启错误输出</span></div><div class="line"><span class="comment"># 管道</span></div><div class="line"><span class="variable">$input</span> <span class="comment">#管道输入</span></div><div class="line"><span class="variable">$args</span> <span class="comment">#参数输入</span></div></pre></td></tr></table></figure>
+<h2 id="powershell脚本"><a href="#powershell脚本" class="headerlink" title="powershell脚本"></a>powershell脚本</h2><figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 获取和更改脚本执行策略</span></div><div class="line"><span class="built_in">Get-ExecutionPolicy</span></div><div class="line"><span class="built_in">Set-ExecutionPolicy</span> UnRestricted</div></pre></td></tr></table></figure>
+<p><strong>Unrestricted:</strong>权限最高，可以不受限制执行任何脚本。<br><strong>Default:</strong>为Powershell默认的策略：Restricted，不允许任何脚本执行。<br><strong>AllSigned：</strong>所有脚本都必须经过签名才能在运行。<br><strong>RemoteSigned：</strong>本地脚本无限制，但是对来自网络的脚本必须经过签名。</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 给脚本的参数绑定数据类型，绑定帮助信息，如果脚本缺少参数，或者输入的参数类型不正确，就会报错	</span></div><div class="line"><span class="keyword">param</span>(</div><div class="line">[string]<span class="variable">$Name</span>=$(<span class="keyword">throw</span> <span class="string">"Parameter missing: -name Name"</span>) ,</div><div class="line">[int]<span class="variable">$Age</span>=$(<span class="keyword">throw</span> <span class="string">"Parameter missing: -age x as number"</span>)</div><div class="line">)</div><div class="line"> </div><div class="line"><span class="string">"Name= <span class="variable">$Name</span>"</span></div><div class="line"><span class="string">"Age=<span class="variable">$Age</span>"</span></div></pre></td></tr></table></figure>
+<p>在Powershell脚本的处理中，绝大多数情况下遇到的都是集合，一旦上一条命令产生一个中间结果，下一条命令就对这个中间结果及时处理，及时释放资源。这样可以节省内存，也减少了用户的等待时间。在处理大量数据时，尤其值得推荐。高速流模式的管道定义包括三部分：begin,process,end。</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">begin</span></div><div class="line">&#123;</div><div class="line">    <span class="built_in">Write-Host</span> <span class="string">"管道脚本环境初始化"</span></div><div class="line">&#125;</div><div class="line"><span class="keyword">process</span></div><div class="line">&#123;</div><div class="line">    <span class="variable">$ele</span>=<span class="variable">$_</span></div><div class="line">    <span class="keyword">if</span>(<span class="variable">$_</span>.Extension <span class="nomarkup">-ne</span> <span class="string">""</span>)</div><div class="line">    &#123;</div><div class="line">        <span class="keyword">switch</span>(<span class="variable">$_</span>.Extension.tolower())</div><div class="line">        &#123;</div><div class="line">            <span class="string">".ps1"</span> &#123;<span class="string">"脚本文件："</span>+ <span class="variable">$ele</span>.name&#125;</div><div class="line">            <span class="string">".txt"</span> &#123;<span class="string">"文本文件："</span>+ <span class="variable">$ele</span>.Name&#125;</div><div class="line">            <span class="string">".gz"</span>  &#123;<span class="string">"压缩文件："</span>+ <span class="variable">$ele</span>.Name&#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="keyword">end</span></div><div class="line">&#123;</div><div class="line">    <span class="built_in">Write-Host</span> <span class="string">"管道脚本环境恢复"</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>文件查找操作</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 支持正则表达式</span></div><div class="line">Dir <span class="variable">$home</span> -include [a-f]*.ps1 -recurse</div><div class="line"><span class="comment"># 具体为当你的过滤条件没有正则表达式时，使用-filter，可以显著提高效率。</span></div><div class="line">Dir <span class="variable">$home</span> -recurse | <span class="built_in">Where-Object</span> &#123; <span class="variable">$_</span>.length <span class="nomarkup">-gt</span> <span class="number">100</span>MB &#125;</div><div class="line"><span class="comment"># 获取目录下的文件 Get-Childitem dir</span></div><div class="line"><span class="comment"># 获取文件 get-item</span></div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;powershell交互式&quot;&gt;&lt;a href=&quot;#powershell交互式&quot; class=&quot;headerlink&quot; title=&quot;powershell交互式&quot;&gt;&lt;/a&gt;powershell交互式&lt;/h2&gt;&lt;h3 id=&quot;命令&quot;&gt;&lt;a href=&quot;#命令&quot; cla
+    
+    </summary>
+    
+      <category term="shell学习笔记" scheme="https://caixueyuan.github.io/categories/shell%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+    
+      <category term="shell" scheme="https://caixueyuan.github.io/tags/shell/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>C++高级知识</title>
+    <link href="https://caixueyuan.github.io/2019/09/04/C-%E9%AB%98%E7%BA%A7%E7%9F%A5%E8%AF%86/"/>
+    <id>https://caixueyuan.github.io/2019/09/04/C-高级知识/</id>
+    <published>2019-09-03T16:03:59.000Z</published>
+    <updated>2019-09-03T16:47:55.751Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="类模板"><a href="#类模板" class="headerlink" title="类模板"></a>类模板</h2><p><strong>概念解析</strong></p>
+<p>1，隐式实例化:声明一个或者多个对象，指出所需要的类型</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T1,<span class="keyword">typename</span> T2&gt;</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ArrayTP</span>&lt;T1,T2&gt;</span></div><div class="line">&#123;</div><div class="line">	T1 t1;</div><div class="line">	T2 t2;</div><div class="line">&#125;</div><div class="line">ArrayTP&lt;<span class="keyword">int</span>,<span class="number">100</span>&gt; stuff;<span class="comment">//隐式实例化</span></div></pre></td></tr></table></figure>
+<p>2，显式实例化：当使用关键字template并指出所需类型来声明类是，将生成类声明的显性实例化</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">template</span> <span class="class"><span class="keyword">class</span> <span class="title">ArrayTP</span>&lt;string,100&gt;;</span></div></pre></td></tr></table></figure>
+<p>在这种情况下，没有创建或提及类对象，但是编译器将生成类声明</p>
+<p>3，显式具体化：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SortedArray</span></span></div><div class="line">&#123;  </div><div class="line">&#125;;</div><div class="line"><span class="keyword">template</span>&lt;&gt; <span class="class"><span class="keyword">class</span> <span class="title">SortedArray</span>&lt;const char *&gt;</span></div><div class="line">&#123;</div><div class="line">    <span class="comment">//显式具体化</span></div><div class="line">&#125;;</div><div class="line">SortedArray&lt;<span class="keyword">int</span>&gt; scores;<span class="comment">//使用第一个</span></div><div class="line">SortedArray&lt;con <span class="keyword">char</span> *&gt; detes;<span class="comment">//使用第二个</span></div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;类模板&quot;&gt;&lt;a href=&quot;#类模板&quot; class=&quot;headerlink&quot; title=&quot;类模板&quot;&gt;&lt;/a&gt;类模板&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;概念解析&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;1，隐式实例化:声明一个或者多个对象，指出所需要的类型&lt;/p&gt;
+&lt;figu
+    
+    </summary>
+    
+      <category term="学习笔记" scheme="https://caixueyuan.github.io/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+    
+      <category term="C++" scheme="https://caixueyuan.github.io/tags/C/"/>
+    
+  </entry>
   
   <entry>
     <title>C++类的使用</title>
@@ -96,7 +238,7 @@
     <link href="https://caixueyuan.github.io/2019/08/06/Linux%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4/"/>
     <id>https://caixueyuan.github.io/2019/08/06/Linux基础命令/</id>
     <published>2019-08-05T16:23:23.000Z</published>
-    <updated>2019-08-29T16:56:04.790Z</updated>
+    <updated>2019-08-29T16:58:49.213Z</updated>
     
     <content type="html"><![CDATA[<h2 id="linux用户管理"><a href="#linux用户管理" class="headerlink" title="linux用户管理"></a>linux用户管理</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span><span class="bash">新增用户</span></div><div class="line">useradd -m cxy -d /home/cxy -g group -u uid</div><div class="line"><span class="meta">#</span><span class="bash">修改用户的根目录</span></div><div class="line">usermod -d /home/cxy_new -m cxy</div><div class="line"><span class="meta">#</span><span class="bash">锁住用户</span></div><div class="line">usermod -L cxy</div><div class="line"><span class="meta">#</span><span class="bash">解锁用户</span></div><div class="line">usermod -U cxy</div><div class="line"><span class="meta">#</span><span class="bash">删除用户</span></div><div class="line">userdel cxy</div><div class="line"><span class="meta">#</span><span class="bash">添加用户组</span></div><div class="line">groupadd group1</div><div class="line"><span class="meta">#</span><span class="bash">删除用户组</span></div><div class="line">groupdel group1</div><div class="line"><span class="meta">#</span><span class="bash">查看用户的详细信息</span></div><div class="line">w</div><div class="line"><span class="meta"></span></div><div class="line">#<span class="bash">查看定时任务后台程序是否启动</span></div><div class="line">systemctl | grep cron</div><div class="line">systemctl | grep crond</div><div class="line"><span class="meta">#</span><span class="bash">将定时任务加入到前台程序中</span></div><div class="line">crontab job1.cron</div><div class="line"><span class="meta">#</span><span class="bash">查看程序中的定时任务</span></div><div class="line">crontab -l</div><div class="line"><span class="meta">#</span><span class="bash">查看程序中的定时任务</span></div><div class="line">crontab -r</div><div class="line"><span class="meta">#</span><span class="bash">只能够有一个定时任务</span></div></pre></td></tr></table></figure>
 <h2 id="Linux用户管理"><a href="#Linux用户管理" class="headerlink" title="Linux用户管理"></a>Linux用户管理</h2><h3 id="文件目录管理"><a href="#文件目录管理" class="headerlink" title="文件目录管理"></a>文件目录管理</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span><span class="bash">查看目录下所有问题，包括隐藏文件</span></div><div class="line">ls -la</div><div class="line"><span class="meta">#</span><span class="bash">加上-n参数可以显示每行的行数</span></div><div class="line">cat -n file.log</div><div class="line"><span class="meta">#</span><span class="bash">查看文件的头20行</span></div><div class="line">head -n 20 file.log</div><div class="line"><span class="meta">#</span><span class="bash">查看文件的尾20行</span></div><div class="line">tail -n 20 file.log</div><div class="line"><span class="meta">#</span><span class="bash">动态查看文件的尾部10行</span></div><div class="line">tail -f file.log</div><div class="line"><span class="meta">#</span><span class="bash">将window文件转换为linux文件</span></div><div class="line">dos2unix file.log</div><div class="line"><span class="meta">#</span><span class="bash">创建目录</span></div><div class="line">mkdir -p /opt/oss/caixueyuan</div></pre></td></tr></table></figure>
@@ -1086,86 +1228,6 @@
     
     
       <category term="C++基础" scheme="https://caixueyuan.github.io/tags/C-%E5%9F%BA%E7%A1%80/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>C++ string字符串</title>
-    <link href="https://caixueyuan.github.io/2018/09/09/string%E5%AD%97%E7%AC%A6%E4%B8%B2/"/>
-    <id>https://caixueyuan.github.io/2018/09/09/string字符串/</id>
-    <published>2018-09-09T15:14:50.000Z</published>
-    <updated>2018-09-23T07:57:20.953Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h2><h3 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h3><p>初始化有两种，直接初始化和拷贝初始化。<br>拷贝初始化<code>string a = &#39;abc&#39;</code><br>直接初始化<code>string a {&#39;abc&#39;}</code></p>
-<h3 id="字符串拼接"><a href="#字符串拼接" class="headerlink" title="字符串拼接"></a>字符串拼接</h3><p>C++语法中的字符串字面值并不是标准库中的string的对象。字符串字面量和string是不同的类型。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">string</span> a = <span class="string">"abc"</span>;</div><div class="line"><span class="built_in">string</span> b = a+<span class="string">"def"</span>+<span class="string">"ghi"</span>;<span class="comment">//正确，(a+"def")+"ghi"</span></div><div class="line"><span class="built_in">string</span> c = <span class="string">"def"</span>+<span class="string">"ghi"</span>+a；<span class="comment">//错误，("def"+"ghi")+a</span></div></pre></td></tr></table></figure>
-<p>C++能够改变字符串中的字符<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">string</span> s &#123;<span class="string">"abc"</span>&#125;;</div><div class="line"><span class="keyword">for</span> (<span class="keyword">auto</span> &amp;temp : s)</div><div class="line">&#123;</div><div class="line">    temp = <span class="built_in">toupper</span>(temp);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>将第一个词变成大写<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//isspace()使用这些函数时需要添加头文件#include&lt;cctype&gt;</span></div><div class="line"><span class="built_in">string</span> s1&#123;<span class="string">"Hello World!!!"</span>&#125;;</div><div class="line"><span class="keyword">for</span> (<span class="keyword">decltype</span>(s1.size()) index = <span class="number">0</span>; index &lt; s1.size() &amp;&amp; !<span class="built_in">isspace</span>(s1[index]); index++)</div><div class="line">&#123;</div><div class="line">    s1[index] = <span class="built_in">toupper</span>(s1[index]);</div><div class="line">&#125;</div><div class="line"><span class="built_in">cout</span> &lt;&lt; s1 &lt;&lt; <span class="built_in">endl</span>;</div></pre></td></tr></table></figure></p>
-<p><code>string::size_type n</code>用于访问字符串的下标</p>
-<h2 id="vector"><a href="#vector" class="headerlink" title="vector"></a>vector</h2>]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;字符串&quot;&gt;&lt;a href=&quot;#字符串&quot; class=&quot;headerlink&quot; title=&quot;字符串&quot;&gt;&lt;/a&gt;字符串&lt;/h2&gt;&lt;h3 id=&quot;初始化&quot;&gt;&lt;a href=&quot;#初始化&quot; class=&quot;headerlink&quot; title=&quot;初始化&quot;&gt;&lt;/a&gt;初始化&lt;/h
-    
-    </summary>
-    
-      <category term="C++" scheme="https://caixueyuan.github.io/categories/C/"/>
-    
-    
-      <category term="C++基础" scheme="https://caixueyuan.github.io/tags/C-%E5%9F%BA%E7%A1%80/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>MySQL表</title>
-    <link href="https://caixueyuan.github.io/2018/08/12/MySQL%E8%A1%A8/"/>
-    <id>https://caixueyuan.github.io/2018/08/12/MySQL表/</id>
-    <published>2018-08-12T15:36:07.000Z</published>
-    <updated>2018-09-23T07:57:23.765Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="索引组织表"><a href="#索引组织表" class="headerlink" title="索引组织表"></a>索引组织表</h2><p><strong>索引组织表</strong>：在InnoDB存储引擎中，表都是根据主键顺序组织存放的，每个表都是有主键<br><code>_rowid</code>可以显示表的主键，只能够查看单个列为主键的情况，并且为非空唯一索引。</p>
-<h2 id="InnoDB逻辑存储结构"><a href="#InnoDB逻辑存储结构" class="headerlink" title="InnoDB逻辑存储结构"></a>InnoDB逻辑存储结构</h2><p>表空间（tablespace)–&gt;端（segment)—&gt;区（extent)—&gt;页（page)—&gt;块（block)</p>
-<h3 id="表空间"><a href="#表空间" class="headerlink" title="表空间"></a>表空间</h3><p>表空间是InnoDB存储引擎逻辑结构的最高层，所有的数据都存放在表空间中。所有的数据都存放在这个表空间中。如果弃用了参数innodb_file_per_table，则每张表内的数据可以单独存放在一个表空间中。</p>
-<p>表空间只存放数据、索引和插入缓冲Bitmap页，其他的数据（如回滚信息，插入缓冲索引页，系统事务信息，二次写缓冲）还是存放在原来的共享表空间中。</p>
-<h3 id="段"><a href="#段" class="headerlink" title="段"></a>段</h3><p>常见的段有数据段、索引段、回滚段。数据段为B+树的叶子节点，而索引段为B+树的非索引节点</p>
-<h3 id="区"><a href="#区" class="headerlink" title="区"></a>区</h3><p>由连续页组成的空间，在任何情况下每个区的大小都是1MB，在默认情况下页的大小为16KB，即一个区中一共有64个连续的页。<br>可以通过参数innodb_page_size来设置默认页的大小</p>
-<h3 id="页"><a href="#页" class="headerlink" title="页"></a>页</h3><p>页是InnoDB磁盘管理的最小单位，默认每个页的大小为16KB。</p>
-<h3 id="行"><a href="#行" class="headerlink" title="行"></a>行</h3><p>InnoDB存储引擎是面向列的，数据都是按照行来进行存放的，最多允许存放16KB/2-200行的记录，也就是7992行</p>
-<h2 id="InnoDB行记录格式"><a href="#InnoDB行记录格式" class="headerlink" title="InnoDB行记录格式"></a>InnoDB行记录格式</h2><p>使用<code>show table status like &#39;table_name&#39;</code>来查看当前表使用的行格式。</p>
-<h3 id="Compact行记录格式"><a href="#Compact行记录格式" class="headerlink" title="Compact行记录格式"></a>Compact行记录格式</h3><p>MySQL5.0引入的，其设计的目的是高效地存储数据。<br>一个页中存放的行数据越多，其性能就越高。<br>在compact格式下，NULL值都不占用任何存储空间，不管是CHAR类型或者是VARCHAR类型</p>
-<h3 id="Redundant行记录格式"><a href="#Redundant行记录格式" class="headerlink" title="Redundant行记录格式"></a>Redundant行记录格式</h3><p>MySQL5.0之前的。</p>
-<h3 id="行溢出数据"><a href="#行溢出数据" class="headerlink" title="行溢出数据"></a>行溢出数据</h3><p>BLOB可以不将数据放在溢出页面中，而且即使是VARCHAR列数据类型，依然有可能被存放为行溢出数据。通过实际测试，VARCHAR的类型的最大长度为65532.VARCHAR类型最大支持65535字节。</p>
-<p>MySQL官方手册中定义的65535长度是指所有的VARCHAR列的长度总和，如果列的长度总和超过了这个长度，依然无法创建。</p>
-<p>InnoDB存储引擎的页为16KB，也就是16384字节，在一般情况下，InnoDB存储引擎的数据都是存放在页类型为B-tree node中。但是当发生行溢出时，数据存放在页类型为Uncompress BLOB页中。</p>
-<p>一个页存放数据，如果为两条数据的话，那么每条的最大的阈值为8098.</p>
-<h3 id="Compressed和Dynamic行记录格式"><a href="#Compressed和Dynamic行记录格式" class="headerlink" title="Compressed和Dynamic行记录格式"></a>Compressed和Dynamic行记录格式</h3><p>InnoDB1.0.x引入新的文件格式，Compressed和Dynamic<br>新的两种记录格式对于存放在BLOB中的数据采用完全的行溢出的方式。同时，存储在其中的行数据会以zlib的算法进行压缩，</p>
-<h3 id="CHAR的行结构存储"><a href="#CHAR的行结构存储" class="headerlink" title="CHAR的行结构存储"></a>CHAR的行结构存储</h3><p>对于多字节字符编码的CHAR数据类型的存储，InnoDB存储引擎在内部将其视为变长字符类型，在变长长度列表中会记录CHAR数据类型的长度</p>
-<p>CHAR(2)保存的是2个字符，不管是GBK，还是UTF-8，还是latin，都是2个字符，而不是2个字节。所以存储的字节是变化的。</p>
-<h2 id="InnoDB数据页结构"><a href="#InnoDB数据页结构" class="headerlink" title="InnoDB数据页结构"></a>InnoDB数据页结构</h2><p>包括7个部分：</p>
-<blockquote>
-<ul>
-<li>File Header(文件头)</li>
-<li>Page Header(页头)</li>
-<li>infimum和Supremum Records</li>
-<li>User Records（用户记录，即行记录）</li>
-<li>Free Space（空闲空间）</li>
-<li>Page Directory（页目录）</li>
-<li>File Trailer(文件结尾信息)</li>
-</ul>
-</blockquote>
-<h2 id="Named-File-Formats机制"><a href="#Named-File-Formats机制" class="headerlink" title="Named File Formats机制"></a>Named File Formats机制</h2>]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;索引组织表&quot;&gt;&lt;a href=&quot;#索引组织表&quot; class=&quot;headerlink&quot; title=&quot;索引组织表&quot;&gt;&lt;/a&gt;索引组织表&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;索引组织表&lt;/strong&gt;：在InnoDB存储引擎中，表都是根据主键顺序组织存放的，每个表都是有主
-    
-    </summary>
-    
-      <category term="数据库" scheme="https://caixueyuan.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
-    
-    
-      <category term="MySQL" scheme="https://caixueyuan.github.io/tags/MySQL/"/>
     
   </entry>
   
