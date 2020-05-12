@@ -1,0 +1,923 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Linux系统管理技术手册," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="caixueyuan" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="shell基础知识1234567891011//管道cut -d: -f7 &amp;lt; /etc/passwd | sort -u//只有当/tmp/t2被成功送入到打印队列后才会删除/tmp/t2lpr /tmp/t2 &amp;amp;&amp;amp; rm /tmp/t2//只有当第一条命令执行失败才会执行第二条语句cp --preserve --recursive /etc/* /spare/backup">
+<meta name="keywords" content="Linux系统管理技术手册">
+<meta property="og:type" content="article">
+<meta property="og:title" content="脚本和shell">
+<meta property="og:url" content="https://caixueyuan.github.io/2019/11/12/shell基础知识/index.html">
+<meta property="og:site_name" content="caixueyuan">
+<meta property="og:description" content="shell基础知识1234567891011//管道cut -d: -f7 &amp;lt; /etc/passwd | sort -u//只有当/tmp/t2被成功送入到打印队列后才会删除/tmp/t2lpr /tmp/t2 &amp;amp;&amp;amp; rm /tmp/t2//只有当第一条命令执行失败才会执行第二条语句cp --preserve --recursive /etc/* /spare/backup">
+<meta property="og:image" content="https://caixueyuan.github.io/2019/11/12/shell基础知识/image-20191126000328683.png">
+<meta property="og:image" content="https://caixueyuan.github.io/2019/11/12/shell基础知识/image-20191126000407140.png">
+<meta property="og:updated_time" content="2019-12-15T15:19:13.892Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="脚本和shell">
+<meta name="twitter:description" content="shell基础知识1234567891011//管道cut -d: -f7 &amp;lt; /etc/passwd | sort -u//只有当/tmp/t2被成功送入到打印队列后才会删除/tmp/t2lpr /tmp/t2 &amp;amp;&amp;amp; rm /tmp/t2//只有当第一条命令执行失败才会执行第二条语句cp --preserve --recursive /etc/* /spare/backup">
+<meta name="twitter:image" content="https://caixueyuan.github.io/2019/11/12/shell基础知识/image-20191126000328683.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://caixueyuan.github.io/2019/11/12/shell基础知识/"/>
+
+
+
+
+
+  <title>脚本和shell | caixueyuan</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">caixueyuan</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">SCUT</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://caixueyuan.github.io/2019/11/12/shell基础知识/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="caixueyuan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="caixueyuan">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">脚本和shell</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-11-12T23:27:49+08:00">
+                2019-11-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/操作系统/" itemprop="url" rel="index">
+                    <span itemprop="name">操作系统</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="shell基础知识"><a href="#shell基础知识" class="headerlink" title="shell基础知识"></a>shell基础知识</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">//管道</div><div class="line">cut -d: -f7 &lt; /etc/passwd | sort -u</div><div class="line">//只有当/tmp/t2被成功送入到打印队列后才会删除/tmp/t2</div><div class="line">lpr /tmp/t2 &amp;&amp; rm /tmp/t2</div><div class="line">//只有当第一条命令执行失败才会执行第二条语句</div><div class="line">cp --preserve --recursive /etc/* /spare/backup || echo "Did not make backup"</div><div class="line">//用户环境变量</div><div class="line">bash ~/.profile</div><div class="line">bash ~/.bash_profile</div><div class="line">//将输出的语句进行执行</div><div class="line">find / -type f -name "*.log" 2&gt;/dev/null | grep -v boot.log | while read fname;do echo mv $fname $&#123;fname&#125;;done;|bash -x</div></pre></td></tr></table></figure>
+<h2 id="引导和关机"><a href="#引导和关机" class="headerlink" title="引导和关机"></a>引导和关机</h2><h3 id="启动脚本"><a href="#启动脚本" class="headerlink" title="启动脚本"></a>启动脚本</h3><ol>
+<li>从MRB读取引导加载程序</li>
+<li>加载并初始化内核</li>
+<li>检测和配置设备</li>
+<li>创建内核线程</li>
+<li>系统管理员干预</li>
+<li>执行系统启动脚本</li>
+</ol>
+<p>mount -o rw, remount /：重新挂载根目录</p>
+<p><code>/etc/init.d/</code>:能够启动或者停止各个服务。当主脚本把系统引入到一个新的运行级别时，它不是直接在<code>/etc/init/d</code>目录下寻找，而是查找<code>/etc/rc**level**.d</code>目录下</p>
+<p>这些目录的运行脚本都是软链接到/etc/init.d目录下的脚本，当init从低运行级向高运行级过渡时，它按照数字递增的顺序，带start参数运行所有以S开头的脚本。当init从高运行级向低运行级别过渡时，它按照数字递增的顺序，带Stop参数运行所有以K开头的脚本</p>
+<h3 id="访问控制和超级权限"><a href="#访问控制和超级权限" class="headerlink" title="访问控制和超级权限"></a>访问控制和超级权限</h3><p><code>/etc/passwd</code>：记录用户的个数</p>
+<p><code>/etc/group</code>:记录用户组的个数</p>
+<p>bash在登陆模式启动要读~/.bash_profile，在非登录模式则读取~/.bashrc</p>
+<p><code>/etc/sudoers</code>:这个文件列出了授权使用sudo的人以及允许他们在每台主机上运行的命令。如果提供给sudo的命令运行运行，那么sudo就提示输入这个用户自己的口令并执行命令。可以通过visudo来编辑该文件</p>
+<h3 id="进程控制"><a href="#进程控制" class="headerlink" title="进程控制"></a>进程控制</h3><p>Unix和Linux都没有提供新进程去运行某个特定程序的系统调用，现有进程必须克隆自身去创建一个新进程，克隆出的进程能够把它正在运行的那个程序替换成另外一个不同的程序</p>
+<p><code>kill pid</code>:请求彻底终止某次执行。它期待接受该信号的进程清除自身的状态并退出。但是该命令不能够保证进程会被杀死。因为TERM信号可能会被捕获/封锁或者忽略。</p>
+<p><strong>设置nice值</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">nice -n 5 ~/bin/longtask</div><div class="line">sudo renice -5 8829</div><div class="line">sudo renice 5 -u boggs</div></pre></td></tr></table></figure>
+<p><strong>ps命令使用</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">ps aux</div><div class="line">ps lax #能够显示父进程，谦让值字段以及进程正在等待的资源(WCHAN)</div><div class="line">find /home -size +1M -print0 | xargs -0 ls -l</div></pre></td></tr></table></figure>
+<p>/proc目录下的进程信息文件</p>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cmd</td>
+<td>进程正在执行的命令或者程序</td>
+</tr>
+<tr>
+<td>cmdline</td>
+<td>进程的完整命令行</td>
+</tr>
+<tr>
+<td>cwd</td>
+<td>链到进程当前目录的符号链接</td>
+</tr>
+<tr>
+<td>environ</td>
+<td>进程的环境变量</td>
+</tr>
+<tr>
+<td>statm</td>
+<td>内存使用情况的信息</td>
+</tr>
+<tr>
+<td>exe</td>
+<td>链到正被执行的文件的符号链接</td>
+</tr>
+<tr>
+<td>stat</td>
+<td>进程的总体状态信息</td>
+</tr>
+<tr>
+<td>fd</td>
+<td>子目录，其中包含链到每个打开文件的描述符的链接</td>
+</tr>
+<tr>
+<td>maps</td>
+<td>内存映射信息（共享段/库）</td>
+</tr>
+<tr>
+<td>root</td>
+<td>链到进程的根目录的符号链接</td>
+</tr>
+<tr>
+<td>stat</td>
+<td>进程的总体状态信息（ps最擅长解析这些信息）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="文件系统"><a href="#文件系统" class="headerlink" title="文件系统"></a>文件系统</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">mount /dev/hda4 /users</div><div class="line"><span class="meta">#</span><span class="bash"> 输出正在使用该文件系统上的某个文件或者目录的每个进程的PID</span></div><div class="line">fuser -c /usr</div></pre></td></tr></table></figure>
+<p>挂载在某个特定系统上的文件系统清单保存在/etc/fstab文件、/etc/vfstab(Solaris)文件。当系统引导时，包含在这个文件中的信息让这些文件系统先被检查(fsck)再自动挂载到系统中</p>
+<p><strong>umount</strong>命令用来卸载文件系统，在大多数系统上，不能够卸载处于“busy”状态的文件系统。umount -f命令能够强制卸载一个处于忙状态的文件系统。</p>
+<table>
+<thead>
+<tr>
+<th>代码</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>f,o</td>
+<td>进程有一个为了读或者写而打开的文件</td>
+</tr>
+<tr>
+<td>c</td>
+<td>进程的当前目录在这个文件系统中</td>
+</tr>
+<tr>
+<td>e,t</td>
+<td>进程目前在执行一个文件</td>
+</tr>
+<tr>
+<td>r</td>
+<td>进程的根目录在这个文件系统中</td>
+</tr>
+<tr>
+<td>m,s</td>
+<td>进程已经映射了一个文件或者共享库</td>
+</tr>
+</tbody>
+</table>
+<p><img src="image-20191126000328683.png" alt="image-20191126000328683"></p>
+<p><img src="image-20191126000407140.png" alt="image-20191126000407140"></p>
+<h3 id="文件类型"><a href="#文件类型" class="headerlink" title="文件类型"></a>文件类型</h3><p>文件有以下几种类型：普通文件，目录，字符设备文件，块设备文件，本地域套接字，有名管道，符号链接</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ln old ../new#硬链接</div><div class="line">ls -s old ../new#软连接</div></pre></td></tr></table></figure>
+<p>硬链接和软链接的区别：硬链接时直接引用，而符号链接是通过名称来引用的。</p>
+<p>主设备号告诉内核该文件访问哪个驱动程序，次设备号告诉驱动程序对哪个物理单元寻址。</p>
+<p>字符设备文件让与之相关的驱动程序做它们自己的输入和输出缓冲。块设备文件由处理块数据的I/O的驱动程序使用，并要求内核为之缓冲。</p>
+<p>setuid和setgid：让执行该命令的用户能够以该命令所有者的权限来执行。</p>
+<p>粘滞位（/tmp）：所有的用户能够在该目录下拥有所有的权限，能够在该目录下任意创建文件，修改和删除文件，但是呢，别的用户不能够动到别人的文件</p>
+<p>umask：分配默认的权限。默认的umask值是022，它不允许属组和其他用户有写入权限。</p>
+<h2 id="添加新用户"><a href="#添加新用户" class="headerlink" title="添加新用户"></a>添加新用户</h2><p>/etc/passwd:用户信息</p>
+<p>/etc/shadow:用户密码</p>
+<p>linux中口令加密算法及其长度限制 位置：/etc/login.defs</p>
+<p>如果把/etc/login.defs中的DEFAULT_HOME设为no，那么就会禁止没有主目录的用户登录。</p>
+<p>可以通过chsh命令来改变自己的shell，chfn来修改使用LDAP或者其他目录服务管理登录信息。</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>文件名</th>
+<th>设置环境</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bash</td>
+<td>.bashrc     .bash_profile</td>
+<td>设置环境变量</td>
+</tr>
+<tr>
+<td>sh</td>
+<td>.profile</td>
+<td>设置搜索路径/终端类型和环境</td>
+</tr>
+<tr>
+<td>vim</td>
+<td>.vimrc       .excr</td>
+<td>设置vim编辑器的选项</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">sudo useradd -c "caixueyuan" -d /home/caixueyuan -g caixueyuan -G student -m -s /bin/sh caixueyuan</div><div class="line">userdel caixueyuan#删除用户</div><div class="line">usermod -L user#锁住用户</div><div class="line">usermod -U user#解锁用户</div></pre></td></tr></table></figure>
+<h2 id="磁盘管理"><a href="#磁盘管理" class="headerlink" title="磁盘管理"></a>磁盘管理</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span><span class="bash"> -T选项从硬盘的高速缓存中读取信息，并且指示总线上的数据传输率，跟物理硬盘介质的吞吐量有关</span></div><div class="line"><span class="meta">#</span><span class="bash"> -t 从物理盘片读数据</span></div><div class="line">sudo hdparm -Tt /dev/sda</div></pre></td></tr></table></figure>
+<p>Linux的LVM配置过程依次为以下不同的阶段：</p>
+<ol>
+<li><p>创建和初始化物理卷</p>
+</li>
+<li><p>把物理卷加入到一个卷组中</p>
+</li>
+<li><p>在卷组中创建逻辑卷</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="meta">   #</span><span class="bash">创建物理卷</span></div><div class="line">   sudo pvcreate /dev/md0</div><div class="line"><span class="meta">   #</span><span class="bash">创建卷组</span></div><div class="line">   sudo vgcreate DEMO /dev/md0</div><div class="line"><span class="meta">   #</span><span class="bash">创建逻辑卷</span></div><div class="line">   sudo lvcreate -L 100G -n web1 DEMO</div><div class="line"><span class="meta">   #</span><span class="bash">创建文件系统</span></div><div class="line">   sudo mkfs /dev/DEMO/web1</div><div class="line"><span class="meta">   #</span><span class="bash">挂载</span></div><div class="line">   sudo mkdir /mnt/web1</div><div class="line">   sudo mount /dev/DEMO/web1 /mnt/web1</div><div class="line"><span class="meta">   #</span><span class="bash">创建快照（创建快照最好跟数据一样大)</span></div><div class="line">   sudo lvcreate -L 100G -s -n web1-snap DEMO/web1</div><div class="line"><span class="meta">   #</span><span class="bash">给逻辑卷增加空间</span></div><div class="line">   sudo  umount /mnt/web1</div><div class="line">   sudo lvchange -an DEMO/web1</div><div class="line">   sudo lvresize -L +10G DEMo/web1</div><div class="line">   sudo lvchange -ay DEMO/web1</div><div class="line"><span class="meta">   #</span><span class="bash">改变文件系统的大小</span></div><div class="line">   sudo e2fsck -f /dev/DEMO/web1</div><div class="line">   sudo resize2fs /dev/DEMO/web1</div><div class="line"><span class="meta">   #</span><span class="bash">将ext2文件系统转为ext4文件系统</span></div><div class="line">tune2fs -j /dev/hda4</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="文件系统-1"><a href="#文件系统-1" class="headerlink" title="文件系统"></a>文件系统</h3><p>   <strong>mkfs</strong>：格式化文件系统</p>
+<p>   <strong>fsck</strong>：检查和修复文件系统</p>
+<p>   <strong>mount</strong>：挂载文件系统</p>
+<p>   <strong>df</strong>:核对一个文件系统的大小</p>
+   <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span><span class="bash">挂载硬盘上所有本地的ext4文件系统</span></div><div class="line">sudo mount -at ext4、</div><div class="line"><span class="meta">#</span><span class="bash"> 查看交互分区的设置</span></div><div class="line">sudo swapon -s</div></pre></td></tr></table></figure>
+<p>   周期性进程</p>
+   <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span><span class="bash">配置方法</span></div><div class="line">55 23 * * 0-3,6 /staff/trent/bin/checkservers</div><div class="line">30 2 * * 1 (cd /user/joe/project; make)</div><div class="line"><span class="meta">#</span><span class="bash"> 用filename来替换任何以前版本的crontab文件</span></div><div class="line">crontab filename</div><div class="line"><span class="meta">#</span><span class="bash"> 编辑文件</span></div><div class="line">crontab -e filename</div><div class="line"><span class="meta">#</span><span class="bash"> cron.deny和cron.allow指定哪些用户可以提交crontab文件</span></div><div class="line"><span class="meta">#</span><span class="bash">删除core文件</span></div><div class="line">find / -xdev -type f '(' -name core -o name 'core.[0-9]*' ')' -atime +7 -exec rm -f &#123;&#125; ';'</div><div class="line">find . ! -name  . ! -name lost+found -type d -mtime +3 -exec /bin/rm -rf &#123;&#125; ';'</div></pre></td></tr></table></figure>
+<p>   系统的crontab在/etc/crontab文件中和/etc/cron.d目录中。</p>
+<p>   在/etc/cron.daily中的脚本每天运行一次，在/etc/cron.weekly中的脚本每周运行一次。</p>
+<h2 id="软件安装和管理"><a href="#软件安装和管理" class="headerlink" title="软件安装和管理"></a>软件安装和管理</h2><h3 id="高级软件包管理系统"><a href="#高级软件包管理系统" class="headerlink" title="高级软件包管理系统"></a>高级软件包管理系统</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">rpm -i#安装</div><div class="line">rpm -U #更新</div><div class="line">rpm -e #卸载</div><div class="line">rpm -q #查询</div><div class="line">rpm -qa #显示系统已经安装的软件包的完整清单</div><div class="line">rpm --query --whatrequires openssh#在尝试升级之前判断出会有其他软件包依赖OpenSSH</div><div class="line">dpkg -l | grep package #判断某个软件是否安装的方便途径</div><div class="line">sudo git rm --cached mtab #在当前的库影像里删除mtab文件</div></pre></td></tr></table></figure>
+<ol>
+<li>apt-get 最重要的配置文件是/etc/apt/source.list，它告诉apt-get 到哪里去找它的软件包。规定了软件包的类型，指向一个文件/CD-ROM/HTTP服务器或者FTP服务器的URL，组件可能的清单。</li>
+<li>apt-mirror在/etc/apt/里放了一个叫做mirror.list的文件，在默认情况下，mirror.list包括了正在使用的Ubuntu版本的所有库。</li>
+<li>apt-get dist-upgrade会下载并安装已经在本地机器上安装过的任何软件包的新版本</li>
+<li>默认返回yes来使用-yes选项</li>
+<li>apt-get –download-only自动下载任何改动过的软件包，但是不安装</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux系统管理技术手册/" rel="tag"># Linux系统管理技术手册</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/10/25/C-标准模板库/" rel="next" title="C++标准模板库">
+                <i class="fa fa-chevron-left"></i> C++标准模板库
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/05/12/考试/" rel="prev" title="考试">
+                考试 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="caixueyuan" />
+          <p class="site-author-name" itemprop="name">caixueyuan</p>
+           
+              <p class="site-description motion-element" itemprop="description">Java后台开发程序员</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">64</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">38</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#shell基础知识"><span class="nav-number">1.</span> <span class="nav-text">shell基础知识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引导和关机"><span class="nav-number">2.</span> <span class="nav-text">引导和关机</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#启动脚本"><span class="nav-number">2.1.</span> <span class="nav-text">启动脚本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#访问控制和超级权限"><span class="nav-number">2.2.</span> <span class="nav-text">访问控制和超级权限</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#进程控制"><span class="nav-number">2.3.</span> <span class="nav-text">进程控制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文件系统"><span class="nav-number">2.4.</span> <span class="nav-text">文件系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文件类型"><span class="nav-number">2.5.</span> <span class="nav-text">文件类型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加新用户"><span class="nav-number">3.</span> <span class="nav-text">添加新用户</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#磁盘管理"><span class="nav-number">4.</span> <span class="nav-text">磁盘管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#文件系统-1"><span class="nav-number">4.1.</span> <span class="nav-text">文件系统</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#软件安装和管理"><span class="nav-number">5.</span> <span class="nav-text">软件安装和管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#高级软件包管理系统"><span class="nav-number">5.1.</span> <span class="nav-text">高级软件包管理系统</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">caixueyuan</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

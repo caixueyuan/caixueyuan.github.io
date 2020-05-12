@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://caixueyuan.github.io/"/>
-  <updated>2019-10-21T14:41:36.313Z</updated>
+  <updated>2020-05-12T16:26:42.423Z</updated>
   <id>https://caixueyuan.github.io/</id>
   
   <author>
@@ -14,6 +14,285 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>考试</title>
+    <link href="https://caixueyuan.github.io/2020/05/12/%E8%80%83%E8%AF%95/"/>
+    <id>https://caixueyuan.github.io/2020/05/12/考试/</id>
+    <published>2020-05-12T15:37:04.000Z</published>
+    <updated>2020-05-12T16:26:42.423Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="2020-05-12"><a href="#2020-05-12" class="headerlink" title="2020/05/12"></a>2020/05/12</h2><p><strong>错题一</strong>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</div><div class="line">    <span class="keyword">static</span> <span class="keyword">int</span> x = <span class="number">10</span>;</div><div class="line"></div><div class="line">    <span class="keyword">static</span>&#123;</div><div class="line">        x+=<span class="number">5</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</div><div class="line">        System.out.println(<span class="string">"x="</span>+Test.x);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">static</span>&#123;</div><div class="line">        x = x/<span class="number">3</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="comment">//结果：运行正确，结果为0</span></div></pre></td></tr></table></figure>
+<p><strong>错题二：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">X</span></span>&#123;</div><div class="line">    Y y = <span class="keyword">new</span> Y();<span class="comment">//1</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">X</span><span class="params">()</span></span>&#123;</div><div class="line">        System.out.print(<span class="string">"X"</span>);<span class="comment">//2</span></div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Y</span></span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Y</span><span class="params">()</span></span>&#123;</div><div class="line">        System.out.print(<span class="string">"Y"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> <span class="keyword">extends</span> <span class="title">X</span></span>&#123;</div><div class="line">    Y y = <span class="keyword">new</span> Y();<span class="comment">//3</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Test</span><span class="params">()</span></span>&#123;</div><div class="line">        System.out.print(<span class="string">"Z"</span>);<span class="comment">//4</span></div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</div><div class="line">        <span class="keyword">new</span> Test();</div><div class="line">     &#125;</div><div class="line">&#125;</div><div class="line"><span class="comment">//YXYZ</span></div></pre></td></tr></table></figure>
+<p><strong>错题三</strong>：instanceof运算符能够用来判断一个对象是否为：一个类的实例，一个实现指定接口的类的实例，一个子类的实例</p>
+<p><strong>错题四</strong>：equals()和hashcode()的关系：</p>
+<p>equals()相等的两个对象，他们的hashcode肯定相等，</p>
+<p>hashcode()相等的两个对象，他们的equals()不一定相等</p>
+<p>在hashmap中，key值是不可能重复的，由HashCode和equals方法共同判断key值是否相等，如果两个对象的hashcode相同，也不能够说明key值相等</p>
+<p>错误五：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Parent</span></span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">hello</span><span class="params">()</span></span>&#123;</div><div class="line">        System.out.println(<span class="string">"hello"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span></span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</div><div class="line">        Parent test = <span class="keyword">null</span>;<span class="comment">//会正确地加载静态方法</span></div><div class="line">        test.hello();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="comment">//能够正确运行，返回hello</span></div></pre></td></tr></table></figure>
+<p>错误六：</p>
+<p><img src="image-20200513002308980.png" alt="image-20200513002308980"></p>
+<p>Class类在java.lang包中</p>
+<p>动态代理技术可以动态创建一个代理对象，反射不行</p>
+<p>反射访问私有成员时，Field调用setAccessible可解除访问符限制</p>
+<p>CGLIB可以实现字符码修改，反射不能够实现字节码修改</p>
+<p>反射会动态创建额外对象，比如每个成员方法只有一个Method对象作为root，他不会直接暴露给用户，调用的时候会返回一个Method的包装类</p>
+<p>反射带来的效率问题主要是动态解析类，JVM无法对反射代码进行优化</p>
+<p>错题七：</p>
+<p><img src="image-20200513002225647.png" alt="image-20200513002225647"></p>
+<p><img src="image-20200513002141998.png" alt="image-20200513002141998"></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;2020-05-12&quot;&gt;&lt;a href=&quot;#2020-05-12&quot; class=&quot;headerlink&quot; title=&quot;2020/05/12&quot;&gt;&lt;/a&gt;2020/05/12&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;错题一&lt;/strong&gt;：&lt;/p&gt;
+&lt;figure clas
+    
+    </summary>
+    
+      <category term="编程考试" scheme="https://caixueyuan.github.io/categories/%E7%BC%96%E7%A8%8B%E8%80%83%E8%AF%95/"/>
+    
+    
+      <category term="考试" scheme="https://caixueyuan.github.io/tags/%E8%80%83%E8%AF%95/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>脚本和shell</title>
+    <link href="https://caixueyuan.github.io/2019/11/12/shell%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/"/>
+    <id>https://caixueyuan.github.io/2019/11/12/shell基础知识/</id>
+    <published>2019-11-12T15:27:49.000Z</published>
+    <updated>2019-12-15T15:19:13.892Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="shell基础知识"><a href="#shell基础知识" class="headerlink" title="shell基础知识"></a>shell基础知识</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">//管道</div><div class="line">cut -d: -f7 &lt; /etc/passwd | sort -u</div><div class="line">//只有当/tmp/t2被成功送入到打印队列后才会删除/tmp/t2</div><div class="line">lpr /tmp/t2 &amp;&amp; rm /tmp/t2</div><div class="line">//只有当第一条命令执行失败才会执行第二条语句</div><div class="line">cp --preserve --recursive /etc/* /spare/backup || echo "Did not make backup"</div><div class="line">//用户环境变量</div><div class="line">bash ~/.profile</div><div class="line">bash ~/.bash_profile</div><div class="line">//将输出的语句进行执行</div><div class="line">find / -type f -name "*.log" 2&gt;/dev/null | grep -v boot.log | while read fname;do echo mv $fname $&#123;fname&#125;;done;|bash -x</div></pre></td></tr></table></figure>
+<h2 id="引导和关机"><a href="#引导和关机" class="headerlink" title="引导和关机"></a>引导和关机</h2><h3 id="启动脚本"><a href="#启动脚本" class="headerlink" title="启动脚本"></a>启动脚本</h3><ol>
+<li>从MRB读取引导加载程序</li>
+<li>加载并初始化内核</li>
+<li>检测和配置设备</li>
+<li>创建内核线程</li>
+<li>系统管理员干预</li>
+<li>执行系统启动脚本</li>
+</ol>
+<p>mount -o rw, remount /：重新挂载根目录</p>
+<p><code>/etc/init.d/</code>:能够启动或者停止各个服务。当主脚本把系统引入到一个新的运行级别时，它不是直接在<code>/etc/init/d</code>目录下寻找，而是查找<code>/etc/rc**level**.d</code>目录下</p>
+<p>这些目录的运行脚本都是软链接到/etc/init.d目录下的脚本，当init从低运行级向高运行级过渡时，它按照数字递增的顺序，带start参数运行所有以S开头的脚本。当init从高运行级向低运行级别过渡时，它按照数字递增的顺序，带Stop参数运行所有以K开头的脚本</p>
+<h3 id="访问控制和超级权限"><a href="#访问控制和超级权限" class="headerlink" title="访问控制和超级权限"></a>访问控制和超级权限</h3><p><code>/etc/passwd</code>：记录用户的个数</p>
+<p><code>/etc/group</code>:记录用户组的个数</p>
+<p>bash在登陆模式启动要读~/.bash_profile，在非登录模式则读取~/.bashrc</p>
+<p><code>/etc/sudoers</code>:这个文件列出了授权使用sudo的人以及允许他们在每台主机上运行的命令。如果提供给sudo的命令运行运行，那么sudo就提示输入这个用户自己的口令并执行命令。可以通过visudo来编辑该文件</p>
+<h3 id="进程控制"><a href="#进程控制" class="headerlink" title="进程控制"></a>进程控制</h3><p>Unix和Linux都没有提供新进程去运行某个特定程序的系统调用，现有进程必须克隆自身去创建一个新进程，克隆出的进程能够把它正在运行的那个程序替换成另外一个不同的程序</p>
+<p><code>kill pid</code>:请求彻底终止某次执行。它期待接受该信号的进程清除自身的状态并退出。但是该命令不能够保证进程会被杀死。因为TERM信号可能会被捕获/封锁或者忽略。</p>
+<p><strong>设置nice值</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">nice -n 5 ~/bin/longtask</div><div class="line">sudo renice -5 8829</div><div class="line">sudo renice 5 -u boggs</div></pre></td></tr></table></figure>
+<p><strong>ps命令使用</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">ps aux</div><div class="line">ps lax #能够显示父进程，谦让值字段以及进程正在等待的资源(WCHAN)</div><div class="line">find /home -size +1M -print0 | xargs -0 ls -l</div></pre></td></tr></table></figure>
+<p>/proc目录下的进程信息文件</p>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cmd</td>
+<td>进程正在执行的命令或者程序</td>
+</tr>
+<tr>
+<td>cmdline</td>
+<td>进程的完整命令行</td>
+</tr>
+<tr>
+<td>cwd</td>
+<td>链到进程当前目录的符号链接</td>
+</tr>
+<tr>
+<td>environ</td>
+<td>进程的环境变量</td>
+</tr>
+<tr>
+<td>statm</td>
+<td>内存使用情况的信息</td>
+</tr>
+<tr>
+<td>exe</td>
+<td>链到正被执行的文件的符号链接</td>
+</tr>
+<tr>
+<td>stat</td>
+<td>进程的总体状态信息</td>
+</tr>
+<tr>
+<td>fd</td>
+<td>子目录，其中包含链到每个打开文件的描述符的链接</td>
+</tr>
+<tr>
+<td>maps</td>
+<td>内存映射信息（共享段/库）</td>
+</tr>
+<tr>
+<td>root</td>
+<td>链到进程的根目录的符号链接</td>
+</tr>
+<tr>
+<td>stat</td>
+<td>进程的总体状态信息（ps最擅长解析这些信息）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="文件系统"><a href="#文件系统" class="headerlink" title="文件系统"></a>文件系统</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">mount /dev/hda4 /users</div><div class="line"><span class="meta">#</span><span class="bash"> 输出正在使用该文件系统上的某个文件或者目录的每个进程的PID</span></div><div class="line">fuser -c /usr</div></pre></td></tr></table></figure>
+<p>挂载在某个特定系统上的文件系统清单保存在/etc/fstab文件、/etc/vfstab(Solaris)文件。当系统引导时，包含在这个文件中的信息让这些文件系统先被检查(fsck)再自动挂载到系统中</p>
+<p><strong>umount</strong>命令用来卸载文件系统，在大多数系统上，不能够卸载处于“busy”状态的文件系统。umount -f命令能够强制卸载一个处于忙状态的文件系统。</p>
+<table>
+<thead>
+<tr>
+<th>代码</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>f,o</td>
+<td>进程有一个为了读或者写而打开的文件</td>
+</tr>
+<tr>
+<td>c</td>
+<td>进程的当前目录在这个文件系统中</td>
+</tr>
+<tr>
+<td>e,t</td>
+<td>进程目前在执行一个文件</td>
+</tr>
+<tr>
+<td>r</td>
+<td>进程的根目录在这个文件系统中</td>
+</tr>
+<tr>
+<td>m,s</td>
+<td>进程已经映射了一个文件或者共享库</td>
+</tr>
+</tbody>
+</table>
+<p><img src="image-20191126000328683.png" alt="image-20191126000328683"></p>
+<p><img src="image-20191126000407140.png" alt="image-20191126000407140"></p>
+<h3 id="文件类型"><a href="#文件类型" class="headerlink" title="文件类型"></a>文件类型</h3><p>文件有以下几种类型：普通文件，目录，字符设备文件，块设备文件，本地域套接字，有名管道，符号链接</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ln old ../new#硬链接</div><div class="line">ls -s old ../new#软连接</div></pre></td></tr></table></figure>
+<p>硬链接和软链接的区别：硬链接时直接引用，而符号链接是通过名称来引用的。</p>
+<p>主设备号告诉内核该文件访问哪个驱动程序，次设备号告诉驱动程序对哪个物理单元寻址。</p>
+<p>字符设备文件让与之相关的驱动程序做它们自己的输入和输出缓冲。块设备文件由处理块数据的I/O的驱动程序使用，并要求内核为之缓冲。</p>
+<p>setuid和setgid：让执行该命令的用户能够以该命令所有者的权限来执行。</p>
+<p>粘滞位（/tmp）：所有的用户能够在该目录下拥有所有的权限，能够在该目录下任意创建文件，修改和删除文件，但是呢，别的用户不能够动到别人的文件</p>
+<p>umask：分配默认的权限。默认的umask值是022，它不允许属组和其他用户有写入权限。</p>
+<h2 id="添加新用户"><a href="#添加新用户" class="headerlink" title="添加新用户"></a>添加新用户</h2><p>/etc/passwd:用户信息</p>
+<p>/etc/shadow:用户密码</p>
+<p>linux中口令加密算法及其长度限制 位置：/etc/login.defs</p>
+<p>如果把/etc/login.defs中的DEFAULT_HOME设为no，那么就会禁止没有主目录的用户登录。</p>
+<p>可以通过chsh命令来改变自己的shell，chfn来修改使用LDAP或者其他目录服务管理登录信息。</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>文件名</th>
+<th>设置环境</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bash</td>
+<td>.bashrc     .bash_profile</td>
+<td>设置环境变量</td>
+</tr>
+<tr>
+<td>sh</td>
+<td>.profile</td>
+<td>设置搜索路径/终端类型和环境</td>
+</tr>
+<tr>
+<td>vim</td>
+<td>.vimrc       .excr</td>
+<td>设置vim编辑器的选项</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">sudo useradd -c "caixueyuan" -d /home/caixueyuan -g caixueyuan -G student -m -s /bin/sh caixueyuan</div><div class="line">userdel caixueyuan#删除用户</div><div class="line">usermod -L user#锁住用户</div><div class="line">usermod -U user#解锁用户</div></pre></td></tr></table></figure>
+<h2 id="磁盘管理"><a href="#磁盘管理" class="headerlink" title="磁盘管理"></a>磁盘管理</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span><span class="bash"> -T选项从硬盘的高速缓存中读取信息，并且指示总线上的数据传输率，跟物理硬盘介质的吞吐量有关</span></div><div class="line"><span class="meta">#</span><span class="bash"> -t 从物理盘片读数据</span></div><div class="line">sudo hdparm -Tt /dev/sda</div></pre></td></tr></table></figure>
+<p>Linux的LVM配置过程依次为以下不同的阶段：</p>
+<ol>
+<li><p>创建和初始化物理卷</p>
+</li>
+<li><p>把物理卷加入到一个卷组中</p>
+</li>
+<li><p>在卷组中创建逻辑卷</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="meta">   #</span><span class="bash">创建物理卷</span></div><div class="line">   sudo pvcreate /dev/md0</div><div class="line"><span class="meta">   #</span><span class="bash">创建卷组</span></div><div class="line">   sudo vgcreate DEMO /dev/md0</div><div class="line"><span class="meta">   #</span><span class="bash">创建逻辑卷</span></div><div class="line">   sudo lvcreate -L 100G -n web1 DEMO</div><div class="line"><span class="meta">   #</span><span class="bash">创建文件系统</span></div><div class="line">   sudo mkfs /dev/DEMO/web1</div><div class="line"><span class="meta">   #</span><span class="bash">挂载</span></div><div class="line">   sudo mkdir /mnt/web1</div><div class="line">   sudo mount /dev/DEMO/web1 /mnt/web1</div><div class="line"><span class="meta">   #</span><span class="bash">创建快照（创建快照最好跟数据一样大)</span></div><div class="line">   sudo lvcreate -L 100G -s -n web1-snap DEMO/web1</div><div class="line"><span class="meta">   #</span><span class="bash">给逻辑卷增加空间</span></div><div class="line">   sudo  umount /mnt/web1</div><div class="line">   sudo lvchange -an DEMO/web1</div><div class="line">   sudo lvresize -L +10G DEMo/web1</div><div class="line">   sudo lvchange -ay DEMO/web1</div><div class="line"><span class="meta">   #</span><span class="bash">改变文件系统的大小</span></div><div class="line">   sudo e2fsck -f /dev/DEMO/web1</div><div class="line">   sudo resize2fs /dev/DEMO/web1</div><div class="line"><span class="meta">   #</span><span class="bash">将ext2文件系统转为ext4文件系统</span></div><div class="line">tune2fs -j /dev/hda4</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="文件系统-1"><a href="#文件系统-1" class="headerlink" title="文件系统"></a>文件系统</h3><p>   <strong>mkfs</strong>：格式化文件系统</p>
+<p>   <strong>fsck</strong>：检查和修复文件系统</p>
+<p>   <strong>mount</strong>：挂载文件系统</p>
+<p>   <strong>df</strong>:核对一个文件系统的大小</p>
+   <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span><span class="bash">挂载硬盘上所有本地的ext4文件系统</span></div><div class="line">sudo mount -at ext4、</div><div class="line"><span class="meta">#</span><span class="bash"> 查看交互分区的设置</span></div><div class="line">sudo swapon -s</div></pre></td></tr></table></figure>
+<p>   周期性进程</p>
+   <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span><span class="bash">配置方法</span></div><div class="line">55 23 * * 0-3,6 /staff/trent/bin/checkservers</div><div class="line">30 2 * * 1 (cd /user/joe/project; make)</div><div class="line"><span class="meta">#</span><span class="bash"> 用filename来替换任何以前版本的crontab文件</span></div><div class="line">crontab filename</div><div class="line"><span class="meta">#</span><span class="bash"> 编辑文件</span></div><div class="line">crontab -e filename</div><div class="line"><span class="meta">#</span><span class="bash"> cron.deny和cron.allow指定哪些用户可以提交crontab文件</span></div><div class="line"><span class="meta">#</span><span class="bash">删除core文件</span></div><div class="line">find / -xdev -type f '(' -name core -o name 'core.[0-9]*' ')' -atime +7 -exec rm -f &#123;&#125; ';'</div><div class="line">find . ! -name  . ! -name lost+found -type d -mtime +3 -exec /bin/rm -rf &#123;&#125; ';'</div></pre></td></tr></table></figure>
+<p>   系统的crontab在/etc/crontab文件中和/etc/cron.d目录中。</p>
+<p>   在/etc/cron.daily中的脚本每天运行一次，在/etc/cron.weekly中的脚本每周运行一次。</p>
+<h2 id="软件安装和管理"><a href="#软件安装和管理" class="headerlink" title="软件安装和管理"></a>软件安装和管理</h2><h3 id="高级软件包管理系统"><a href="#高级软件包管理系统" class="headerlink" title="高级软件包管理系统"></a>高级软件包管理系统</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">rpm -i#安装</div><div class="line">rpm -U #更新</div><div class="line">rpm -e #卸载</div><div class="line">rpm -q #查询</div><div class="line">rpm -qa #显示系统已经安装的软件包的完整清单</div><div class="line">rpm --query --whatrequires openssh#在尝试升级之前判断出会有其他软件包依赖OpenSSH</div><div class="line">dpkg -l | grep package #判断某个软件是否安装的方便途径</div><div class="line">sudo git rm --cached mtab #在当前的库影像里删除mtab文件</div></pre></td></tr></table></figure>
+<ol>
+<li>apt-get 最重要的配置文件是/etc/apt/source.list，它告诉apt-get 到哪里去找它的软件包。规定了软件包的类型，指向一个文件/CD-ROM/HTTP服务器或者FTP服务器的URL，组件可能的清单。</li>
+<li>apt-mirror在/etc/apt/里放了一个叫做mirror.list的文件，在默认情况下，mirror.list包括了正在使用的Ubuntu版本的所有库。</li>
+<li>apt-get dist-upgrade会下载并安装已经在本地机器上安装过的任何软件包的新版本</li>
+<li>默认返回yes来使用-yes选项</li>
+<li>apt-get –download-only自动下载任何改动过的软件包，但是不安装</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;shell基础知识&quot;&gt;&lt;a href=&quot;#shell基础知识&quot; class=&quot;headerlink&quot; title=&quot;shell基础知识&quot;&gt;&lt;/a&gt;shell基础知识&lt;/h2&gt;&lt;figure class=&quot;highlight shell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;t
+    
+    </summary>
+    
+      <category term="操作系统" scheme="https://caixueyuan.github.io/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+    
+      <category term="Linux系统管理技术手册" scheme="https://caixueyuan.github.io/tags/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E6%8A%80%E6%9C%AF%E6%89%8B%E5%86%8C/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>C++标准模板库</title>
+    <link href="https://caixueyuan.github.io/2019/10/25/C-%E6%A0%87%E5%87%86%E6%A8%A1%E6%9D%BF%E5%BA%93/"/>
+    <id>https://caixueyuan.github.io/2019/10/25/C-标准模板库/</id>
+    <published>2019-10-24T16:24:38.000Z</published>
+    <updated>2019-11-07T16:24:50.586Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="string类和标准模板库"><a href="#string类和标准模板库" class="headerlink" title="string类和标准模板库"></a>string类和标准模板库</h2><h3 id="string类"><a href="#string类" class="headerlink" title="string类"></a>string类</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">char</span> info[<span class="number">100</span>];</div><div class="line"><span class="built_in">cin</span> &gt;&gt; info;</div><div class="line"><span class="built_in">cin</span>.getline(info,<span class="number">100</span>);</div><div class="line"><span class="built_in">cin</span>.get(info,<span class="number">100</span>);</div><div class="line"><span class="built_in">cin</span>.getline(info,<span class="string">":"</span>);</div><div class="line"><span class="built_in">string</span> stuff;</div><div class="line"><span class="built_in">cin</span> &gt;&gt; stuff;</div><div class="line">getline(<span class="built_in">cin</span>,stuff);</div><div class="line">getline(stuff,<span class="string">":"</span>);</div></pre></td></tr></table></figure>
+<p>string对象的最大允许长度，由常量string::npos指定，这通常是最大的unsigned int值</p>
+<h3 id="智能指针"><a href="#智能指针" class="headerlink" title="智能指针"></a>智能指针</h3><p><strong>shared_ptr</strong>:创建智能更高的指针，跟踪引用特定对象的智能指针数，引用计数。例如，赋值时，计数将加1，而指针过期时，计数将减1。仅当最后一个指针过期时，才调用delete。</p>
+<p><strong>auto_ptr</strong>：建立所有权概念，对于特定的对象，只能有一个智能指针可拥有它，这样只有拥有对象的智能指针的构造函数会删除该对象。然后，让赋值操作转让所有权。</p>
+<p><strong>unique_ptr</strong>:如果出现了浅拷贝的赋值方式下，会在编译的过程中报错误</p>
+<p>能够使用auto_ptr的地方最好使用unique_ptr，能够在编译的过程中设别浅拷贝风险。</p>
+<p>unique_ptr智能指针有数组和非数组的方式</p>
+<h3 id="函数对象"><a href="#函数对象" class="headerlink" title="函数对象"></a>函数对象</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>&gt;</span></div><div class="line"><span class="title">class</span> <span class="title">TooBig2</span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">private</span>:T cutoff;</div><div class="line">    <span class="keyword">public</span>:</div><div class="line">    TooBig2(<span class="keyword">const</span> T &amp; t):cutoff(t)&#123;&#125;</div><div class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">operator</span><span class="params">()</span><span class="params">(<span class="keyword">const</span> T &amp; v)</span></span>&#123;<span class="keyword">return</span> tooBig&lt;T&gt;(v,cutoff)&#125;<span class="comment">//函数对象</span></div><div class="line">&#125;</div><div class="line"><span class="keyword">template</span>&lt;class T&gt;</div><div class="line"><span class="keyword">bool</span> tooBig(<span class="keyword">const</span> T &amp; val,<span class="keyword">const</span> T &amp; lim)&#123;<span class="keyword">return</span> val&gt;lim;&#125;</div><div class="line"></div><div class="line">TooBig2&lt;<span class="keyword">int</span>&gt; tB100(<span class="number">100</span>);</div><div class="line"><span class="keyword">int</span> x;<span class="built_in">cin</span> &gt;&gt; x;</div><div class="line"><span class="keyword">if</span>(tB100(x))<span class="comment">//same as if (tooBig(x,100))</span></div><div class="line"><span class="comment">//调用tB100(x)相当于调用tooBig(x,100),但两个参数的函数转换为单参数的函数对象，其中第二个参数被用于构建函数对象，简而言之，类函数符TooBig2时一个函数适配器，使得函数能够满足不同的接口</span></div></pre></td></tr></table></figure>
+<p>复制构造函数和移动构造函数</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//复制构造函数</span></div><div class="line">Useless &amp; Useless:<span class="keyword">operator</span>=(<span class="keyword">const</span> Useless &amp; f)</div><div class="line">&#123;</div><div class="line">    <span class="keyword">if</span>(<span class="keyword">this</span> == &amp;f)</div><div class="line">        <span class="keyword">return</span> *<span class="keyword">this</span>;</div><div class="line">    <span class="keyword">delete</span>[] pc;</div><div class="line">    n = f.n;</div><div class="line">    pc = <span class="keyword">new</span> <span class="keyword">char</span>[n];</div><div class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;i++)</div><div class="line">        pc[i]=f.pc[<span class="number">1</span>];</div><div class="line">    <span class="keyword">return</span> *<span class="keyword">this</span>;</div><div class="line">&#125;</div><div class="line"><span class="comment">//移动构造函数</span></div><div class="line">Useless &amp; Useless::<span class="keyword">operator</span>=(Useless &amp;&amp; f)</div><div class="line">&#123;</div><div class="line">    <span class="keyword">if</span>(<span class="keyword">this</span> == &amp;f)</div><div class="line">        <span class="keyword">return</span> *<span class="keyword">this</span>;</div><div class="line">    <span class="keyword">delete</span>[] pc;</div><div class="line">    n = f.n;</div><div class="line">    pc = f.pc;</div><div class="line">    f.n = <span class="number">0</span>;</div><div class="line">    f.pc = <span class="literal">nullptr</span>;</div><div class="line">    <span class="keyword">return</span> *<span class="keyword">this</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//可以使用std::move来强制调用移动构造函数</span></div><div class="line">Useless four = <span class="built_in">std</span>::move(one);</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;string类和标准模板库&quot;&gt;&lt;a href=&quot;#string类和标准模板库&quot; class=&quot;headerlink&quot; title=&quot;string类和标准模板库&quot;&gt;&lt;/a&gt;string类和标准模板库&lt;/h2&gt;&lt;h3 id=&quot;string类&quot;&gt;&lt;a href=&quot;#st
+    
+    </summary>
+    
+      <category term="C++,学习笔记" scheme="https://caixueyuan.github.io/categories/C-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+    
+      <category term="C++" scheme="https://caixueyuan.github.io/tags/C/"/>
+    
+  </entry>
   
   <entry>
     <title>powershell学习笔记</title>
@@ -130,7 +409,7 @@
     <link href="https://caixueyuan.github.io/2019/09/04/C-%E9%AB%98%E7%BA%A7%E7%9F%A5%E8%AF%86/"/>
     <id>https://caixueyuan.github.io/2019/09/04/C-高级知识/</id>
     <published>2019-09-03T16:03:59.000Z</published>
-    <updated>2019-09-03T16:47:55.751Z</updated>
+    <updated>2019-10-23T16:28:45.704Z</updated>
     
     <content type="html"><![CDATA[<h2 id="类模板"><a href="#类模板" class="headerlink" title="类模板"></a>类模板</h2><p><strong>概念解析</strong></p>
 <p>1，隐式实例化:声明一个或者多个对象，指出所需要的类型</p>
@@ -140,6 +419,8 @@
 <p>在这种情况下，没有创建或提及类对象，但是编译器将生成类声明</p>
 <p>3，显式具体化：</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SortedArray</span></span></div><div class="line">&#123;  </div><div class="line">&#125;;</div><div class="line"><span class="keyword">template</span>&lt;&gt; <span class="class"><span class="keyword">class</span> <span class="title">SortedArray</span>&lt;const char *&gt;</span></div><div class="line">&#123;</div><div class="line">    <span class="comment">//显式具体化</span></div><div class="line">&#125;;</div><div class="line">SortedArray&lt;<span class="keyword">int</span>&gt; scores;<span class="comment">//使用第一个</span></div><div class="line">SortedArray&lt;con <span class="keyword">char</span> *&gt; detes;<span class="comment">//使用第二个</span></div></pre></td></tr></table></figure>
+<h3 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">double</span> <span class="title">marm</span><span class="params">()</span> <span class="keyword">noexcept</span></span>;<span class="comment">//标志marm不抛出任何错误</span></div><div class="line"><span class="keyword">int</span> *pi = <span class="keyword">new</span> (<span class="built_in">std</span>::nothrow)<span class="keyword">int</span>;<span class="comment">//如果出现分配内存失败不会报错误，而是返回空指针</span></div></pre></td></tr></table></figure>
+<p>引发异常时总是创建一个临时拷贝，即使异常规范和catch块中指定的是引用。基类引用可以执行派生类对象。</p>
 ]]></content>
     
     <summary type="html">
@@ -1071,156 +1352,6 @@
     <summary type="html">
     
       &lt;h2 id=&quot;类概念&quot;&gt;&lt;a href=&quot;#类概念&quot; class=&quot;headerlink&quot; title=&quot;类概念&quot;&gt;&lt;/a&gt;类概念&lt;/h2&gt;&lt;figure class=&quot;highlight cpp&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div
-    
-    </summary>
-    
-      <category term="C++" scheme="https://caixueyuan.github.io/categories/C/"/>
-    
-    
-      <category term="C++基础" scheme="https://caixueyuan.github.io/tags/C-%E5%9F%BA%E7%A1%80/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>&#39;C++基础知识&#39;</title>
-    <link href="https://caixueyuan.github.io/2018/09/23/C-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/"/>
-    <id>https://caixueyuan.github.io/2018/09/23/C-基础知识/</id>
-    <published>2018-09-23T13:10:59.000Z</published>
-    <updated>2019-03-18T16:05:05.322Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="指针和引用"><a href="#指针和引用" class="headerlink" title="指针和引用"></a>指针和引用</h2><p>指针是“指向”另外一种类型的复合类型。和引用类似，指针也实现了对其他对象的间接访问。然而指针和引用相比又有很多不相同点。</p>
-<blockquote>
-<ul>
-<li>指针本身就是一个对象，允许对指针赋值和靠背，而且在指针的生命周期内它可以先后指向几个不同的对象</li>
-<li>指针无需在定义的时候赋初值</li>
-<li>和其他内置对象类型一样，在块作用域中定义的指针如果没有被初始化，也将拥有一个不确定的值</li>
-</ul>
-</blockquote>
-<h2 id="语句"><a href="#语句" class="headerlink" title="语句"></a>语句</h2><p><strong>case标签</strong>：switch…case中case标签必须是整形常量表达式。</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span>(deltype(s.size())index = <span class="number">0</span>;index!= s.size() &amp;&amp; !<span class="built_in">isspace</span>(s[index]);++index)&#123;</div><div class="line">    s[index]=<span class="built_in">toupper</span>(s[index]);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>错误类型</p>
-<blockquote>
-<ul>
-<li>exception最常见的问题</li>
-<li>runtime_error只有在运行的时候才能够检测出来的问题</li>
-<li>range_error运行时错误，生成的结果超过了有意义的值域范围</li>
-<li>overflow_error:运行时错误：计算上溢</li>
-<li>underflow_error:运行时错误：计算下溢</li>
-<li>logic_error：程序逻辑错误</li>
-<li>domain_error:逻辑错误：参数对应的结果不存在</li>
-<li>invalid_argument:逻辑错误：无效参数</li>
-<li>length_error：逻辑错误，试图创建一个超出该类型最大长度的对象</li>
-<li>out_of_range：逻辑错误：使用一个超过有效范围的值</li>
-</ul>
-</blockquote>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">try</span>&#123;</div><div class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> runtime_error(<span class="string">"abc"</span>);</div><div class="line">&#125;</div><div class="line"><span class="keyword">catch</span>(runtime_error err)&#123;</div><div class="line">    <span class="built_in">cout</span>&lt;&lt;err.what()&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><p><strong>函数的返回值不能是数组类型或者函数类型，但可以是指向数组或函数的指针</strong></p>
-<p><strong>局部静态对象</strong>：在程序的执行路径第一次经过对象定义语句时初始化，并且直到程序终止才被销毁。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">size_t</span> count_calls()</div><div class="line">&#123;</div><div class="line">    <span class="keyword">static</span> <span class="keyword">size_t</span> ctr = <span class="number">0</span>;<span class="comment">//调用结束后，这个值仍然有效</span></div><div class="line">    <span class="keyword">return</span> ++ctr;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h3 id="编译程序"><a href="#编译程序" class="headerlink" title="编译程序"></a>编译程序</h3><p>分离式编译<br><figure class="highlight stata"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">CC</span> factMain.<span class="keyword">cc</span> <span class="keyword">fact</span>.<span class="keyword">cc</span></div><div class="line"><span class="keyword">CC</span> factMain.<span class="keyword">cc</span> <span class="keyword">fact</span>.<span class="keyword">cc</span> -o main</div></pre></td></tr></table></figure></p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">CC -c factMain<span class="selector-class">.cc</span></div><div class="line">CC -c fact<span class="selector-class">.cc</span></div><div class="line">CC factMain<span class="selector-class">.o</span> fact<span class="selector-class">.o</span></div><div class="line">CC factMain<span class="selector-class">.o</span> fact<span class="selector-class">.o</span> -o main</div></pre></td></tr></table></figure>
-<h3 id="参数传递"><a href="#参数传递" class="headerlink" title="参数传递"></a>参数传递</h3><p><strong>传值参数</strong>：</p>
-<blockquote>
-<ul>
-<li>传基本类型</li>
-<li>指针形参：指针也是值，当执行指针拷贝操作时，拷贝的是指针的值。拷贝之后，两个指针是不同的指针。</li>
-</ul>
-</blockquote>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">reset</span><span class="params">(<span class="keyword">int</span> *ip)</span></span></div><div class="line">&#123;</div><div class="line">    *ip = <span class="number">0</span>;<span class="comment">//改变指针ip所指对象的值</span></div><div class="line">    ip = <span class="number">0</span>;<span class="comment">//只改变了ip的局部拷贝，实参没有改变</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><strong>传引用参数</strong>：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">reset</span><span class="params">(<span class="keyword">int</span> &amp;i)</span></span></div><div class="line">&#123;</div><div class="line">    i = <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>使用引用的好处是：</p>
-<blockquote>
-<ul>
-<li>使用引用避免拷贝</li>
-<li>使用引用形参返回额外信息。</li>
-</ul>
-</blockquote>
-<p>顶层和底层const<br><strong>顶层const表示指针本身是个常量，底层const表示指针所指的对象是一个常量</strong></p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> i = <span class="number">0</span>;</div><div class="line"><span class="keyword">int</span> *<span class="keyword">const</span> p1 = &amp;i;<span class="comment">//不能够修改p1的值，这是一个顶层const</span></div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> ci = <span class="number">42</span>;<span class="comment">//不能修改ci的值，这是一个顶层的const</span></div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> *p2 = &amp;ci;<span class="comment">//允许修改p2的值，这是一个底层的const</span></div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> *<span class="keyword">const</span> p3 = p2;</div></pre></td></tr></table></figure>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;指针和引用&quot;&gt;&lt;a href=&quot;#指针和引用&quot; class=&quot;headerlink&quot; title=&quot;指针和引用&quot;&gt;&lt;/a&gt;指针和引用&lt;/h2&gt;&lt;p&gt;指针是“指向”另外一种类型的复合类型。和引用类似，指针也实现了对其他对象的间接访问。然而指针和引用相比又有很多不相同
-    
-    </summary>
-    
-      <category term="C++" scheme="https://caixueyuan.github.io/categories/C/"/>
-    
-    
-      <category term="C++基础" scheme="https://caixueyuan.github.io/tags/C-%E5%9F%BA%E7%A1%80/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>&#39;C++算术运算符&#39;</title>
-    <link href="https://caixueyuan.github.io/2018/09/23/C-%E7%AE%97%E6%9C%AF%E8%BF%90%E7%AE%97%E7%AC%A6/"/>
-    <id>https://caixueyuan.github.io/2018/09/23/C-算术运算符/</id>
-    <published>2018-09-23T09:25:11.000Z</published>
-    <updated>2018-09-23T11:15:34.079Z</updated>
-    
-    <content type="html"><![CDATA[<p>##赋值运算符</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> i;</div><div class="line"><span class="keyword">while</span>((i=get_value()) != <span class="number">42</span>)&#123;</div><div class="line">    <span class="comment">//其他处理</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>sizeof运算符的结果部分地依赖于其作用的类型：</p>
-<blockquote>
-<ul>
-<li>对char或者类型为char的表达式执行sizeof运算，结果为1</li>
-<li>对引用类型执行sizeof运算得到被引用对象所占的空间的大小</li>
-<li>对指针执行sizeof运算得到指针本身所占空间的大小</li>
-<li>对解引用指针执行sizeof运算得到指针所指向的对象所占空间的大小，指针不需要有效</li>
-<li>对数组执行sizeof运算得到整个数组所占空间的大小，等价于对数组中所有的元素各执行一次sizeof运算并将所得到的结果求和</li>
-<li>对string对象或vector对象执行sizeof运算只返回该类型固定部分的大小，不会计算对象中的元素占用了多少空间</li>
-</ul>
-</blockquote>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">constexpr</span> <span class="keyword">size_t</span> sz=<span class="keyword">sizeof</span>(ia)/<span class="keyword">sizeof</span>(*ia);<span class="comment">//得到ia元素的个数</span></div></pre></td></tr></table></figure>
-<h2 id="强制类型转换"><a href="#强制类型转换" class="headerlink" title="强制类型转换"></a>强制类型转换</h2><p><strong>static_cast</strong>:作用域任何具有明确定义的类型转换，只要不包含底层const，都可以使用static_cast.<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span>* p = &amp;d;<span class="comment">//正确：任何非常量对象的地址都能够存入void*</span></div><div class="line"><span class="keyword">double</span> *dp = <span class="keyword">static_cast</span>&lt;<span class="keyword">double</span>*&gt;(p);<span class="comment">//正确，将void*转换回初始的指针类型</span></div></pre></td></tr></table></figure></p>
-<p><strong>const_cast</strong>:只能改变运算对象的底层const。能够将常量对象转换成非常量对象的行为。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> <span class="keyword">char</span> *pc;</div><div class="line"><span class="keyword">char</span> *p = <span class="keyword">const_cast</span>&lt;<span class="keyword">char</span>*&gt;(pc);</div></pre></td></tr></table></figure></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;##赋值运算符&lt;/p&gt;
-&lt;figure class=&quot;highlight cpp&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class
-    
-    </summary>
-    
-      <category term="C++" scheme="https://caixueyuan.github.io/categories/C/"/>
-    
-    
-      <category term="C++基础" scheme="https://caixueyuan.github.io/tags/C-%E5%9F%BA%E7%A1%80/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>指针与引用</title>
-    <link href="https://caixueyuan.github.io/2018/09/11/%E6%8C%87%E9%92%88%E4%B8%8E%E5%BC%95%E7%94%A8/"/>
-    <id>https://caixueyuan.github.io/2018/09/11/指针与引用/</id>
-    <published>2018-09-11T14:07:02.000Z</published>
-    <updated>2018-09-23T07:57:16.028Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>引用为对象起了另外一个名字，引用类型引用另外一种类型，引用类型的初始值必须是一个对象。<br><code>int &amp;refVal4 = 10</code>这种引用类型不是一个对象。</p>
-<p>指针本身是一个对象，允许对指针赋值和拷贝，而且在指针的生命周期内可以先后指向几个不同的对象。其二,指针无需在定义时赋初值。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> ival = <span class="number">42</span>;</div><div class="line"><span class="keyword">int</span> *p = &amp;ival;<span class="comment">//&amp;是取地址符，存放变量ival的地址，或者说p是指向变量ival的指针。</span></div><div class="line"><span class="comment">//第二条语句把p定义为一个指向int的指针，随后初始化p让其指向名为ival的int对象。</span></div><div class="line"><span class="keyword">int</span> *p;</div><div class="line">p = &amp;ival;</div></pre></td></tr></table></figure></p>
-<p>在constexpr声明中，如果定义了一个指针，限定符constexpr仅仅对指针有效，与指针所指的对象无关。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> *p = <span class="literal">nullptr</span>;<span class="comment">//p是一个指向整形常量的指针</span></div><div class="line"><span class="keyword">constexpr</span> <span class="keyword">int</span> *q = <span class="literal">nullptr</span>;<span class="comment">//q是一个指向整数的常量指针</span></div></pre></td></tr></table></figure></p>
-<h3 id="使用别名"><a href="#使用别名" class="headerlink" title="使用别名"></a>使用别名</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="keyword">double</span> wages;</div><div class="line"><span class="keyword">using</span> SI= Sales_Item;</div></pre></td></tr></table></figure>
-<h3 id="decltype类型指示符"><a href="#decltype类型指示符" class="headerlink" title="decltype类型指示符"></a>decltype类型指示符</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">decltype</span>(f()) sum = x;<span class="comment">//sum的类型就是函数f的返回类型</span></div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> ci =<span class="number">0</span>,&amp;cj = ci;</div><div class="line"><span class="keyword">decltype</span>(ci) x = <span class="number">0</span>;<span class="comment">//x的类型是const int</span></div><div class="line"><span class="keyword">decltype</span>(cj) y = x;<span class="comment">//y的类型是const int&amp;，y绑定到变量x</span></div><div class="line"><span class="keyword">decltype</span>(cj) z;<span class="comment">//错误，引用不能够为空</span></div><div class="line"><span class="keyword">int</span> i=<span class="number">42</span>,*p = &amp;i;</div><div class="line"><span class="keyword">decltype</span>(*p) c;<span class="comment">//解引用指针可以得到指针所指定的对象，而且给这个对象赋值，因为结果是int&amp;</span></div></pre></td></tr></table></figure>
-<h3 id="vector"><a href="#vector" class="headerlink" title="vector"></a>vector</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; v1(<span class="number">10</span>)<span class="comment">//v1有10个元素，每个元素的值都是0</span></div><div class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; v2&#123;<span class="number">10</span>&#125;<span class="comment">//v2有1个元素，元素的值为0</span></div><div class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; v3(<span class="number">10</span>,<span class="number">1</span>)<span class="comment">//v3有10个元素，每个元素的值都是1</span></div><div class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; v4&#123;<span class="number">10</span>,<span class="number">1</span>&#125;<span class="comment">//v4有2个元素，元素的值为10,1</span></div></pre></td></tr></table></figure>
-<p>vector对象的下标对象运算符可用于访问已存在的元素,而不能够用于添加元素。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="built_in">string</span> <span class="title">s</span><span class="params">(<span class="string">"some string"</span>)</span></span>;</div><div class="line"><span class="keyword">if</span> (s.begin() != s.end())&#123;</div><div class="line">    <span class="keyword">auto</span> it = s.begin();</div><div class="line">    *it = <span class="built_in">toupper</span>(*it);</div><div class="line">&#125;</div><div class="line"><span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; s &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line"></div><div class="line"><span class="keyword">for</span> (<span class="keyword">auto</span> it = s.begin(); it != s.end() &amp;&amp; !<span class="built_in">isspace</span>(*it); it++)&#123;</div><div class="line">    *it = <span class="built_in">toupper</span>(*it);</div><div class="line">&#125;</div><div class="line"><span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; s &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div></pre></td></tr></table></figure>
-<p>迭代器类型<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//读写类型</span></div><div class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;::iterator it;</div><div class="line"><span class="built_in">string</span>::iterator it2;</div><div class="line"><span class="comment">//只读类型</span></div><div class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;::const_iterator it3;</div><div class="line"><span class="built_in">string</span>::const_iterator it4;</div></pre></td></tr></table></figure></p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; v;</div><div class="line"><span class="keyword">const</span> <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; cv;</div><div class="line"><span class="keyword">auto</span> it1 = v.begin();<span class="comment">//it1的类型是vector&lt;int&gt;::iterator</span></div><div class="line"><span class="keyword">auto</span> it2 = cv.begin();<span class="comment">//it2的类型是vector&lt;int&gt;::const_iterator</span></div><div class="line"><span class="keyword">auto</span> it3 = v.cbegin();<span class="comment">//it3的类型是vector&lt;int&gt;::const_iterator</span></div><div class="line">（*it).empty()等于it-&gt;empty()<span class="comment">//it为迭代器</span></div></pre></td></tr></table></figure>
-<h3 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h3><p>定义数组时一定要保证数组的个数为常量，定义数组时一定要定义数组的类型，不能够是使用auto<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">unsigned</span> cnt = <span class="number">12</span>;</div><div class="line"><span class="keyword">constexpr</span> <span class="keyword">unsigned</span> cnt1 = <span class="number">12</span>;<span class="comment">//常量表达式</span></div><div class="line"><span class="built_in">string</span> bad[cnt];<span class="comment">//错误，cnt不是常量表达式</span></div></pre></td></tr></table></figure></p>
-<p>字符数组的特殊性<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">char</span> a3[] = <span class="string">"C++"</span><span class="comment">//自动添加表示字符串结束的空字符</span></div><div class="line"><span class="keyword">const</span> <span class="keyword">char</span> a4[<span class="number">6</span>] = <span class="string">"Deniel"</span>;<span class="comment">//错误，没有空间可存放空字符</span></div></pre></td></tr></table></figure></p>
-<p><strong>注意</strong>：不能够将数组拷贝给其他数组作为初始值</p>
-<figure class="highlight 1c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">int (*Parray)[<span class="number">10</span>] = <span class="meta">&amp;arr;<span class="comment">//Parray指向一个含有10个整数的数组</span></span></div><div class="line">int (<span class="meta">&amp;arrRef)[10] = arr;<span class="comment">//arrRef引用一个含有10个整数的数组</span></span></div></pre></td></tr></table></figure>
-<p><strong>指针和数组</strong>：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">string</span> nums[] = &#123;<span class="string">"one"</span>,<span class="string">"two"</span>,<span class="string">"three"</span>&#125;;</div><div class="line"><span class="built_in">string</span> *p = &amp;nums[<span class="number">0</span>];</div><div class="line"><span class="built_in">string</span> *p2 = nums;<span class="comment">//等价于string *p = &amp;nums[0];</span></div><div class="line"><span class="function"><span class="keyword">auto</span> <span class="title">ia2</span><span class="params">(nums)</span></span>;<span class="comment">//ia2是一个整形指针，指向ia的第一个元素</span></div></pre></td></tr></table></figure></p>
-<p>数组输出全部元素<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> *e = &amp;arr[<span class="number">10</span>];<span class="comment">//arr有10个元素</span></div><div class="line"><span class="keyword">for</span>(<span class="keyword">int</span> *b = &amp;arr;b!=e;b++)&#123;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span>&lt;&lt;*b&lt;&lt;<span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>数组的函数<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">int arr[] = &#123;<span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>&#125;;</div><div class="line">int *pbeg = begin(arr);</div><div class="line">int *pend = end(arr);</div><div class="line">while(pbeg != pend &amp;&amp; *pbeg &gt;= <span class="number">0</span>)</div><div class="line">    ++pbeg;</div></pre></td></tr></table></figure></p>
-<p>只有同一相关对象的指针才能够比较，不相关对象的指针不能够进行比较。</p>
-<h3 id="多维数组的下标引用"><a href="#多维数组的下标引用" class="headerlink" title="多维数组的下标引用"></a>多维数组的下标引用</h3><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">int ia[<span class="number">3</span>][<span class="number">4</span>]=&#123;</div><div class="line">    &#123;<span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>&#125;,</div><div class="line">    &#123;<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>&#125;,</div><div class="line">    &#123;<span class="number">8</span>,<span class="number">9</span>,<span class="number">10</span>,<span class="number">11</span>&#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">int (&amp;row)[<span class="number">4</span>] = ia[<span class="number">1</span>];<span class="comment">//把row绑定到ia的第二个4元素数组上</span></div><div class="line"><span class="comment">//把row定义为一个含有4个整数的数组的引用，然后将其绑定到ia的第2行。</span></div></pre></td></tr></table></figure>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;概念&quot;&gt;&lt;a href=&quot;#概念&quot; class=&quot;headerlink&quot; title=&quot;概念&quot;&gt;&lt;/a&gt;概念&lt;/h2&gt;&lt;p&gt;引用为对象起了另外一个名字，引用类型引用另外一种类型，引用类型的初始值必须是一个对象。&lt;br&gt;&lt;code&gt;int &amp;amp;refVal4 
     
     </summary>
     
