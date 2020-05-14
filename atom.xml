@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://caixueyuan.github.io/"/>
-  <updated>2020-05-13T16:15:41.422Z</updated>
+  <updated>2020-05-14T16:01:21.120Z</updated>
   <id>https://caixueyuan.github.io/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="https://caixueyuan.github.io/2020/05/12/%E8%80%83%E8%AF%95/"/>
     <id>https://caixueyuan.github.io/2020/05/12/考试/</id>
     <published>2020-05-12T15:37:04.000Z</published>
-    <updated>2020-05-13T16:15:41.422Z</updated>
+    <updated>2020-05-14T16:01:21.120Z</updated>
     
     <content type="html"><![CDATA[<h2 id="2020-05-12"><a href="#2020-05-12" class="headerlink" title="2020/05/12"></a>2020/05/12</h2><p><strong>错题一</strong>：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</div><div class="line">    <span class="keyword">static</span> <span class="keyword">int</span> x = <span class="number">10</span>;</div><div class="line"></div><div class="line">    <span class="keyword">static</span>&#123;</div><div class="line">        x+=<span class="number">5</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</div><div class="line">        System.out.println(<span class="string">"x="</span>+Test.x);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">static</span>&#123;</div><div class="line">        x = x/<span class="number">3</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="comment">//结果：运行正确，结果为0</span></div></pre></td></tr></table></figure>
@@ -77,6 +77,13 @@
 <p>静态方法不能访问非静态变量，A和C错；</p>
 <p>抽象类中的抽象方法不能有方法体，B错；</p>
 <p>一个类中有多个类声明时，只能有一个public类，D错</p>
+<h2 id="2020-05-14"><a href="#2020-05-14" class="headerlink" title="2020/05/14"></a>2020/05/14</h2><p><strong>错误一</strong>：JAVA 子类重写继承的方法时,不可以降低方法的访问权限，子类继承父类的访问修饰符要比父类的更大，也就是更加开放，假如我父类是protected修饰的，其子类只能是protected或者public。接口中方法默认是 abstract public,所以在接口只写函数声明是符合语法规则<strong>。但是</strong>变量默认是用public final static 修饰的，意思它是静态常量，常量不管在接口中还是类中必须在声明时初始化，必须在声明时并给出初始化。接口中只有常量定义，没有变量声明。**</p>
+<p><strong>错误二</strong>：</p>
+<p>java的访问权限有public、protected、private和default的，default不能修饰变量</p>
+<p><strong>错误三：</strong></p>
+<p>堆区：只存放类对象，线程共享；</p>
+<p>方法区：又叫静态存储区，存放class文件和静态数据，线程共享;</p>
+<p>栈区：存放方法局部变量，基本类型变量区、执行环境上下文、操作指令区，线程不共享;</p>
 ]]></content>
     
     <summary type="html">

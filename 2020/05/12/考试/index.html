@@ -109,7 +109,7 @@
 <meta property="og:image" content="https://caixueyuan.github.io/2020/05/12/考试/image-20200514000324218.png">
 <meta property="og:image" content="https://caixueyuan.github.io/2020/05/12/考试/image-20200514000920753.png">
 <meta property="og:image" content="https://caixueyuan.github.io/2020/05/12/考试/image-20200514001436984.png">
-<meta property="og:updated_time" content="2020-05-13T16:15:41.422Z">
+<meta property="og:updated_time" content="2020-05-14T16:01:21.120Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="考试">
 <meta name="twitter:description" content="2020/05/12错题一： 12345678910111213141516public class Test &amp;#123;    static int x = 10;    static&amp;#123;        x+=5;    &amp;#125;    public static void main(String[] args)&amp;#123;        System.out.println(&quot;x">
@@ -427,6 +427,13 @@
 <p>静态方法不能访问非静态变量，A和C错；</p>
 <p>抽象类中的抽象方法不能有方法体，B错；</p>
 <p>一个类中有多个类声明时，只能有一个public类，D错</p>
+<h2 id="2020-05-14"><a href="#2020-05-14" class="headerlink" title="2020/05/14"></a>2020/05/14</h2><p><strong>错误一</strong>：JAVA 子类重写继承的方法时,不可以降低方法的访问权限，子类继承父类的访问修饰符要比父类的更大，也就是更加开放，假如我父类是protected修饰的，其子类只能是protected或者public。接口中方法默认是 abstract public,所以在接口只写函数声明是符合语法规则<strong>。但是</strong>变量默认是用public final static 修饰的，意思它是静态常量，常量不管在接口中还是类中必须在声明时初始化，必须在声明时并给出初始化。接口中只有常量定义，没有变量声明。**</p>
+<p><strong>错误二</strong>：</p>
+<p>java的访问权限有public、protected、private和default的，default不能修饰变量</p>
+<p><strong>错误三：</strong></p>
+<p>堆区：只存放类对象，线程共享；</p>
+<p>方法区：又叫静态存储区，存放class文件和静态数据，线程共享;</p>
+<p>栈区：存放方法局部变量，基本类型变量区、执行环境上下文、操作指令区，线程不共享;</p>
 
       
     </div>
@@ -613,7 +620,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#2020-05-12"><span class="nav-number">1.</span> <span class="nav-text">2020/05/12</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2020-05-13"><span class="nav-number">2.</span> <span class="nav-text">2020/05/13</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#2020-05-12"><span class="nav-number">1.</span> <span class="nav-text">2020/05/12</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2020-05-13"><span class="nav-number">2.</span> <span class="nav-text">2020/05/13</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2020-05-14"><span class="nav-number">3.</span> <span class="nav-text">2020/05/14</span></a></li></ol></div>
             
 
           </div>
