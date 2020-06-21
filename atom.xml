@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://caixueyuan.github.io/"/>
-  <updated>2020-06-14T16:05:46.761Z</updated>
+  <updated>2020-06-21T14:45:43.291Z</updated>
   <id>https://caixueyuan.github.io/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="https://caixueyuan.github.io/2020/06/14/Java8%E6%96%B0%E7%89%B9%E6%80%A7/"/>
     <id>https://caixueyuan.github.io/2020/06/14/Java8新特性/</id>
     <published>2020-06-14T01:14:30.000Z</published>
-    <updated>2020-06-14T16:05:46.761Z</updated>
+    <updated>2020-06-21T14:45:43.291Z</updated>
     
     <content type="html"><![CDATA[<h2 id="通过行为参数化传递代码"><a href="#通过行为参数化传递代码" class="headerlink" title="通过行为参数化传递代码"></a>通过行为参数化传递代码</h2><p>作用：软件原则DRY（Don’t repeat yourself,不要重复自己）</p>
 <p><strong>概念</strong>：让方法接受多种行为作为参数，并在内部使用，来完成不同的行为。</p>
@@ -66,6 +66,45 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">List&lt;String&gt; uniqueCharactors = words.stream()</div><div class="line">    .map(w -&gt; w.split(<span class="string">""</span>))</div><div class="line">    .floatMap(Arrays::stream)</div><div class="line">    .distinct()</div><div class="line">    .collect(Collectors.toList());</div></pre></td></tr></table></figure>
 <p><strong>findFirst和findAny的区别</strong>：找到第一个元素在并行上限制更多，如果不关心返回的元素是那个的话，请使用findAny，因为它在使用并行时限制较少</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">List&lt;Integer&gt; someNumbers = Arrays.asList(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>);</div><div class="line">Optional&lt;Integer&gt; firstSquareDevisibleByThree = someNumbers.stream()</div><div class="line">    .map(x -&gt; x * x)</div><div class="line">    .filter(x -&gt; x % <span class="number">3</span> == <span class="number">0</span>)</div><div class="line">    .findFirst();</div></pre></td></tr></table></figure>
+<h2 id="用流收集数据"><a href="#用流收集数据" class="headerlink" title="用流收集数据"></a>用流收集数据</h2><p>流支持两种类型的操作：中间操作和终端操作。中间操作可以链接起来，将一个流转换成一个流。这些操作不会消耗流，其目的是建立一个流水线。与此相反，终端操作会消耗流，以产生一个最终结果。比如返回流中的最大元素。他们通常可以通过优化流水线来缩短计算时间。</p>
+<h3 id="归约和汇总"><a href="#归约和汇总" class="headerlink" title="归约和汇总"></a>归约和汇总</h3><p><strong>查找流中的最大值和最小值</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Comparator&lt;Dish&gt; dishCaleriesComparator = Comparator.comparingInt(Dish::getCalories);</div><div class="line">Optional&lt;Dish&gt; mostCaloriesDish = menu.stream().collect(maxBy(dishCaloriesComparator));</div></pre></td></tr></table></figure>
+<p>Java 8引入了Optional，它是一个容器，可以包含也可以不包含值。这里它完美地代表了可能也可能不返回菜肴的情况。</p>
+<p><strong>汇总</strong>，可接受一个把对象映射为求和所需要的int函数，并返回一个收集器；该收集器在传递给普通的collect方法后即执行我们所需要的汇总操作。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> <span class="keyword">static</span> java.util.stream.Collectors.summingInt;</div><div class="line"><span class="keyword">int</span> totalCalories = menu.stream().collect(summingInt(Dish::getCalories()));</div></pre></td></tr></table></figure>
+<p><strong>连接字符串</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">String shortMenu = menu.stream().map(Dish::getName).collect(joining(<span class="string">", "</span>));</div></pre></td></tr></table></figure>
+<p> <strong>广义归约汇总</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> totalCalories = menu.stream().collect(reducing(<span class="number">0</span>,Dish::getCalories,(i,j) -&gt; i+j));</div><div class="line">Optional&lt;Dish&gt; mostCalorieDish = menu.stream().collect(reducing((d1,d2) -&gt; d1.getCalories() &gt; d2.getCalories() ? d1 : d2));</div></pre></td></tr></table></figure>
+<p><strong>分组</strong>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Map&lt;Dish.Type,List&lt;Dish&gt;&gt; dishesByType = menu.stream().collect(groupingBy(Dish::getType));</div></pre></td></tr></table></figure>
+<p><strong>按照子组收集数据</strong>:传递给第一个groupingBy的第二个收集器可以是任何类型，而不一定是另一个groupingBy.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Map&lt;Dish.Type,Long&gt; typesCount = menu.stream().collect(groupingBy(Dish::getType,counting()));</div><div class="line">Map&lt;Dish.Type,Dish&gt; mostCaloricByType = menu.stream().collect(groupingBy(Dish::getType,collectingAndThen(</div><div class="line">	maxBy(comparingInt(Dish::getCalories)),Optional::get)));</div></pre></td></tr></table></figure>
+<p><strong>分区</strong>：由一个谓语作为分类函数，它分分区函数。分区函数返回一个布尔值</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Map&lt;Boolean,List&lt;Dish&gt;&gt; partiotionedMenu = menu.stream().collect(partitioningBy(Dish::isVegetarian));</div></pre></td></tr></table></figure>
+<p>将数字按照质数和非质数分区</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isPrime</span><span class="params">(<span class="keyword">int</span> candidate)</span></span>&#123;</div><div class="line">    <span class="keyword">return</span> IntStream.range(<span class="number">2</span>,candidate).noneMatch(i -&gt; candidate % i == <span class="number">0</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="收集器接口"><a href="#收集器接口" class="headerlink" title="收集器接口"></a>收集器接口</h3><p><strong>supplier</strong>:必须返回一个接口为空的Supplier，也就是一个无参数函数，在调用时它会创建一个空的累加器实例，供数据收集过程使用</p>
+<p><strong>accumulator</strong>:返回执行归约操作的函数，当遍历到流中第n个元素时，这个函数执行时会有两个参数：保存归约结果的累加器，还有第n个元素本身</p>
+<p><strong>finisher</strong>：在遍历完流后，finisher方法必须返回在累积过程中的最后要调用的一个函数，以便将累加器对象转换为整个集合操作的最终结果。</p>
+<p><strong>combiner</strong>:定义对流中的各个子部分进行并行处理时，各个子部分归约所得的累加器要如何合并。</p>
+<p><strong>characteristics</strong>:返回一个不可变的Characteristics集合，定义了收集器的行为。</p>
+<ol>
+<li>UNORDERED——归约结果不受流中项目的遍历和累积顺序的影响</li>
+<li>CONCURRENT——accumulator函数可以从多个线程同时调用，且该收集器可以并行归约流。如果收集器没有标为UNORDERED，那它仅在用于无序数据源时才可以并行归约</li>
+<li>IDENTITY_FINISH——这表明完成器方法返回的函数是一个恒等函数，可以跳过。将累加器A不加检查地转换为结果R是安全的</li>
+</ol>
+<h2 id="并行数据处理和性能"><a href="#并行数据处理和性能" class="headerlink" title="并行数据处理和性能"></a>并行数据处理和性能</h2><h3 id="并行流"><a href="#并行流" class="headerlink" title="并行流"></a>并行流</h3><p>可以通过对收集源调用parallelStream方法来把集合转换为并行流。并行流就是一个把内容分为多个数据块，并用不同的线程分别处理每个数据块的流。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">long</span> <span class="title">parallelSum</span><span class="params">(<span class="keyword">long</span> n)</span></span>&#123;</div><div class="line">    <span class="keyword">return</span> Stream.iterate(<span class="number">1L</span>,i-&gt;i+<span class="number">1</span>)<span class="comment">//顺序处理</span></div><div class="line">        .limit(n)</div><div class="line">        .parallel()</div><div class="line">        .reduce(<span class="number">0L</span>,Long::sum);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>配置并行流使用的线程池：默认情况下使用的线程池的个数为处理器的数量，这个值为<code>Runtime.getRuntime().available-Processors()</code>得到的。可以通过修改系统属性<code>java.util.concurrent.ForkJoinPool.common.parallelism</code>来改变线程池大小。</p>
+<p>把流标记为并行，其实是给顺序处理增加开销，还要把每次求和操作分到一个不同的线程中。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">long</span> <span class="title">parallelRangedSum</span><span class="params">(<span class="keyword">long</span> n)</span></span>&#123;</div><div class="line">    <span class="keyword">return</span> LongStream.rangeClosed(<span class="number">1</span>,n)</div><div class="line">        .parallel()</div><div class="line">        .reduce(<span class="number">0L</span>,Long::sum);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>并行化过程本身需要对流进行递归划分，把每个子流的归纳操作分配到不同的线程，然后把这些操作的结果合并到一个值。</p>
+<h3 id="分支-合并框架"><a href="#分支-合并框架" class="headerlink" title="分支/合并框架"></a>分支/合并框架</h3><p>分支/合并框架的目的是以递归方式将可以并行的任务拆分为更小的任务，然后将每个子任务的结果合并起来生成整体结果。</p>
+<p><strong>RecursiveTask</strong>：并行任务，结果有返回值</p>
+<p><strong>RecursiveAction</strong>：并行任务，结果没有返回值</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">protected</span> Long <span class="title">compute</span><span class="params">()</span></span>&#123;</div><div class="line">    <span class="keyword">int</span> length = end - start;</div><div class="line">    <span class="keyword">if</span>(length &lt;= THRESHOLD)&#123;</div><div class="line">        <span class="keyword">return</span> computeSequentially();</div><div class="line">    &#125;</div><div class="line">    ForkJoinSumCalculator leftTask = <span class="keyword">new</span> ForkJoinSumCalculator(numbers,start,start+length/<span class="number">2</span>);</div><div class="line">    leftTask.fork();</div><div class="line">    ForkJoinSumCalculator rightTask = <span class="keyword">new</span> ForkJoinSumCalculator(numbers,start+length/<span class="number">2</span>,end);</div><div class="line">    Long rightResult = rightTask.compute();<span class="comment">//第一个线程</span></div><div class="line">    Long leftResult = leftTask.join();<span class="comment">//第二个线程，对于一个任务调用join方法会阻塞调用方，直到该任务做出结果</span></div><div class="line">    <span class="keyword">return</span> leftResult + rightResult;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>Spliterator</strong>:</p>
 ]]></content>
     
     <summary type="html">
