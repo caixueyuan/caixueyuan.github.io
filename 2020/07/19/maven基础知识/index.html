@@ -1,0 +1,835 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Java构建," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="caixueyuan" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="maven核心概念生命周期Clean生命周期：  pre-clean:执行清理前需要完成的工作 clean:清理上一次构建过程中生成的文件，比如编译后的class文件 post-clean:执行清理后需要完成的工作  default生命周期：  validate:验证项目结构是否正常，必要的配置文件是否存在 initialize:做构建前的初始化操作，比如初始化参数，创建必要的目录 generat">
+<meta name="keywords" content="Java构建">
+<meta property="og:type" content="article">
+<meta property="og:title" content="maven基础知识">
+<meta property="og:url" content="https://caixueyuan.github.io/2020/07/19/maven基础知识/index.html">
+<meta property="og:site_name" content="caixueyuan">
+<meta property="og:description" content="maven核心概念生命周期Clean生命周期：  pre-clean:执行清理前需要完成的工作 clean:清理上一次构建过程中生成的文件，比如编译后的class文件 post-clean:执行清理后需要完成的工作  default生命周期：  validate:验证项目结构是否正常，必要的配置文件是否存在 initialize:做构建前的初始化操作，比如初始化参数，创建必要的目录 generat">
+<meta property="og:updated_time" content="2020-08-06T15:40:40.313Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="maven基础知识">
+<meta name="twitter:description" content="maven核心概念生命周期Clean生命周期：  pre-clean:执行清理前需要完成的工作 clean:清理上一次构建过程中生成的文件，比如编译后的class文件 post-clean:执行清理后需要完成的工作  default生命周期：  validate:验证项目结构是否正常，必要的配置文件是否存在 initialize:做构建前的初始化操作，比如初始化参数，创建必要的目录 generat">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://caixueyuan.github.io/2020/07/19/maven基础知识/"/>
+
+
+
+
+
+  <title>maven基础知识 | caixueyuan</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">caixueyuan</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">SCUT</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://caixueyuan.github.io/2020/07/19/maven基础知识/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="caixueyuan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="caixueyuan">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">maven基础知识</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-19T23:09:42+08:00">
+                2020-07-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="maven核心概念"><a href="#maven核心概念" class="headerlink" title="maven核心概念"></a><strong>maven核心概念</strong></h2><h3 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h3><p>Clean<strong>生命周期</strong>：</p>
+<ol>
+<li>pre-clean:执行清理前需要完成的工作</li>
+<li>clean:清理上一次构建过程中生成的文件，比如编译后的class文件</li>
+<li>post-clean:执行清理后需要完成的工作</li>
+</ol>
+<p><strong>default生命周期</strong>：</p>
+<ol>
+<li>validate:验证项目结构是否正常，必要的配置文件是否存在</li>
+<li>initialize:做构建前的初始化操作，比如初始化参数，创建必要的目录</li>
+<li>generate-sources:产生在编译过程中需要的源代码</li>
+<li>process-sources:处理源代码，比如过滤值</li>
+<li>generate-resources：产生主代码中的资源在class path中的包</li>
+<li>process-resources：将资源文件复制到classpath的对应包中</li>
+<li>compile：编译项目中的源代码</li>
+<li>process-classes:产生编译过程中生成的文件</li>
+<li>generate-test-sources:产生编译过程中测试相关的代码</li>
+<li>process-test-resources：处理测试代码</li>
+<li>generate-test-resources：产生测试过程中的测试相关的代码</li>
+<li>process-test-resources:将测试资源复制到classpath中</li>
+<li>test-compile：编译测试代码</li>
+<li>process-test-classes：产生编译测试代码过程的文件</li>
+<li>test：运行测试案例</li>
+<li>prepare-package：处理打包前需要初始化的准备工作</li>
+<li>package：将编译后的class和资源打包成压缩文件，比如rar</li>
+<li>pre-integration-test：做成集成测试后的收尾工作，比如清理集成环境的值</li>
+<li>integration-test：集成测试</li>
+<li>post-integration-test:完成集成测试后的收尾工作，比如清理集成环境的值</li>
+<li>verify：检测测试后的包是否完好</li>
+<li>install：将打包的组件以构件的形式，安装到本地依赖仓位中，以便共享给本地的其他项目中</li>
+<li>deploy：运行集成和发布环境，将测试后的最终包以构件的方法发布到远程仓中，方便所有程序员共享。</li>
+</ol>
+<p>site<strong>建立和发布站点</strong>：</p>
+<ol>
+<li>pre-site:执行生成站点前的准备工作</li>
+<li>site:生成站点工作</li>
+<li>post-site：执行生成站点后的收尾工作</li>
+<li>site-deploy：将生成的站点发布到服务器中。</li>
+</ol>
+<h3 id="插件"><a href="#插件" class="headerlink" title="插件"></a>插件</h3><p><strong>作用</strong>：maven只是对项目的构建过程进行了统一的抽象定义和管理。至于每个阶段由谁来做，maven自己不去实现，而是让对应的插件去完成。将插件的功能集成到maven生命周期的相关阶段中，让maven构建工作时自动调用插件完成指定的任务。有内置绑定和自定义绑定等。</p>
+<ol>
+<li>内置绑定：Maven在安装后，自动会为生命周期的主要阶段绑定了很多插件的目标。当用户通过命令或者图形界面执行生命周期的某些阶段时，对应的插件目标就会自动执行，完成任务</li>
+<li>自定义绑定插件：通过<code>&lt;phase&gt;verify&lt;/phase&gt;</code>来完成绑定。</li>
+</ol>
+<p>在不同的生命周期阶段绑定不同的插件目标后，这些目标执行时按照阶段的顺序逐个执行。如果在一个阶段上绑定了多个目标，会按照插件生命的顺序执行。</p>
+<p><strong>插件配置</strong>：了解插件绑定的默认生命周期阶段</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">mvn help:describe -Dplugin=org.apache.maven.plugins:maven-resource-plugin:<span class="number">3.0</span>.0 -Ddetail</div><div class="line">mvn help:describe -Dplugin=site -Dgoal=site -Ddetail</div><div class="line">mvn dependency:tree<span class="comment">//maven &lt;插件名称|前缀&gt;:&lt;目标&gt;[-D 参数名=参数值 ...]</span></div></pre></td></tr></table></figure>
+<p><strong>解析插件</strong></p>
+<p>插件仓库：默认为maven中心库，可以通过pluginRepositores-&gt;pluginRepository命令进行配置</p>
+<p>插件默认的groupid:MAVEN官方的插件，为org.apache.maven.plugins</p>
+<p>解析插件的版本：如果插件不属于核心插件范畴，maven会去检测所有仓库中的版本，最终会选择最新版本，而且这个最新版本不排除是快照版本。</p>
+<p>解析插件的前缀：通过groupId/maven-metadata.xml中进行定义</p>
+<h4 id="仓库"><a href="#仓库" class="headerlink" title="仓库"></a>仓库</h4><p>构件最终是文件的形式存在的。maven仓库其实就是使用固定规则的目录结构，把公共的构件保存在一个固定的存储位置中，需要的时候可以按照规则找到这些具体的构件文件。</p>
+<p>maven查找构件的时候，先查看本地仓库，如果本地仓库存在坐标对应的构件，直接使用。如果本地仓库不存在所需要的构件，或者需要查看是否由更新的构件版本，maven就会去远程仓库查找，发现需要的构件后，下载到本地仓库后使用。如果本地仓库和远程仓库都没有找到需要的构件，maven会报错。</p>
+<p>所有maven项目都是集成这个pom.xml文件，通常把这个pom叫做超级pom，与Java中的Object类一样，也是所有的类都自动继承Objects。而Object类也叫超级类。</p>
+<p><code>&lt;snapshots&gt;&lt;enabled&gt;false&lt;/enabled&gt;&lt;/snapshots&gt;</code>用来控制maven对发布构件的构件和快照的构件下载。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">releases</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">enabled</span>&gt;</span>true<span class="tag">&lt;/<span class="name">enabled</span>&gt;</span> </div><div class="line">    <span class="tag">&lt;<span class="name">updatePolicy</span>&gt;</span>daily<span class="tag">&lt;/<span class="name">updatePolicy</span>&gt;</span><span class="comment">&lt;!-- 配置maven从远程仓库检测更新的频率，默认为daily，表示每天检查更新 --&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">checksumPolicy</span>&gt;</span>ignore<span class="tag">&lt;/<span class="name">checksumPolicy</span>&gt;</span><span class="comment">&lt;!-- 配置检测校验和文件的策略 --&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">releases</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>通过pom.xml中使用distributionManagement配置部署信息来，通过<server>来配置认证私服的认证信息。</server></p>
+<p>快照版本只应该在开发团队内部的项目或者模块之间依赖使用。</p>
+<p><strong>从仓库中解析依赖的机制</strong>：</p>
+<ol>
+<li>当依赖的范围是system的时候，Maven直接从本地文件系统中解析构件</li>
+<li>根据依赖坐标计算仓库路径，尝试直接从本地仓库中寻找构件，如果发现对应的构件，就解析成功</li>
+<li>如果在本地仓库中不存在相应的构件，就遍历所有的远程仓库，发现后，下载并解析使用</li>
+<li>如果依赖的版本是RELEASE和LASTEST，就基于更新策略读取所有远程仓库的元数据文件(groupId/artifactId/maven-metadata.xml)，将其与本地仓库的对应源数据合并，计算出RELEASE或者LASTEST的真实值，然后各级该值检查本地仓库或者，从远程仓库中下载</li>
+<li>如果依赖的版本是SNAPSHOT，基于更新策略读取所有远程仓库的元数据文件，将它与本地仓库对应的元数据合并，得到最新快照版本的值，然后根据该值检查本地仓库或者从远程仓库下载</li>
+<li>如果最后解析得到的构件版本含有时间戳，先将文件下载下来，再将文件名中时间戳信息删除，剩下SNAPSHOT并使用</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">mirrorOf</span>&gt;</span>*<span class="tag">&lt;/<span class="name">mirrorOf</span>&gt;</span> 匹配所有的远程仓库</div><div class="line"><span class="tag">&lt;<span class="name">mirrorOf</span>&gt;</span>external:*<span class="tag">&lt;/<span class="name">mirrorOf</span>&gt;</span> 匹配所有的远程仓库，使用localhost或者file://协议的除外</div><div class="line"><span class="tag">&lt;<span class="name">mirrorOf</span>&gt;</span><span class="tag">&lt;/<span class="name">mirrorOf</span>&gt;</span> 匹配指定的几个远程仓库，每个仓库之间用逗号隔开</div><div class="line"><span class="tag">&lt;<span class="name">mirrorOf</span>&gt;</span>*,!r1,r2<span class="tag">&lt;/<span class="name">mirrorOf</span>&gt;</span>  匹配除了指定仓库外的所有仓库</div></pre></td></tr></table></figure>
+<h4 id="依赖"><a href="#依赖" class="headerlink" title="依赖"></a>依赖</h4><p>依赖的范围：</p>
+<ol>
+<li>compile:编译依赖的范围，在编译，测试和运行时都能够使用</li>
+<li>test:测试依赖范围</li>
+<li>provided：已提供依赖范围，使用此范围，只在编译和测试的时候有效，运行项目的时候时是无效</li>
+<li>runtime：运行时依赖的范围，只会对测试和运行的classpath有效，但在编译主代码时是无效的</li>
+<li>system：系统依赖范围，在编译和测试中有效</li>
+<li>import：导入依赖范围，该依赖范围不会对三种classpath产生实际的影响，将其他模块定义好的dependencyManagement导入当前Maven项目Pom的dependencyManagement中。</li>
+</ol>
+<p><strong>依赖调解</strong>:</p>
+<ol>
+<li>依赖调解原则：按照路径优先原则和声明预先原则来进行判断</li>
+<li>可选依赖</li>
+<li>排除依赖：通过<code>&lt;exclusion&gt;&lt;/execlusion&gt;</code>来排除依赖的groupId和artifictId</li>
+<li>归类依赖：通过<code>&lt;properties&gt;&lt;project.build.spring.version&gt;4.2.7&lt;/project.build.version&gt;&lt;/properties&gt;</code>来配置版本依赖</li>
+</ol>
+<p><strong>继承和聚合</strong></p>
+<p>Maven跟面向对象的语言相似，可以通过<parent></parent>的方式来继承一个父POM，这时候要注意了，被继承的POM只能够是POM类型(<packaging>POM</packaging>)</p>
+<p>可以通过<modules><module>../abc</module></modules>来集合不同的模块，来让不同的模块同步构建</p>
+<h3 id="Maven测试"><a href="#Maven测试" class="headerlink" title="Maven测试"></a>Maven测试</h3><p>在maven的default生命周期的test阶段，绑定的默认插件是maven-surefire_plugins。这是一个内置绑定，在默认情况下，maven-surefire-plugin的test阶段会自动执行测试源代码下的所有符合命名模式的测试类。符合命名模式的规范是：</p>
+<ol>
+<li>所有命名为Test开头的java类</li>
+<li>所有命名为Test结尾的Java类</li>
+<li>所有命名为TestCase结尾的Java类</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">mvn package -DskipTests //可以通过来跳过运行测试案例</div><div class="line">mvn package -Dmaven.test.skip=true //同时控制了maven-compile-plugin和maven-surefire-plugin两个插件的行为，既跳过了测试代码的编译，也跳过了测试代码的运行</div><div class="line">mvn test -Dest=TestDemo //只执行TestDemo测试类</div></pre></td></tr></table></figure>
+<p>可以通过maven-surefire-report-plugin插件来实现测试生成HTML版的测试报告</p>
+<p>可以通过groupId=org.codehaus.mojo,artifactId=cobertura-maven-plugin来生成测试覆盖率报告，通过执行<code>mvn cobertura:cobertura</code>生成测试覆盖率报告。</p>
+<p>插件可以自定义开发，插件本身也是一个maven项目，按照特定的变量进行配置，就可以进行使用。在使用之前要将项目install到本地或者私服中</p>
+<p>Archetype为maven项目的创建模板，也可以进行定制。定制需要更改了archetype-catalog.xml文件</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java构建/" rel="tag"># Java构建</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/06/14/Java8新特性/" rel="next" title="Java8新特性">
+                <i class="fa fa-chevron-left"></i> Java8新特性
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="caixueyuan" />
+          <p class="site-author-name" itemprop="name">caixueyuan</p>
+           
+              <p class="site-description motion-element" itemprop="description">Java后台开发程序员</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">66</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">40</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#maven核心概念"><span class="nav-number">1.</span> <span class="nav-text">maven核心概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#生命周期"><span class="nav-number">1.1.</span> <span class="nav-text">生命周期</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#插件"><span class="nav-number">1.2.</span> <span class="nav-text">插件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#仓库"><span class="nav-number">1.2.1.</span> <span class="nav-text">仓库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#依赖"><span class="nav-number">1.2.2.</span> <span class="nav-text">依赖</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Maven测试"><span class="nav-number">1.3.</span> <span class="nav-text">Maven测试</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">caixueyuan</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
