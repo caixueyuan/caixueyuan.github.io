@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://caixueyuan.github.io/"/>
-  <updated>2020-08-06T15:40:40.313Z</updated>
+  <updated>2020-09-28T16:37:00.000Z</updated>
   <id>https://caixueyuan.github.io/</id>
   
   <author>
@@ -14,6 +14,67 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Spring Cloud Alibaba微服务原理与实战</title>
+    <link href="https://caixueyuan.github.io/2020/09/28/Spring-Cloud-Alibaba%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E6%88%98/"/>
+    <id>https://caixueyuan.github.io/2020/09/28/Spring-Cloud-Alibaba微服务原理与实战/</id>
+    <published>2020-09-28T15:57:44.000Z</published>
+    <updated>2020-09-28T16:37:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="微服务的发展史"><a href="#微服务的发展史" class="headerlink" title="微服务的发展史"></a>微服务的发展史</h2><h3 id="网站发展历史"><a href="#网站发展历史" class="headerlink" title="网站发展历史"></a>网站发展历史</h3><ol>
+<li>单体架构：所有功能都集中在一个war包，部署到一个tomcat web服务器中。（缺点：耦合，一个功能点异常会影响整个应用）</li>
+<li>集群及垂直化：通过功能进行划分，将一个巨婴划分成多个不同的模块，不同的模块可以部署到不同的机器中（缺点：无法扩展，需要重复实现功能，比如鉴权等）</li>
+<li>SOA：面向服务的架构，核心目的是把一些通用的，会被多个上层服务调用的共享业务提取出独立的基础服务，可以被重用，主要解决了信息孤岛和共享业务的重用问题</li>
+<li>微服务架构：对于面向服务的进一步细化，微服务关注的是解耦，降低业务之间的耦合度，而重用性关注的是服务的复用。可以这样理解：微服务是对SOA的进一步细化，多个微服务的功能集合相当于一个SOA。同时，也实现了DevOps持续交付。（说白了，服务跟代码是一个道理，只要实现了高内聚，低耦合都能够更好地实现了DevOps，由于微服务的粒度比较小，如果抽取成微服务的粒度和功能得当，本身就能够实现高内聚，低耦合）</li>
+</ol>
+<h3 id="微服务架构："><a href="#微服务架构：" class="headerlink" title="微服务架构："></a>微服务架构：</h3><p>微服务的架构图如下：</p>
+<p><img src="微服务架构简图.png" alt="image-20200929003609063"></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;微服务的发展史&quot;&gt;&lt;a href=&quot;#微服务的发展史&quot; class=&quot;headerlink&quot; title=&quot;微服务的发展史&quot;&gt;&lt;/a&gt;微服务的发展史&lt;/h2&gt;&lt;h3 id=&quot;网站发展历史&quot;&gt;&lt;a href=&quot;#网站发展历史&quot; class=&quot;headerlink&quot; 
+    
+    </summary>
+    
+      <category term="微服务" scheme="https://caixueyuan.github.io/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/"/>
+    
+    
+      <category term="Spring" scheme="https://caixueyuan.github.io/tags/Spring/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Spring起步</title>
+    <link href="https://caixueyuan.github.io/2020/08/06/Spring%E8%B5%B7%E6%AD%A5/"/>
+    <id>https://caixueyuan.github.io/2020/08/06/Spring起步/</id>
+    <published>2020-08-06T15:42:46.000Z</published>
+    <updated>2020-08-08T15:22:24.947Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="Spring起步"><a href="#Spring起步" class="headerlink" title="Spring起步"></a>Spring起步</h2><h3 id="初始化Spring应用"><a href="#初始化Spring应用" class="headerlink" title="初始化Spring应用"></a>初始化Spring应用</h3><p>微服务一般都是打包成jar的方式，而不是war的方式。</p>
+<h4 id="SpringBootApplication"><a href="#SpringBootApplication" class="headerlink" title="SpringBootApplication"></a>SpringBootApplication</h4><p>是一个组合注解</p>
+<ol>
+<li>@SpringBootConfiguration:将该类声明为配置类</li>
+<li>@EnableAutoConfiguration：启动Spring Boot的自动配置。</li>
+<li>@ComponentScan:启动组件扫描</li>
+</ol>
+<p>使用RunDashboard的方式，编译.idea下的文件workspace.xml文件（IDEA默认会使用devtools)</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">component</span> <span class="attr">name</span>=<span class="string">"RunDashboard"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">option</span> <span class="attr">name</span>=<span class="string">"configurationTypes"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">set</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">"SpringBootApplicationConfigurationType"</span> /&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">set</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">option</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">option</span> <span class="attr">name</span>=<span class="string">"ruleStates"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">list</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">RuleState</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">option</span> <span class="attr">name</span>=<span class="string">"name"</span> <span class="attr">value</span>=<span class="string">"ConfigurationTypeDashboardGroupingRule"</span> /&gt;</span></div><div class="line">      <span class="tag">&lt;/<span class="name">RuleState</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">RuleState</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">option</span> <span class="attr">name</span>=<span class="string">"name"</span> <span class="attr">value</span>=<span class="string">"StatusDashboardGroupingRule"</span> /&gt;</span></div><div class="line">      <span class="tag">&lt;/<span class="name">RuleState</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">list</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">option</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">component</span>&gt;</span></div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;Spring起步&quot;&gt;&lt;a href=&quot;#Spring起步&quot; class=&quot;headerlink&quot; title=&quot;Spring起步&quot;&gt;&lt;/a&gt;Spring起步&lt;/h2&gt;&lt;h3 id=&quot;初始化Spring应用&quot;&gt;&lt;a href=&quot;#初始化Spring应用&quot; class
+    
+    </summary>
+    
+      <category term="Spring" scheme="https://caixueyuan.github.io/categories/Spring/"/>
+    
+    
+      <category term="Spring" scheme="https://caixueyuan.github.io/tags/Spring/"/>
+    
+  </entry>
   
   <entry>
     <title>maven基础知识</title>
@@ -1439,129 +1500,6 @@
     
     
       <category term="Linux基础知识" scheme="https://caixueyuan.github.io/tags/Linux%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Linux进程管理</title>
-    <link href="https://caixueyuan.github.io/2019/05/19/Linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/"/>
-    <id>https://caixueyuan.github.io/2019/05/19/Linux进程管理/</id>
-    <published>2019-05-19T14:31:59.000Z</published>
-    <updated>2019-05-26T04:22:59.222Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="进程优先级"><a href="#进程优先级" class="headerlink" title="进程优先级"></a>进程优先级</h2><h3 id="进程优先级-1"><a href="#进程优先级-1" class="headerlink" title="进程优先级"></a>进程优先级</h3><p>进程可以分为实时线程和普通线程，一般情况下咱们运行的微服务的进程都是普通线程。<br>实时进程的优先级大于普通线程，在CPU调度中优先执行，采用先进先出的原则进行调度；<br>普通线程的优先级：影响进程的优先级有两个值：动态优先级（PRI）和静态优先级（NI），静态优先级可以影响进程的优先级。<br>使用ps -l的方式进行查询</p>
-<p>NICE有40个优先级，以-20（最高优先级）到19（最低优先级），默认有限级为0,<br>使用renice能够改变进程的优先级，只有root用户才能够提高进程的优先级，而普通用户只能够减低进程的优先级<br>使用的命令如下：</p>
-<blockquote>
-<ul>
-<li>nice -n 6 sh bash.sh</li>
-<li>renice +3 1234(PID)</li>
-</ul>
-</blockquote>
-<h3 id="常用命令："><a href="#常用命令：" class="headerlink" title="常用命令："></a>常用命令：</h3><p>进程还分为前台进程和后台进程，前台进程负责跟用户进行交互，使用以下两个命令能够进行前后台切换</p>
-<blockquote>
-<ul>
-<li>fg 将后台转变成前台</li>
-<li><p>bg 将前台转变成后台</p>
-</li>
-<li><p>nohup 用户注销不影响进程运行</p>
-</li>
-<li>ps -j –forest 查询进程树的结构</li>
-</ul>
-</blockquote>
-<h2 id="进程的生命周期"><a href="#进程的生命周期" class="headerlink" title="进程的生命周期"></a>进程的生命周期</h2><p><img src="https://img-blog.csdn.net/20180227113851124" alt="进程生命周期"><br>进程有这几个状态：</p>
-<blockquote>
-<ul>
-<li>运行状态：进程正在CPU上运行</li>
-<li>等待状态：进程已经准备好啦，等待CPU进行调度，获取CPU片段时间</li>
-<li>终止状态：进程已经运行完啦，通过return/_exit/exit进行返回</li>
-<li>睡眠状态：进程因为某些原因（主要有两种：IO缺页问题导致需要进行IO退出CPU运行，或者是周期性的CPU调度）导致进程CPU片段时间被抢占，进入睡眠状态</li>
-</ul>
-</blockquote>
-<h2 id="数据结构task-struct"><a href="#数据结构task-struct" class="headerlink" title="数据结构task_struct"></a>数据结构task_struct</h2><p>包含了进程运行的所有信息，其实比较重要的变量：</p>
-<blockquote>
-<ul>
-<li><code>volatile long state</code>代表进程的状态</li>
-<li><code>pid_t pid;  pid_t tgid;</code>进程的唯一标识PID</li>
-<li><code>void *stack;</code>进程的内核栈</li>
-</ul>
-</blockquote>
-<p>具体的参考链接：<br><a href="https://blog.csdn.net/gatieme/article/details/51383272" target="_blank" rel="external">Linux进程描述符task_struct结构体详解</a></p>
-<h2 id="进程关系："><a href="#进程关系：" class="headerlink" title="进程关系："></a>进程关系：</h2><h3 id="进程组的概念"><a href="#进程组的概念" class="headerlink" title="进程组的概念"></a>进程组的概念</h3><p>每个进程都属于一个进程组，进程组有一个进程组领导进程。<br>比如这个（这三个进程为一个进程组，进程组领导进程为第一个进程bash进程）<br><img src="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/linux/base/%E8%BF%9B%E7%A8%8B%E5%85%B3%E7%B3%BB.png" alt="进程组"></p>
-<h3 id="会话-session"><a href="#会话-session" class="headerlink" title="会话 (session)"></a>会话 (session)</h3><p>将进程分为前台进程和后台进程，通过fg和pg进行切换</p>
-<p>参考链接：<a href="https://www.cnblogs.com/vamei/archive/2012/10/07/2713023.html" target="_blank" rel="external">Linux进程关系</a></p>
-<h2 id="进程创建"><a href="#进程创建" class="headerlink" title="进程创建"></a>进程创建</h2><p>进程都是通过父进程创建子进程的方式来创建进程的。主要有三种方式：fork，vfork和clone</p>
-<h3 id="fork"><a href="#fork" class="headerlink" title="fork"></a>fork</h3><p>fork是最常用的方式，一般情况下我们都是使用这种方式来创建进程</p>
-<p><code>重要</code>:<br>开始的时候，父进程和子进程都是共用一份可执行文件，堆栈等，物理地址和逻辑地址都是一致的，父进程和子进程共享页帧而不是复制页帧，并且页帧是被保护的。</p>
-<p>当父进程A或子进程B任何一方对这些已共享的物理页面执行写操作时,都会产生页面出错异常(page_fault int14)中断,此时CPU会执行系统提供的异常处理函数do_wp_page()来解决这个异常，这时内核就把这个页复制到一个新的页帧中并标记为可写。如果是父进程创建的页帧，只对父进程可见可读可写。如果是子进程创建的页，只对父进程可见可读可写。</p>
-<p>do_wp_page()会对这块导致写入异常中断的物理页面进行取消共享操作,为写进程复制一新的物理页面,使父进程A和子进程B各自拥有一块内容相同的物理页面.最后,从异常处理函数中返回时,CPU就会重新执行刚才导致异常的写入操作指令,使进程继续执行下去.</p>
-<p>这个过程结束之后，虚拟地址依然是不变的，只是虚拟地址映射到物理地址的映射变化，物理地址是变化的，但是虚拟地址不变</p>
-<p>子进程和父进程的执行顺序不能够确定</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/types.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">int</span> count = <span class="number">1</span>;</div><div class="line">    <span class="keyword">int</span> child;</div><div class="line"></div><div class="line">    child = fork( );</div><div class="line"></div><div class="line">    <span class="keyword">if</span>(child &lt; <span class="number">0</span>)</div><div class="line">    &#123;</div><div class="line">        perror(<span class="string">"fork error : "</span>);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(child == <span class="number">0</span>)     <span class="comment">//  fork return 0 in the child process because child can get hid PID by getpid( )</span></div><div class="line">    &#123;</div><div class="line">        <span class="built_in">printf</span>(<span class="string">"This is son, his count is: %d (%p). and his pid is: %d\n"</span>, ++count, &amp;count, getpid());</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">else</span>                    <span class="comment">//  the PID of the child process is returned in the parent’s thread of execution</span></div><div class="line">    &#123;</div><div class="line">        <span class="built_in">printf</span>(<span class="string">"This is father, his count is: %d (%p), his pid is: %d\n"</span>, count, &amp;count, getpid());</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> EXIT_SUCCESS;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>运行结果：<br><figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">caixueyuan@caixueyuan-PC:~/Desktop/process$ ./fork </div><div class="line">This <span class="keyword">is</span> father, <span class="keyword">his</span> <span class="built_in">count</span> i<span class="variable">s:</span> <span class="number">1</span> (<span class="number">0</span>x7ffeff294758), <span class="keyword">his</span> pid i<span class="variable">s:</span> <span class="number">11495</span></div><div class="line">This <span class="keyword">is</span> son, <span class="keyword">his</span> <span class="built_in">count</span> i<span class="variable">s:</span> <span class="number">2</span> (<span class="number">0</span>x7ffeff294758). <span class="built_in">and</span> <span class="keyword">his</span> pid i<span class="variable">s:</span> <span class="number">11496</span></div></pre></td></tr></table></figure></p>
-<h3 id="vfork"><a href="#vfork" class="headerlink" title="vfork"></a>vfork</h3><p>vfork跟fork最大的区别就是vfork没有采用写时复制这一块，子进程从开始到结束都是使用父进程的虚拟地址和物理空间，如果子进程要修改数据，修改的也是父进程的数据<br><code>重要</code>:这里要特别注意：子进程退出不能够使用return的方式，因为子进程退出和父进程退出是一样的，会导致重复退出而报错。最好也不要使用exit(0)这种方式，稍后会进行解释。</p>
-<p>vfork的用处：一般是用来创建不修改父进程的数据的子进程（一般咱们是用来通过创建子进程来执行另外一个程序，不会修改到原程序的堆，数据等）</p>
-<p>vfork创建的进程都是子进程先执行，等子进程使用execve或者_exit退出之后才会继续运行父进程</p>
-<p>代码：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/types.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">int</span> count = <span class="number">1</span>;</div><div class="line">    <span class="keyword">int</span> child;</div><div class="line"></div><div class="line">   <span class="comment">// child = vfork( );</span></div><div class="line"></div><div class="line">    <span class="built_in">printf</span>(<span class="string">"Before create son, the father's count is:%d\n"</span>, count);</div><div class="line"></div><div class="line">    <span class="keyword">if</span>((child = vfork())&lt; <span class="number">0</span>)</div><div class="line">    &#123;</div><div class="line">        perror(<span class="string">"fork error : "</span>);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(child == <span class="number">0</span>)     <span class="comment">//  fork return 0 in the child process because child can get hid PID by getpid( )</span></div><div class="line">    &#123;</div><div class="line">        <span class="built_in">printf</span>(<span class="string">"This is son, his count is: %d (%p). and his pid is: %d\n"</span>, ++count, &amp;count, getpid());</div><div class="line">        _exit(<span class="number">0</span>);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">else</span>                    <span class="comment">//  the PID of the child process is returned in the parent’s thread of execution</span></div><div class="line">    &#123;</div><div class="line">        <span class="built_in">printf</span>(<span class="string">"After son, This is father, his count is: %d (%p), his pid is: %d\n"</span>, ++count, &amp;count, getpid());</div><div class="line">        _exit(<span class="number">0</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> EXIT_SUCCESS;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>运行结果<br><figure class="highlight applescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Before create son, <span class="keyword">the</span> father's <span class="built_in">count</span> <span class="keyword">is</span>:<span class="number">1</span></div><div class="line">This <span class="keyword">is</span> son, his <span class="built_in">count</span> <span class="keyword">is</span>: <span class="number">2</span> (<span class="number">0x7ffe4b965058</span>). <span class="keyword">and</span> his pid <span class="keyword">is</span>: <span class="number">12998</span></div><div class="line">After son, This <span class="keyword">is</span> father, his <span class="built_in">count</span> <span class="keyword">is</span>: <span class="number">3</span> (<span class="number">0x7ffe4b965058</span>), his pid <span class="keyword">is</span>: <span class="number">12997</span></div></pre></td></tr></table></figure></p>
-<h3 id="clone"><a href="#clone" class="headerlink" title="clone"></a>clone</h3><p>clone是libc中的函数，不是系统调用，一般是用来创建线程的，可以通过clone的方式来创建以上fork或者vfork的方式的创建进程</p>
-<p>参考链接：<a href="https://blog.csdn.net/gatieme/article/details/51417488" target="_blank" rel="external">Linux中fork，vfork和clone详解（区别与联系）</a></p>
-<h2 id="进程的退出"><a href="#进程的退出" class="headerlink" title="进程的退出"></a>进程的退出</h2><p>进程的退出有两种：</p>
-<blockquote>
-<ul>
-<li>正常退出（return,exit(0),_exit(0))</li>
-<li>非正常退出（调用abort(),通过信号的方式（kill -9))</li>
-</ul>
-</blockquote>
-<p>正常退出的方式要注意exit和_exit的区别，有可能造成很隐蔽的错误</p>
-<blockquote>
-<p>_exit是系统调用，直接使进程停止运行，清除其使用的内存空间，并销毁其在内核中的各种数据结构<br>exit不是系统调用，是libc中的接口，包含了_exit的操作，按ATEXIT注册时相反的顺序调用所有由它注册的函数，同时还能够刷一下IO，这样可以保证写文件的缓冲等能够刷到文件或者控制台中。</p>
-</blockquote>
-<p>之所有不推荐在vfork的方式下使用exit(0)的方式，就是怕exit需要刷IO，需要调用终止处理程序，可能会对进程中的内容造成破坏，给父进程造成不确定性</p>
-<p><img src="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/linux/base/%E8%BF%9B%E7%A8%8B%E9%80%80%E5%87%BA.png" alt="进程退出"></p>
-<h2 id="调度策略"><a href="#调度策略" class="headerlink" title="调度策略"></a>调度策略</h2><h3 id="进程的分类（略）"><a href="#进程的分类（略）" class="headerlink" title="进程的分类（略）"></a>进程的分类（略）</h3><p>实时进程：对于实时进程，采用先进先出的方式进行，优先级高于普通进程，会快速响应<br>普通进程：CFS调度。实现尽可能公平的分配CPU资源。一种是直接的, 比如进程打算睡眠或出于其他原因放弃CPU，另一种是通过周期性的机制, 以固定的频率运行, 不时的检测是否有必要</p>
-<h3 id="进程的上下文切换（略）"><a href="#进程的上下文切换（略）" class="headerlink" title="进程的上下文切换（略）"></a>进程的上下文切换（略）</h3>]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;进程优先级&quot;&gt;&lt;a href=&quot;#进程优先级&quot; class=&quot;headerlink&quot; title=&quot;进程优先级&quot;&gt;&lt;/a&gt;进程优先级&lt;/h2&gt;&lt;h3 id=&quot;进程优先级-1&quot;&gt;&lt;a href=&quot;#进程优先级-1&quot; class=&quot;headerlink&quot; title=
-    
-    </summary>
-    
-      <category term="Linux" scheme="https://caixueyuan.github.io/categories/Linux/"/>
-    
-    
-      <category term="Linux基础知识" scheme="https://caixueyuan.github.io/tags/Linux%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>linux和C++基础</title>
-    <link href="https://caixueyuan.github.io/2019/05/04/linux%E5%92%8CC-%E5%9F%BA%E7%A1%80/"/>
-    <id>https://caixueyuan.github.io/2019/05/04/linux和C-基础/</id>
-    <published>2019-05-04T14:45:45.000Z</published>
-    <updated>2019-05-04T15:22:38.643Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="第7章-编译"><a href="#第7章-编译" class="headerlink" title="第7章 编译"></a>第7章 编译</h2><h3 id="编译的阶段"><a href="#编译的阶段" class="headerlink" title="编译的阶段"></a>编译的阶段</h3><blockquote>
-<ul>
-<li>源代码</li>
-<li><p>预处理：字符”#”开头的命令，修改源程序，得到另一个源程序，常以.i作为文件扩展名<figure class="highlight plain"><figcaption><span>-o main.i -E main.c gcc -o hello.i -E hello.c```</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&gt; * 编译：将预处理之后的完整的代码进行编译，变成汇编代码```gcc -S main.i hello.i</div></pre></td></tr></table></figure></p>
-</li>
-<li><p>汇编：将汇编代码翻译成机器代码，变成二进制文件。<figure class="highlight plain"><figcaption><span>-c main.s hello.s```</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&gt; * 链接：链接程序形成可执行目标文件```gcc -o hello main.o hello.o</div></pre></td></tr></table></figure></p>
-</li>
-</ul>
-</blockquote>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;第7章-编译&quot;&gt;&lt;a href=&quot;#第7章-编译&quot; class=&quot;headerlink&quot; title=&quot;第7章 编译&quot;&gt;&lt;/a&gt;第7章 编译&lt;/h2&gt;&lt;h3 id=&quot;编译的阶段&quot;&gt;&lt;a href=&quot;#编译的阶段&quot; class=&quot;headerlink&quot; title=
-    
-    </summary>
-    
-      <category term="linux,C++" scheme="https://caixueyuan.github.io/categories/linux-C/"/>
-    
-    
-      <category term="linux,C++" scheme="https://caixueyuan.github.io/tags/linux-C/"/>
     
   </entry>
   
