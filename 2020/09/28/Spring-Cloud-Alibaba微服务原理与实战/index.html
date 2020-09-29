@@ -103,7 +103,10 @@
 <meta property="og:site_name" content="caixueyuan">
 <meta property="og:description" content="微服务的发展史网站发展历史 单体架构：所有功能都集中在一个war包，部署到一个tomcat web服务器中。（缺点：耦合，一个功能点异常会影响整个应用） 集群及垂直化：通过功能进行划分，将一个巨婴划分成多个不同的模块，不同的模块可以部署到不同的机器中（缺点：无法扩展，需要重复实现功能，比如鉴权等） SOA：面向服务的架构，核心目的是把一些通用的，会被多个上层服务调用的共享业务提取出独立的基础服务，">
 <meta property="og:image" content="https://caixueyuan.github.io/2020/09/28/Spring-Cloud-Alibaba微服务原理与实战/微服务架构简图.png">
-<meta property="og:updated_time" content="2020-09-28T16:37:00.000Z">
+<meta property="og:image" content="https://caixueyuan.github.io/2020/09/28/Spring-Cloud-Alibaba微服务原理与实战/Dubbo架构.png">
+<meta property="og:image" content="https://caixueyuan.github.io/2020/09/28/Spring-Cloud-Alibaba微服务原理与实战/Dubbo_ZooKeeper.png">
+<meta property="og:image" content="https://caixueyuan.github.io/2020/09/28/Spring-Cloud-Alibaba微服务原理与实战/dubbo_zookeeper原理.png">
+<meta property="og:updated_time" content="2020-09-29T16:42:02.971Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring Cloud Alibaba微服务原理与实战">
 <meta name="twitter:description" content="微服务的发展史网站发展历史 单体架构：所有功能都集中在一个war包，部署到一个tomcat web服务器中。（缺点：耦合，一个功能点异常会影响整个应用） 集群及垂直化：通过功能进行划分，将一个巨婴划分成多个不同的模块，不同的模块可以部署到不同的机器中（缺点：无法扩展，需要重复实现功能，比如鉴权等） SOA：面向服务的架构，核心目的是把一些通用的，会被多个上层服务调用的共享业务提取出独立的基础服务，">
@@ -374,6 +377,38 @@
 </ol>
 <h3 id="微服务架构："><a href="#微服务架构：" class="headerlink" title="微服务架构："></a>微服务架构：</h3><p>微服务的架构图如下：</p>
 <p><img src="微服务架构简图.png" alt="image-20200929003609063"></p>
+<h2 id="Spring-Cloud的核心之Spring-Boot"><a href="#Spring-Cloud的核心之Spring-Boot" class="headerlink" title="Spring Cloud的核心之Spring Boot"></a>Spring Cloud的核心之Spring Boot</h2><h3 id="重新认识Spring-Boot"><a href="#重新认识Spring-Boot" class="headerlink" title="重新认识Spring Boot"></a>重新认识Spring Boot</h3><p><strong>核心思想为约定胜于配置</strong></p>
+<h4 id="Spring-IOC-DI"><a href="#Spring-IOC-DI" class="headerlink" title="Spring IOC/DI"></a>Spring IOC/DI</h4><p><strong>IoC(控制反转)</strong>：对象的创建不是由代码通过new来创建的，而是通过Spring容器来进行控制的，程序只是使用容器来控制程序的运行</p>
+<p><strong>DI(依赖注入)</strong>：IoC容器在运行期间，动态地把某些依赖关系注入组件中，来创建一个容器出来。</p>
+<p>以前所有的配置都是基于XML配置文件来运行的，Spring Boot的出现只是用来简化Spring应用开发</p>
+<p>约定优于配置是一种软件设计模式，目的不是在于减少依赖，但是，而是在于减少配置数量或者降低理解难度，从而来提高开发效率。理由如下：运用Spring Boot容器的方式，实际上依赖的数量和复杂度并没有变化，因为外界的依赖就是有这么多，软件本身是根据实物来抽象出来的，所以软件抽象出来的依赖并没有发生变化，通过Spring 容器的方式只是将依赖集中化管理而已）。设计模式的本身也不能够减少抽象出来的实体的依赖，只是对这些依赖做抽象（比如，抽象成聚合，组合，实现等关系，给予不同的依赖不同的涵义，帮助软件的设计和管理）</p>
+<h4 id="Spring-Boot自动装配的原理"><a href="#Spring-Boot自动装配的原理" class="headerlink" title="Spring Boot自动装配的原理"></a>Spring Boot自动装配的原理</h4><p>自动装配的核心是扫描约定目录下的文件进行解析，解析完成之后得到的Configuration配置类通过ImportSelector进行导入。从而完成Bean的自动装配过程。</p>
+<p>扫描  -&gt;  Bean,Configuration  -&gt;  自动装配（解决相互依赖）   -&gt;  容器（获取Bean） -&gt;   功能运行</p>
+<h2 id="微服务架构下的服务治理"><a href="#微服务架构下的服务治理" class="headerlink" title="微服务架构下的服务治理"></a>微服务架构下的服务治理</h2><p>服务与服务之间的远程通讯是分布式架构最基本的组成部分，传统意义上的远程通讯，更多的时候是解决信息孤岛及数据互联互通问题，它更多关注的是数据的共享。微服务架构思想的落地，更多注重的是服务与服务之间的解耦。</p>
+<h4 id="Apache-Dubbo"><a href="#Apache-Dubbo" class="headerlink" title="Apache Dubbo"></a>Apache Dubbo</h4><p>Apache Dubbo是一个统一的服务治理框架，对服务进行统一/有效的管控，从而保证服务的高效/健康运行。提供了服务治理功能，比如服务注册，监控，路由和容错。核心功能就是监控和服务注册发现。</p>
+<p><img src="Dubbo架构.png" alt="image-20200929232959375"></p>
+<p>Dubbo主要实现点对点的形式来实现服务的通讯（可以把Dubbo看成一种通讯协议），Dubbo可以很好地集成注册中心来实现服务地址的统一管理。比如使用zookeeper来进行管理。</p>
+<h3 id="ZooKeeper"><a href="#ZooKeeper" class="headerlink" title="ZooKeeper"></a>ZooKeeper</h3><h4 id="ZooKeeper介绍"><a href="#ZooKeeper介绍" class="headerlink" title="ZooKeeper介绍"></a>ZooKeeper介绍</h4><p>ZooKeeper的数据是结构化存储的，并没有在物理上体现出文件和目录。ZooKeeper树中的每个节点被称为Znode，维护一个stat状态信息，其中包含数据变化的时间和版本，并且每个Znode可以设置一个value值。每个节点的数据都是允许读和写的.并且Znode的状态发生变化之后,会有事件进行通知.节点的类型如下:</p>
+<ol>
+<li>持久化节点:节点的数据会被持久化到磁盘中</li>
+<li>临时节点:节点的声明周期和创建该节点的客户端的生命周期保持一致,一旦该客户端的会话结束,则该客户端所创建的临时节点会被自动创建(每个节点可以代表一个微服务的状态)</li>
+<li>有序节点:在创建的节点后面会增加一个递增的序列,该序列在同一级父节点之下是唯一的.</li>
+<li>容器节点:当容器节点下的最后一个子节点被删除时,容器节点就会被自动删除</li>
+<li>TTL节点:针对持久化节点或持久化有序节点,可以设置一个存活时间,如果在存活时间之内,该节点没有任何修改并且没有任何子节点,它会被自动删除.</li>
+</ol>
+<h4 id="常用场景"><a href="#常用场景" class="headerlink" title="常用场景"></a>常用场景</h4><ol>
+<li>分布式独占锁:使用临时节点,在同一个目录中进行创建,谁能够创建成功,谁就能够访问资源.获取独占锁之后,完成工作之后,临时节点进行删除.这个时候其他进程再通过相同的方式进行创建.</li>
+<li>Master选举:第一种方法,通过独占锁的方式来实现Master选举,谁能够创建临时节点的话,谁就是Master,其他的不能够创建成功的微服务都对该处做了订阅;第二个方式是通过临时有序节点的特性来实现,每个微服务分前后的方式构成了一个有序节点,每个节点都注册了对于前一个节点的订阅.如果前面的节点被删除的话,后面一个就成为Master节点.</li>
+</ol>
+<h3 id="Apache-Dubbo集成ZK来实现服务注册"><a href="#Apache-Dubbo集成ZK来实现服务注册" class="headerlink" title="Apache Dubbo集成ZK来实现服务注册"></a>Apache Dubbo集成ZK来实现服务注册</h3><ol>
+<li>服务动态上下线感知:就是服务调用者要感知到服务提供者上下线的变化</li>
+<li>负载均衡</li>
+</ol>
+<h4 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h4><p>Dubbo服务启动时,会去ZooKeeper服务器上的/dubbo/com.gupaoedu.book.dubbo.IHelloService/providers目录下创建当前服务的URL,其中com.gupaoedu.book.dubbo.IHelloService是发布服务的接口全路径名称,providers表示服务提供者的类型,dubbo://ip:port表示该服务发布的协议及访问端口.其中URL是临时节点,如果微服务下线的话,节点就不存在了.</p>
+<p><img src="Dubbo_ZooKeeper.png" alt="image-20200930001149410"></p>
+<p>当Dubbo服务消费者启动时,会对/dubbo/com.gupaoedu.book.dubbo.IHelloService/providers节点下的子节点注册Watcher监听,感知服务提供方节点的上下线变化.服务消费者会在dubbo/com.gupaoedu.book.dubbo.IHelloService/consumers下写入自己的URL,这样做的目的是可以在监控平台上看到Dubbo服务正在被哪些服务调用.Dubbo服务的消费者通过获取providers下的服务,然后调用负载均衡算法(Sentitle)来计算出一个地址来进行远程访问(比如实现灰度发布)</p>
+<p>dubbo在这里实现的功能就是注册发现服务,比如注册是在对应Znode(providers)中创建临时节点.发现服务是在对应Znode(consumers)中创建临时节点.ZooKeeper的粒度不是以微服务为单位,而是以服务提供者提供的接口为粒度.每个接口的下面有providers和consumers两个持久化节点.</p>
+<p><img src="dubbo_zookeeper原理.png" alt="image-20200930004124454"></p>
 
       
     </div>
@@ -560,7 +595,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#微服务的发展史"><span class="nav-number">1.</span> <span class="nav-text">微服务的发展史</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#网站发展历史"><span class="nav-number">1.1.</span> <span class="nav-text">网站发展历史</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#微服务架构："><span class="nav-number">1.2.</span> <span class="nav-text">微服务架构：</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#微服务的发展史"><span class="nav-number">1.</span> <span class="nav-text">微服务的发展史</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#网站发展历史"><span class="nav-number">1.1.</span> <span class="nav-text">网站发展历史</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#微服务架构："><span class="nav-number">1.2.</span> <span class="nav-text">微服务架构：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-Cloud的核心之Spring-Boot"><span class="nav-number">2.</span> <span class="nav-text">Spring Cloud的核心之Spring Boot</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#重新认识Spring-Boot"><span class="nav-number">2.1.</span> <span class="nav-text">重新认识Spring Boot</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Spring-IOC-DI"><span class="nav-number">2.1.1.</span> <span class="nav-text">Spring IOC/DI</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Spring-Boot自动装配的原理"><span class="nav-number">2.1.2.</span> <span class="nav-text">Spring Boot自动装配的原理</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#微服务架构下的服务治理"><span class="nav-number">3.</span> <span class="nav-text">微服务架构下的服务治理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Apache-Dubbo"><span class="nav-number">3.0.1.</span> <span class="nav-text">Apache Dubbo</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ZooKeeper"><span class="nav-number">3.1.</span> <span class="nav-text">ZooKeeper</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ZooKeeper介绍"><span class="nav-number">3.1.1.</span> <span class="nav-text">ZooKeeper介绍</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#常用场景"><span class="nav-number">3.1.2.</span> <span class="nav-text">常用场景</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Apache-Dubbo集成ZK来实现服务注册"><span class="nav-number">3.2.</span> <span class="nav-text">Apache Dubbo集成ZK来实现服务注册</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#实现原理"><span class="nav-number">3.2.1.</span> <span class="nav-text">实现原理</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
