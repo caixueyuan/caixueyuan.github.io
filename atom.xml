@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://caixueyuan.github.io/"/>
-  <updated>2020-09-29T16:42:02.971Z</updated>
+  <updated>2020-10-08T16:12:56.848Z</updated>
   <id>https://caixueyuan.github.io/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="https://caixueyuan.github.io/2020/09/28/Spring-Cloud-Alibaba%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E6%88%98/"/>
     <id>https://caixueyuan.github.io/2020/09/28/Spring-Cloud-Alibaba微服务原理与实战/</id>
     <published>2020-09-28T15:57:44.000Z</published>
-    <updated>2020-09-29T16:42:02.971Z</updated>
+    <updated>2020-10-08T16:12:56.848Z</updated>
     
     <content type="html"><![CDATA[<h2 id="微服务的发展史"><a href="#微服务的发展史" class="headerlink" title="微服务的发展史"></a>微服务的发展史</h2><h3 id="网站发展历史"><a href="#网站发展历史" class="headerlink" title="网站发展历史"></a>网站发展历史</h3><ol>
 <li>单体架构：所有功能都集中在一个war包，部署到一个tomcat web服务器中。（缺点：耦合，一个功能点异常会影响整个应用）</li>
@@ -62,6 +62,43 @@
 <p>当Dubbo服务消费者启动时,会对/dubbo/com.gupaoedu.book.dubbo.IHelloService/providers节点下的子节点注册Watcher监听,感知服务提供方节点的上下线变化.服务消费者会在dubbo/com.gupaoedu.book.dubbo.IHelloService/consumers下写入自己的URL,这样做的目的是可以在监控平台上看到Dubbo服务正在被哪些服务调用.Dubbo服务的消费者通过获取providers下的服务,然后调用负载均衡算法(Sentitle)来计算出一个地址来进行远程访问(比如实现灰度发布)</p>
 <p>dubbo在这里实现的功能就是注册发现服务,比如注册是在对应Znode(providers)中创建临时节点.发现服务是在对应Znode(consumers)中创建临时节点.ZooKeeper的粒度不是以微服务为单位,而是以服务提供者提供的接口为粒度.每个接口的下面有providers和consumers两个持久化节点.</p>
 <p><img src="dubbo_zookeeper原理.png" alt="image-20200930004124454"></p>
+<h4 id="Dubbo高级应用"><a href="#Dubbo高级应用" class="headerlink" title="Dubbo高级应用"></a>Dubbo高级应用</h4><p>对于Dubbo的高级功能，目前有较多的三方件有替代功能。</p>
+<ol>
+<li>集群容错：<ol>
+<li><strong>Failover Cluster</strong>:失败自动切换。当服务调用失败后，会切换到集群中的其他机器进行重试。</li>
+<li><strong>Failfast Cluster</strong>：快速失败。当服务调用失败，立即报错</li>
+<li><strong>Failsafe Cluster</strong>:失败安全，出现异常后，直接忽略异</li>
+</ol>
+</li>
+<li>负载均衡：目前Dubbo提供了4中负载均衡策略，默认是随机算法。</li>
+<li>服务降级：把一些非必要的功能在流量较大的时间段暂时关闭。</li>
+</ol>
+<h2 id="服务注册与发现"><a href="#服务注册与发现" class="headerlink" title="服务注册与发现"></a>服务注册与发现</h2><h3 id="Alibaba-Nacos"><a href="#Alibaba-Nacos" class="headerlink" title="Alibaba Nacos"></a>Alibaba Nacos</h3><p>Nacos致力于解决微服务中统一配置，服务注册与发现等问题。</p>
+<ol>
+<li>Nacos支持基于DNS和基于RPC的服务发现。服务提供者使用SDK/OpenAPI或者一个独立的Agent TODo注册Service后，服务消费者可以使用DNS或HTTP/API查找和发现服务。Nacos提供对服务的实时健康检查，阻止向不健康的主机或服务实例发送请求。</li>
+<li>动态配置服务。动态配置服务可以以中心化，外部化和动态化的方式管理所有环境的应用配置和服务配置，可以使配置管理变得更加高效和敏捷。配置中心化管理实现无状态服务更加简单，让服务按需弹性扩展变得更容易。</li>
+</ol>
+<h3 id="API说明"><a href="#API说明" class="headerlink" title="API说明"></a>API说明</h3><p>Nacos提供了SDK及Open API的方式来完成服务注册与发现。</p>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="meta"># 注册微服务</span></div><div class="line"><span class="symbol">OpenAPI:</span><span class="meta-keyword">/nacos/</span>v1<span class="meta-keyword">/ns/</span>instance(POST)</div><div class="line"><span class="symbol">SDK:</span>void registerInstance(String serviceName,String ip,String port) throws NacosException</div><div class="line"><span class="meta"># 获取所有实例</span></div><div class="line">Open API:<span class="meta-keyword">/nacos/</span>v1/instancelist(GET)</div><div class="line"><span class="symbol">SDK:</span> List<span class="params">&lt;Instance&gt;</span> getAllInstances(String serviceName) throws NacosException</div><div class="line"><span class="meta"># 监听服务(监听指定服务下的实例变化，监听服务机制可以让客户端及时感知服务提供者实例的变化)</span></div><div class="line">Open API:<span class="meta-keyword">/nacos/</span>v1<span class="meta-keyword">/ns/</span>instance/list(GET)</div><div class="line">SDK void subscribe(String serviceName,EventListener listener) throws NacosException</div></pre></td></tr></table></figure>
+<h3 id="Nacos高可用部署"><a href="#Nacos高可用部署" class="headerlink" title="Nacos高可用部署"></a>Nacos高可用部署</h3><p>Nacos提供了类似于ZooKeeper的集群架构，包括一个Leader节点和多个Follow节点。和ZooKeeper不同的是，它的数据一致性算法采用的是Raft。</p>
+<p>Nacos作为Spring Cloud Alibaba中服务注册与发现的核心组件，可以很好地帮助开发者将服务自动注册到Nacos服务端，并且能够动态感知和刷新某个服务实例的服务列表中。</p>
+<p><img src="Nacos原理.png" alt="image-20201008233637596"></p>
+<p>注册中心实现原理</p>
+<ol>
+<li>服务实例在启动时注册到服务注册者，并在关闭时注销</li>
+<li>服务消费者查询服务注册表，获得可用实例</li>
+<li>服务注册中心需要调用服务实例的健康检查API来验证它是否能够处理请求。</li>
+</ol>
+<p><img src="/注册中心.png" alt="image-20201008235558711"></p>
+<p>Dubbo在这里只是作为一个通讯协议。</p>
+<p>Nacos Naming Service作为单独的微服务，能够提供注册中心的作用，并且自身能够实现集群算法统一。</p>
+<p><strong>Dubbo+Nacos Service与Dubbo+ZooKeeper的联系与区别</strong>：</p>
+<ol>
+<li>共同点:Nacos Service和ZooKeeper都提供了分布式集群信息通讯的作用，保证了信息的分布式节点的一致性</li>
+<li>不同点：Dubbo + Nacos Service的方式下，实际上是通过Nacos的Open API的方式来实现了服务的注册与发现。并且，Nacos自身能够记录Open API存储的信息，保证在多个节点中的一致性的问题。Dubbo在这里只是作为通讯协议的作用</li>
+<li>Dubbo + ZooKeeper时，Dubbo提供了服务的注册与发现的作用，Dubbo通过在分布式存储ZooKeeper中建立固定节点和临时节点的方式来实现服务的注册与发现，Dubbo在这里不仅仅提供了通讯协议的功能，还提供了服务的注册与发现的功能。而内部信息在多节点的一致性是通过ZooKeeper来进行保证的。</li>
+</ol>
+<p>心跳机制：就是客户端通过schedule定时向服务端发送一个数据包，然后启动一个线程不断检查服务端的回应。如果在设定时间内没有收到服务端的回应，则认为服务器出现故障。Nacos服务端会根据客户端的心跳包不断更新服务的状态。（是一个双向过程）</p>
 ]]></content>
     
     <summary type="html">
