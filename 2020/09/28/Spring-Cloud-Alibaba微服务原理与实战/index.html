@@ -107,8 +107,8 @@
 <meta property="og:image" content="https://caixueyuan.github.io/2020/09/28/Spring-Cloud-Alibaba微服务原理与实战/Dubbo_ZooKeeper.png">
 <meta property="og:image" content="https://caixueyuan.github.io/2020/09/28/Spring-Cloud-Alibaba微服务原理与实战/dubbo_zookeeper原理.png">
 <meta property="og:image" content="https://caixueyuan.github.io/2020/09/28/Spring-Cloud-Alibaba微服务原理与实战/Nacos原理.png">
-<meta property="og:image" content="https://caixueyuan.github.io/注册中心.png">
-<meta property="og:updated_time" content="2020-10-08T16:12:56.848Z">
+<meta property="og:image" content="https://caixueyuan.github.io/2020/09/28/Spring-Cloud-Alibaba微服务原理与实战/注册中心.png">
+<meta property="og:updated_time" content="2020-10-08T16:15:18.258Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring Cloud Alibaba微服务原理与实战">
 <meta name="twitter:description" content="微服务的发展史网站发展历史 单体架构：所有功能都集中在一个war包，部署到一个tomcat web服务器中。（缺点：耦合，一个功能点异常会影响整个应用） 集群及垂直化：通过功能进行划分，将一个巨婴划分成多个不同的模块，不同的模块可以部署到不同的机器中（缺点：无法扩展，需要重复实现功能，比如鉴权等） SOA：面向服务的架构，核心目的是把一些通用的，会被多个上层服务调用的共享业务提取出独立的基础服务，">
@@ -438,7 +438,7 @@
 <li>服务消费者查询服务注册表，获得可用实例</li>
 <li>服务注册中心需要调用服务实例的健康检查API来验证它是否能够处理请求。</li>
 </ol>
-<p><img src="/注册中心.png" alt="image-20201008235558711"></p>
+<p><img src="注册中心.png" alt="image-20201008235558711"></p>
 <p>Dubbo在这里只是作为一个通讯协议。</p>
 <p>Nacos Naming Service作为单独的微服务，能够提供注册中心的作用，并且自身能够实现集群算法统一。</p>
 <p><strong>Dubbo+Nacos Service与Dubbo+ZooKeeper的联系与区别</strong>：</p>

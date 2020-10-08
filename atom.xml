@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://caixueyuan.github.io/"/>
-  <updated>2020-10-08T16:12:56.848Z</updated>
+  <updated>2020-10-08T16:15:18.258Z</updated>
   <id>https://caixueyuan.github.io/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="https://caixueyuan.github.io/2020/09/28/Spring-Cloud-Alibaba%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E6%88%98/"/>
     <id>https://caixueyuan.github.io/2020/09/28/Spring-Cloud-Alibaba微服务原理与实战/</id>
     <published>2020-09-28T15:57:44.000Z</published>
-    <updated>2020-10-08T16:12:56.848Z</updated>
+    <updated>2020-10-08T16:15:18.258Z</updated>
     
     <content type="html"><![CDATA[<h2 id="微服务的发展史"><a href="#微服务的发展史" class="headerlink" title="微服务的发展史"></a>微服务的发展史</h2><h3 id="网站发展历史"><a href="#网站发展历史" class="headerlink" title="网站发展历史"></a>网站发展历史</h3><ol>
 <li>单体架构：所有功能都集中在一个war包，部署到一个tomcat web服务器中。（缺点：耦合，一个功能点异常会影响整个应用）</li>
@@ -89,7 +89,7 @@
 <li>服务消费者查询服务注册表，获得可用实例</li>
 <li>服务注册中心需要调用服务实例的健康检查API来验证它是否能够处理请求。</li>
 </ol>
-<p><img src="/注册中心.png" alt="image-20201008235558711"></p>
+<p><img src="注册中心.png" alt="image-20201008235558711"></p>
 <p>Dubbo在这里只是作为一个通讯协议。</p>
 <p>Nacos Naming Service作为单独的微服务，能够提供注册中心的作用，并且自身能够实现集群算法统一。</p>
 <p><strong>Dubbo+Nacos Service与Dubbo+ZooKeeper的联系与区别</strong>：</p>
