@@ -82,6 +82,8 @@
 
 
 
+  
+
 
   <link rel="alternate" href="/atom.xml" title="caixueyuan" type="application/atom+xml" />
 
@@ -108,7 +110,9 @@
 <meta property="og:image" content="https://caixueyuan.github.io/2020/09/28/Spring-Cloud-Alibaba微服务原理与实战/dubbo_zookeeper原理.png">
 <meta property="og:image" content="https://caixueyuan.github.io/2020/09/28/Spring-Cloud-Alibaba微服务原理与实战/Nacos原理.png">
 <meta property="og:image" content="https://caixueyuan.github.io/2020/09/28/Spring-Cloud-Alibaba微服务原理与实战/注册中心.png">
-<meta property="og:updated_time" content="2020-10-08T16:15:18.258Z">
+<meta property="og:image" content="https://caixueyuan.github.io/2020/09/28/Spring-Cloud-Alibaba微服务原理与实战/Nacos配置中心.png">
+<meta property="og:image" content="https://caixueyuan.github.io/2020/09/28/Spring-Cloud-Alibaba微服务原理与实战/长轮询机制.png">
+<meta property="og:updated_time" content="2020-10-09T16:23:21.853Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring Cloud Alibaba微服务原理与实战">
 <meta name="twitter:description" content="微服务的发展史网站发展历史 单体架构：所有功能都集中在一个war包，部署到一个tomcat web服务器中。（缺点：耦合，一个功能点异常会影响整个应用） 集群及垂直化：通过功能进行划分，将一个巨婴划分成多个不同的模块，不同的模块可以部署到不同的机器中（缺点：无法扩展，需要重复实现功能，比如鉴权等） SOA：面向服务的架构，核心目的是把一些通用的，会被多个上层服务调用的共享业务提取出独立的基础服务，">
@@ -390,7 +394,8 @@
 <h4 id="Apache-Dubbo"><a href="#Apache-Dubbo" class="headerlink" title="Apache Dubbo"></a>Apache Dubbo</h4><p>Apache Dubbo是一个统一的服务治理框架，对服务进行统一/有效的管控，从而保证服务的高效/健康运行。提供了服务治理功能，比如服务注册，监控，路由和容错。核心功能就是监控和服务注册发现。</p>
 <p><img src="Dubbo架构.png" alt="image-20200929232959375"></p>
 <p>Dubbo主要实现点对点的形式来实现服务的通讯（可以把Dubbo看成一种通讯协议），Dubbo可以很好地集成注册中心来实现服务地址的统一管理。比如使用zookeeper来进行管理。</p>
-<h3 id="ZooKeeper"><a href="#ZooKeeper" class="headerlink" title="ZooKeeper"></a>ZooKeeper</h3><h4 id="ZooKeeper介绍"><a href="#ZooKeeper介绍" class="headerlink" title="ZooKeeper介绍"></a>ZooKeeper介绍</h4><p>ZooKeeper的数据是结构化存储的，并没有在物理上体现出文件和目录。ZooKeeper树中的每个节点被称为Znode，维护一个stat状态信息，其中包含数据变化的时间和版本，并且每个Znode可以设置一个value值。每个节点的数据都是允许读和写的.并且Znode的状态发生变化之后,会有事件进行通知.节点的类型如下:</p>
+<p>ZooKeeper</p>
+<h4 id="ZooKeeper介绍"><a href="#ZooKeeper介绍" class="headerlink" title="ZooKeeper介绍"></a>ZooKeeper介绍</h4><p>ZooKeeper的数据是结构化存储的，并没有在物理上体现出文件和目录。ZooKeeper树中的每个节点被称为Znode，维护一个stat状态信息，其中包含数据变化的时间和版本，并且每个Znode可以设置一个value值。每个节点的数据都是允许读和写的.并且Znode的状态发生变化之后,会有事件进行通知.节点的类型如下:</p>
 <ol>
 <li>持久化节点:节点的数据会被持久化到磁盘中</li>
 <li>临时节点:节点的声明周期和创建该节点的客户端的生命周期保持一致,一旦该客户端的会话结束,则该客户端所创建的临时节点会被自动创建(每个节点可以代表一个微服务的状态)</li>
@@ -402,7 +407,8 @@
 <li>分布式独占锁:使用临时节点,在同一个目录中进行创建,谁能够创建成功,谁就能够访问资源.获取独占锁之后,完成工作之后,临时节点进行删除.这个时候其他进程再通过相同的方式进行创建.</li>
 <li>Master选举:第一种方法,通过独占锁的方式来实现Master选举,谁能够创建临时节点的话,谁就是Master,其他的不能够创建成功的微服务都对该处做了订阅;第二个方式是通过临时有序节点的特性来实现,每个微服务分前后的方式构成了一个有序节点,每个节点都注册了对于前一个节点的订阅.如果前面的节点被删除的话,后面一个就成为Master节点.</li>
 </ol>
-<h3 id="Apache-Dubbo集成ZK来实现服务注册"><a href="#Apache-Dubbo集成ZK来实现服务注册" class="headerlink" title="Apache Dubbo集成ZK来实现服务注册"></a>Apache Dubbo集成ZK来实现服务注册</h3><ol>
+<p>Apache Dubbo集成ZK来实现服务注册</p>
+<ol>
 <li>服务动态上下线感知:就是服务调用者要感知到服务提供者上下线的变化</li>
 <li>负载均衡</li>
 </ol>
@@ -448,6 +454,43 @@
 <li>Dubbo + ZooKeeper时，Dubbo提供了服务的注册与发现的作用，Dubbo通过在分布式存储ZooKeeper中建立固定节点和临时节点的方式来实现服务的注册与发现，Dubbo在这里不仅仅提供了通讯协议的功能，还提供了服务的注册与发现的功能。而内部信息在多节点的一致性是通过ZooKeeper来进行保证的。</li>
 </ol>
 <p>心跳机制：就是客户端通过schedule定时向服务端发送一个数据包，然后启动一个线程不断检查服务端的回应。如果在设定时间内没有收到服务端的回应，则认为服务器出现故障。Nacos服务端会根据客户端的心跳包不断更新服务的状态。（是一个双向过程）</p>
+<h2 id="Nacos实现统一配置管理"><a href="#Nacos实现统一配置管理" class="headerlink" title="Nacos实现统一配置管理"></a>Nacos实现统一配置管理</h2><p>各个应用自己独立维护本地配置的方式有其局限性：</p>
+<ol>
+<li>配置的动态更新。本地配置变化需要重启微服务才能够实现配置更新</li>
+<li>配置集中化管理：在微服务中，微服务实例可能有上百个，如果配置属性发生变化的话，变更工作量是巨大</li>
+<li>配置内容的安全性和权限。配置文件随着源代码统一提交到代码库中，容易造成生产环境配置信息的数据泄露</li>
+<li>不同部署环境下配置的管理。</li>
+</ol>
+<p>最基本的方法就是把各个应用系统中的某些配置放在一个第三方中间件上进行统一维护。然后，对于统一配置中心上的数据的变更需要推动到相应的服务节点实现动态更新。包括Config Server和Config Client.</p>
+<h3 id="Spring-Cloud-Alibaba-Nacos-Config"><a href="#Spring-Cloud-Alibaba-Nacos-Config" class="headerlink" title="Spring Cloud Alibaba Nacos Config"></a>Spring Cloud Alibaba Nacos Config</h3><p>Nacos 实现在不同的环境中加载不同配置的能力，主要是通过文件名来进行加载。在Spring Cloud Alibaba Nacos Config中加载Nacos Config Server中的配置对，不仅加载了Data ID以<code>${spring.application.name}.${file-extension:properties}</code>为前缀的基础配置，还会加载Data ID为<code>${spring.application.name}-${profile}.${file-extension:properties}</code>的基础配置</p>
+<p><strong>bootstrap.properties</strong></p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">spring<span class="selector-class">.cloud</span><span class="selector-class">.nacos</span><span class="selector-class">.config</span><span class="selector-class">.file-extension</span>=yaml</div><div class="line">spring<span class="selector-class">.profiles</span><span class="selector-class">.active</span>=prod</div><div class="line">spring<span class="selector-class">.application</span><span class="selector-class">.name</span>=spring-cloud-nacos-config-sample</div></pre></td></tr></table></figure>
+<p>如上图所示，可以通过加载<code>spring-cloud-nacos-config-sampl-prod.yaml</code>文件来实现微服务配置文件加载</p>
+<h3 id="Nacos-Config自定义Namespace和Group"><a href="#Nacos-Config自定义Namespace和Group" class="headerlink" title="Nacos Config自定义Namespace和Group"></a>Nacos Config自定义Namespace和Group</h3><p>Nacos Config都采用默认的Namespace:public和Group：DEFAULT_GROUP.其中Namespace用于解决多环境及多租户用户数据的隔离问题，比如根据指定环境创建不同的Namespace，实现多环境的隔离，或者在多用户的场景中，每个用户可以维护自己的Namespace，实现每个用户的配置数据和注册数据的隔离。而Group可以更加专注于业务层面的数据分组。</p>
+<p>Namespace -&gt;   Group   -&gt;   Data ID(通过Namespace-Group-DataID来获取到配置文件)</p>
+<h3 id="Nacos-Config实现原理解析"><a href="#Nacos-Config实现原理解析" class="headerlink" title="Nacos Config实现原理解析"></a>Nacos Config实现原理解析</h3><h4 id="提供接口"><a href="#提供接口" class="headerlink" title="提供接口"></a>提供接口</h4><ol>
+<li>获取配置，从Nacos Config Server中读取配置</li>
+<li>监听配置：订阅感兴趣的配置，当配置发生变化时可以收到一个事件</li>
+<li>发布配置：将配置发布到Nacos Config Server</li>
+<li>删除配置：删除配置中心的指定配置</li>
+</ol>
+<h4 id="配置的CRUD"><a href="#配置的CRUD" class="headerlink" title="配置的CRUD"></a>配置的CRUD</h4><p>如何能够实现Nacos Server的数据一致性：通过数据库来实现持久化</p>
+<p><img src="Nacos配置中心.png" alt="image-20201009233748455"></p>
+<p>配置中心通过数据库来实现持久化，Config Service提供外部访问接口，来添加配置和删除配置等。Nacos Client是作为一个微服务实例，能够拉取最新的配置。</p>
+<h4 id="动态监听之Pull-Or-Push"><a href="#动态监听之Pull-Or-Push" class="headerlink" title="动态监听之Pull Or Push"></a>动态监听之Pull Or Push</h4><ol>
+<li>Pull：客户端从服务端主动拉取数据，客户端需要定时从服务端拉取一次数据，由于定时任务会存在一定的时间间隔，所以不能够实现实时更新。并且，如果没有服务端配置长时间不更新的情况下，会造成无效的Pull</li>
+<li>Push：服务端主动把数据推送到客户端中，能够实现实时更新。但是呢，服务端需要维护与客户端的长连接，如果客户端的数量较多的话，需要耗费大量的内存资源来保存每个连接，并且检测连接的有效性，还需要心跳机制来维护每个连接的状态。对于消息的发送的复杂性集中与服务端中，由服务端来控制连接的存在，以及如果事件更新较快的话，可能会存在挤压。</li>
+</ol>
+<p>Nacos使用的是长轮询机制。所谓长轮询机制的好处在于：客户端自动拉取数据，由客户端来控制配置的更新，不需要服务器来维护与客户端的链接，能够减少服务端的资源使用量。并且，由于长轮询时间比较长，能够减少客户端发起请求的无效资源消耗量。另外，如果在长轮询过程中，出现事件更新的话，能够直接返回请求，来达到实时推送的作用，从而达到PUSH的操作。也就是说长轮询能够实现主动拉取（PULL）和实时推送（PUSH）</p>
+<h4 id="长轮询机制"><a href="#长轮询机制" class="headerlink" title="长轮询机制"></a>长轮询机制</h4><p><img src="长轮询机制.png" alt="image-20201010001323906"></p>
+<p><strong>长轮询的步骤如下：</strong></p>
+<ol>
+<li>客户端发起请求</li>
+<li>请求被客户端处理，检查配置是否发生更新，如果配置已经发生更新的话，请求直接返回</li>
+<li>如果请求到达时，请求没有发生变化，该请求进入到缓存队列中。如果在长轮询的过程中（比如29.5s中），有配置发生变化的话，通过遍历缓存中的对象（或者通过Map的方式来实现定点快速更新的方式），来将该请求进行返回</li>
+<li>如果在长轮询的过程中（比如29.5s后）配置依然没有发生变化的，那么请求在定时任务的作用下，检查配置是否返回变化，并且返回最终的结果。</li>
+</ol>
+<p>优化点:这样的话，对于每个配置需要进行两次配置检查，第一次为处理PULL请求，第二次为定时任务检查配置是否更新。可以减少第二次配置检查，将这一此配置更新检查顺延到下一次的长轮询请求，来减少空闲请求占用的资源。也就是优化第4步，让其不做检查，直接返回结果。</p>
 
       
     </div>
@@ -634,7 +677,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#微服务的发展史"><span class="nav-number">1.</span> <span class="nav-text">微服务的发展史</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#网站发展历史"><span class="nav-number">1.1.</span> <span class="nav-text">网站发展历史</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#微服务架构："><span class="nav-number">1.2.</span> <span class="nav-text">微服务架构：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-Cloud的核心之Spring-Boot"><span class="nav-number">2.</span> <span class="nav-text">Spring Cloud的核心之Spring Boot</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#重新认识Spring-Boot"><span class="nav-number">2.1.</span> <span class="nav-text">重新认识Spring Boot</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Spring-IOC-DI"><span class="nav-number">2.1.1.</span> <span class="nav-text">Spring IOC/DI</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Spring-Boot自动装配的原理"><span class="nav-number">2.1.2.</span> <span class="nav-text">Spring Boot自动装配的原理</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#微服务架构下的服务治理"><span class="nav-number">3.</span> <span class="nav-text">微服务架构下的服务治理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Apache-Dubbo"><span class="nav-number">3.0.1.</span> <span class="nav-text">Apache Dubbo</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ZooKeeper"><span class="nav-number">3.1.</span> <span class="nav-text">ZooKeeper</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ZooKeeper介绍"><span class="nav-number">3.1.1.</span> <span class="nav-text">ZooKeeper介绍</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#常用场景"><span class="nav-number">3.1.2.</span> <span class="nav-text">常用场景</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Apache-Dubbo集成ZK来实现服务注册"><span class="nav-number">3.2.</span> <span class="nav-text">Apache Dubbo集成ZK来实现服务注册</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#实现原理"><span class="nav-number">3.2.1.</span> <span class="nav-text">实现原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Dubbo高级应用"><span class="nav-number">3.2.2.</span> <span class="nav-text">Dubbo高级应用</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#服务注册与发现"><span class="nav-number">4.</span> <span class="nav-text">服务注册与发现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Alibaba-Nacos"><span class="nav-number">4.1.</span> <span class="nav-text">Alibaba Nacos</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#API说明"><span class="nav-number">4.2.</span> <span class="nav-text">API说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Nacos高可用部署"><span class="nav-number">4.3.</span> <span class="nav-text">Nacos高可用部署</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#微服务的发展史"><span class="nav-number">1.</span> <span class="nav-text">微服务的发展史</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#网站发展历史"><span class="nav-number">1.1.</span> <span class="nav-text">网站发展历史</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#微服务架构："><span class="nav-number">1.2.</span> <span class="nav-text">微服务架构：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-Cloud的核心之Spring-Boot"><span class="nav-number">2.</span> <span class="nav-text">Spring Cloud的核心之Spring Boot</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#重新认识Spring-Boot"><span class="nav-number">2.1.</span> <span class="nav-text">重新认识Spring Boot</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Spring-IOC-DI"><span class="nav-number">2.1.1.</span> <span class="nav-text">Spring IOC/DI</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Spring-Boot自动装配的原理"><span class="nav-number">2.1.2.</span> <span class="nav-text">Spring Boot自动装配的原理</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#微服务架构下的服务治理"><span class="nav-number">3.</span> <span class="nav-text">微服务架构下的服务治理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Apache-Dubbo"><span class="nav-number">3.0.1.</span> <span class="nav-text">Apache Dubbo</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ZooKeeper介绍"><span class="nav-number">3.0.2.</span> <span class="nav-text">ZooKeeper介绍</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#常用场景"><span class="nav-number">3.0.3.</span> <span class="nav-text">常用场景</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#实现原理"><span class="nav-number">3.0.4.</span> <span class="nav-text">实现原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Dubbo高级应用"><span class="nav-number">3.0.5.</span> <span class="nav-text">Dubbo高级应用</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#服务注册与发现"><span class="nav-number">4.</span> <span class="nav-text">服务注册与发现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Alibaba-Nacos"><span class="nav-number">4.1.</span> <span class="nav-text">Alibaba Nacos</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#API说明"><span class="nav-number">4.2.</span> <span class="nav-text">API说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Nacos高可用部署"><span class="nav-number">4.3.</span> <span class="nav-text">Nacos高可用部署</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Nacos实现统一配置管理"><span class="nav-number">5.</span> <span class="nav-text">Nacos实现统一配置管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Spring-Cloud-Alibaba-Nacos-Config"><span class="nav-number">5.1.</span> <span class="nav-text">Spring Cloud Alibaba Nacos Config</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Nacos-Config自定义Namespace和Group"><span class="nav-number">5.2.</span> <span class="nav-text">Nacos Config自定义Namespace和Group</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Nacos-Config实现原理解析"><span class="nav-number">5.3.</span> <span class="nav-text">Nacos Config实现原理解析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#提供接口"><span class="nav-number">5.3.1.</span> <span class="nav-text">提供接口</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#配置的CRUD"><span class="nav-number">5.3.2.</span> <span class="nav-text">配置的CRUD</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#动态监听之Pull-Or-Push"><span class="nav-number">5.3.3.</span> <span class="nav-text">动态监听之Pull Or Push</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#长轮询机制"><span class="nav-number">5.3.4.</span> <span class="nav-text">长轮询机制</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
