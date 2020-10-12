@@ -82,6 +82,8 @@
 
 
 
+  
+
 
   <link rel="alternate" href="/atom.xml" title="caixueyuan" type="application/atom+xml" />
 
@@ -122,7 +124,9 @@
 <meta property="og:image" content="https://caixueyuan.github.io/2020/09/28/Spring-Cloud-Alibaba微服务原理与实战/RocketMQ代码原理.png">
 <meta property="og:image" content="https://caixueyuan.github.io/2020/09/28/Spring-Cloud-Alibaba微服务原理与实战/RocketMQ集群管理图.png">
 <meta property="og:image" content="https://caixueyuan.github.io/2020/09/28/Spring-Cloud-Alibaba微服务原理与实战/RocketMQ存储设计.png">
-<meta property="og:updated_time" content="2020-10-11T16:27:51.057Z">
+<meta property="og:image" content="https://caixueyuan.github.io/2020/09/28/Spring-Cloud-Alibaba微服务原理与实战/网关.png">
+<meta property="og:image" content="https://caixueyuan.github.io/2020/09/28/Spring-Cloud-Alibaba微服务原理与实战/Spring_cloud_gateway集成Nacos.png">
+<meta property="og:updated_time" content="2020-10-12T15:51:51.175Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring Cloud Alibaba微服务原理与实战">
 <meta name="twitter:description" content="微服务的发展史网站发展历史 单体架构：所有功能都集中在一个war包，部署到一个tomcat web服务器中。（缺点：耦合，一个功能点异常会影响整个应用） 集群及垂直化：通过功能进行划分，将一个巨婴划分成多个不同的模块，不同的模块可以部署到不同的机器中（缺点：无法扩展，需要重复实现功能，比如鉴权等） SOA：面向服务的架构，核心目的是把一些通用的，会被多个上层服务调用的共享业务提取出独立的基础服务，">
@@ -701,6 +705,28 @@
 <li>请求转发和路由：接受客户端的所有请求，并将请求转发到后端的微服务中。相当于门面模式</li>
 <li>过滤：网关会拦截所有请求并完成一系列的横切工作，比如鉴权，限流。</li>
 </ol>
+<p><img src="网关.png" alt="image-20201012231321393"></p>
+<p>路由（Route):它是网关的基本组件，由ID，目标URI，Predicate集合，Filter集合组成</p>
+<p>谓语（Predicate):提供了断言的功能，可以匹配HTTP请求中的任何内容，如果Predicate的聚合判断结果为true，则意味这该请求会被当前Router进行转发</p>
+<ol>
+<li>根据指定时间规则匹配路由</li>
+<li>根据携带的Cookie是否匹配配置的规则</li>
+<li>根据Header头消息对应的name和value与Predicate配置的值是否匹配</li>
+<li>根据Host字段来进行路由</li>
+<li>根据HTTP请求的Method属性来实现路由</li>
+<li>根据请求路径来进行路由</li>
+</ol>
+<p>过滤器（Filter):为请求提供前置和后置的过滤</p>
+<ol>
+<li>Pre类型的过滤器在请求转发到后端微服务之前执行，在Pre类型过滤器链中可以做鉴权/限流等操作</li>
+<li>Post类型的过滤在请求执行完之后，将结果返回客户端之前执行。</li>
+</ol>
+<p>GlobalFilter:会应用到所有的路由上，而GatewayFilter只会应用到单个路由或一个分组的路由上。</p>
+<p>当Gateway接收到请求时，Filtering Web Handle处理器会将所有的GlobalFilter实例及所有路由上所配置的GatewayFilter实例添加到一条过滤链中。该过滤器链里的所有过滤器都会按照@Order注解所注定的数字的大小进行排序</p>
+<p><img src="Spring_cloud_gateway集成Nacos.png" alt="image-20201012234118072"></p>
+<p>在外部请求进入API网关时，会先经过SentinelGatewayFilter，在该过滤器中依次进行Route ID/API分组匹配，请求属性解析和参数组装，通过配置的网关限流规则来解析请求属性，并按照参数索引顺序组装参数数组，最终传入到SphU.entry(name,args)中。</p>
+<p>在Sentinel API Gateway Adapter Common 模块中在Slot Chain中添加GatewayFlowSlot，专门用来处理网关限流规则的检查。</p>
+<p>Sentinel限制规则最终在网关的入口为Filter。</p>
 
       
     </div>
