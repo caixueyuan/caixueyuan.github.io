@@ -1,0 +1,804 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="服务器," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="caixueyuan" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="tomcat介绍应用服务器和Web服务器的区别应用服务器（如Tomcat)，是作为复杂业务逻辑处理的服务器，侧重于构建业务系统的组件支撑，以简化复杂系统的构建工作 Web服务器（如Nginx），侧重于HTTP请求（静态资源）的处理。 原因：对于Tomcat，一般情况下都是阻塞式的，对于每个请求，Tomcat会创建一个新的线程来处理请求，在大并发场景下，请求量较大，远远超过了系统的线程容量，导致系统">
+<meta name="keywords" content="服务器">
+<meta property="og:type" content="article">
+<meta property="og:title" content="tomcat应知应会">
+<meta property="og:url" content="https://caixueyuan.github.io/2020/10/21/tomcat应知应会/index.html">
+<meta property="og:site_name" content="caixueyuan">
+<meta property="og:description" content="tomcat介绍应用服务器和Web服务器的区别应用服务器（如Tomcat)，是作为复杂业务逻辑处理的服务器，侧重于构建业务系统的组件支撑，以简化复杂系统的构建工作 Web服务器（如Nginx），侧重于HTTP请求（静态资源）的处理。 原因：对于Tomcat，一般情况下都是阻塞式的，对于每个请求，Tomcat会创建一个新的线程来处理请求，在大并发场景下，请求量较大，远远超过了系统的线程容量，导致系统">
+<meta property="og:image" content="https://caixueyuan.github.io/2020/10/21/tomcat应知应会/tomcat总体架构.png">
+<meta property="og:image" content="https://caixueyuan.github.io/2020/10/21/tomcat应知应会/tomcat类加载器.png">
+<meta property="og:updated_time" content="2020-10-22T16:01:30.346Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="tomcat应知应会">
+<meta name="twitter:description" content="tomcat介绍应用服务器和Web服务器的区别应用服务器（如Tomcat)，是作为复杂业务逻辑处理的服务器，侧重于构建业务系统的组件支撑，以简化复杂系统的构建工作 Web服务器（如Nginx），侧重于HTTP请求（静态资源）的处理。 原因：对于Tomcat，一般情况下都是阻塞式的，对于每个请求，Tomcat会创建一个新的线程来处理请求，在大并发场景下，请求量较大，远远超过了系统的线程容量，导致系统">
+<meta name="twitter:image" content="https://caixueyuan.github.io/2020/10/21/tomcat应知应会/tomcat总体架构.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://caixueyuan.github.io/2020/10/21/tomcat应知应会/"/>
+
+
+
+
+
+  <title>tomcat应知应会 | caixueyuan</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">caixueyuan</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">SCUT</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://caixueyuan.github.io/2020/10/21/tomcat应知应会/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="caixueyuan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="caixueyuan">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">tomcat应知应会</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-10-21T00:07:30+08:00">
+                2020-10-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/微服务/" itemprop="url" rel="index">
+                    <span itemprop="name">微服务</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="tomcat介绍"><a href="#tomcat介绍" class="headerlink" title="tomcat介绍"></a>tomcat介绍</h2><h3 id="应用服务器和Web服务器的区别"><a href="#应用服务器和Web服务器的区别" class="headerlink" title="应用服务器和Web服务器的区别"></a>应用服务器和Web服务器的区别</h3><p>应用服务器（如Tomcat)，是作为复杂业务逻辑处理的服务器，侧重于构建业务系统的组件支撑，以简化复杂系统的构建工作</p>
+<p>Web服务器（如Nginx），侧重于HTTP请求（静态资源）的处理。</p>
+<p>原因：对于Tomcat，一般情况下都是阻塞式的，对于每个请求，Tomcat会创建一个新的线程来处理请求，在大并发场景下，请求量较大，远远超过了系统的线程容量，导致系统可能出现宕机。特别是对于静态资源，如果静态资源相对较大的话，阻塞式的请求处理，会大大拖低系统的处理能力，让系统无法处理到来的请求。所以需要Nginx web服务器来处理静态资源，将对于静态资源的请求（如css文件，js文件）等用Nginx来进行。由于Nginx服务器对于每个请求，都是用进程来进行处理，默认情况下每个核一个进程来进行，不会有线程创建和释放的消耗。所以线程相对较好。（Nginx为啥子好，还不太清楚）。而对于业务的请求，通过Nginx进行转发到Tomcat应用服务器来进行处理，通过tomcat来处理复杂的请求。</p>
+<p>业界通用的请求处理模式如下：</p>
+<p>请求  —–&gt;  Gateway（负载均衡，鉴权）      ——&gt;     Nginx(处理静态资源)    ——-&gt; tomcat（处理Rest请求等）</p>
+<p>Gateway分为外部请求和内部请求，有些时候两次会合一。</p>
+<h3 id="Tomcat总体架构"><a href="#Tomcat总体架构" class="headerlink" title="Tomcat总体架构"></a>Tomcat总体架构</h3><p>Tomcat总体架构如下</p>
+<p><img src="tomcat总体架构.png" alt="image-20201022230717109"></p>
+<ol>
+<li>Bootstrap:通过Bootstrap来拉起tomcat实例</li>
+<li>Catalina:通过Digester组件来解析server.xml文件，拉起Catalina实例</li>
+<li>Server:通过Catalina来初始化Server。每个Server等实例都继承Lifecycle接口，实现对该实例进行周期管理</li>
+<li>Service:与Server是多对一的关系，Server下管理多个应用程序</li>
+<li>Connector:作为Service的组件之一，主要负责请求的接收，协议处理等，处理请求的URL和请求的信息</li>
+<li>Engine：引擎，与Service也是多对一的关系，也是一个容器，相当于请求处理的集合，包含请求的各个部分</li>
+<li>AbstractEndpoint:与端口进行对应，主要的作用是从指定的端口读取数据，包括启动端口监听等</li>
+<li>Processor:协议处理类，主要是对读取的数据进行指定协议的处理，处理出请求的数据出来</li>
+<li>MapperListener:连接监听器，不是ProtocolHandle处理的一部分，而是Service请求的一部分，主要是对抽取出来的请求进行处理，进行Mapper映射</li>
+<li>Mapper:存储着对象的映射</li>
+<li>Host：相当于域名服务器，对一个域名中的所有请求进行处理</li>
+<li>Context：相当于一个webapp</li>
+<li>Wrapper:相当于URL请求映射，包含Servlet请求。</li>
+<li>对于每一个Engine，Host，Context和Wrapper，都有一个Pipeline，每个Pipeline都使用了责任链模式，可以对请求进行拦截处理</li>
+<li>经过以上的Pipeline层次之后，才会经过Filter（Filter也是责任链模式），用来对请求进行处理，在Servlet请求的前面。</li>
+</ol>
+<h3 id="Tomcat类加载器"><a href="#Tomcat类加载器" class="headerlink" title="Tomcat类加载器"></a>Tomcat类加载器</h3><p><img src="tomcat类加载器.png" alt="image-20201022232855659"></p>
+<ol>
+<li>Bootstrap层次：主要加载jre核心类，可以通过-bootclasspath的方式来进行负载</li>
+<li>Extension层次：主要是用来加载Java核心代码，对于核心代码进行修改，可以通过以上的方式</li>
+<li>System层次：对于-classpath和-module-path的jar包，一概都是由System类加载进行加载。所以，对于应用程序来说，大部分的类都是由System Class Loader来加载的。只有类是由System层次加载的，才会使用CDS（Class Data Sharing)来进行加载的。对于bootstrap.jar和catalina-juli.jar都是由该类加载进行加载。</li>
+<li>Common Class Loader:Common类加载器是Tomcat类加载器，主要用来加载Tomcat启动应用服务器内部和Web应用均可见的类。可以在catalina.properties进行配置。</li>
+<li>Catalina Class Loader:用来加载只有Tomcat应用服务器内部可见的类，对于业务是不可见的。可以在catalina.properties进行配置。</li>
+<li>Shared Class Loader:用来加载Web应用共享的类，这些类Tomcat服务器不会依赖。可以在catalina.properties进行配置。</li>
+<li>Web App Class Loader:用来加载Web应用的类，该类只有该Context下才可见。</li>
+</ol>
+<p>Tomcat提供的Web应用类加载器与默认的委托模式有所不同。当进行类加载时，除JVM基础类库外，它会首先尝试通过当前类加载器加载，然后进行委托。Servlet规范相关API禁止通过。</p>
+<ol>
+<li>从缓存中加载</li>
+<li>如果没有，则从JVM的Bootstrap类加载器加载</li>
+<li>如果没有，则从当前类加载器加载，按照WEB-INF/classes，WEB-INF/lib的顺序</li>
+<li>如果没有，则从父类加载器加载，由于父类加载器采用默认的委派模式，所以加载顺序为System，Common，Shared。</li>
+</ol>
+<p>Tomcat提供了delegate属性用于控制是否启动Java委派模式，默认为false（不启动），当配置为true的时候，Tomcat将使用Java默认的委派模式，即</p>
+<ol>
+<li>从缓存中加载</li>
+<li>如果没有，从JVM的Bootstrap类加载器加载</li>
+<li>如果没有，则从父类加载器加载（System,Common,Shared)</li>
+<li>如果没有，则从当前类加载加载</li>
+</ol>
+<p>Tomcat还可以通过packageTriggersDeny属性只让某些包路径采用Java的委派模式，Web应用类加载器对于符合packageTriggersDeny指定包路径的类强制采用Java的委派模式。</p>
+<p>Tomcat通过该机制实现为Web应用中的Jar包覆盖服务器提供包的目的。Java核心类库/Servlet规范相关类库是无法覆盖的，此外Java默认提供的诸如XML工具包，由于位于JVM的Bootstrap类加载也无法覆盖，只能通过endorsed的方式来实现。</p>
+<h3 id="Web请求处理"><a href="#Web请求处理" class="headerlink" title="Web请求处理"></a>Web请求处理</h3><ol>
+<li>根据Connector的请求和响应对象创建Servlet请求和响应</li>
+<li>转换请求参数并完成请求映射</li>
+<li>得到当前的Engine的第一个Valve并执行，完成客户端请求处理</li>
+<li>对于Engine，Host，Context，Wrapper中Pipeline中Valve进行处理</li>
+<li>对于ApplicationFilterChain和Filter进行处理</li>
+<li>找到对应的Servlet，并进行处理</li>
+</ol>
+<h3 id="Tomcat配置文件"><a href="#Tomcat配置文件" class="headerlink" title="Tomcat配置文件"></a>Tomcat配置文件</h3><ol>
+<li>catalina.properties:该列主要是对类加载器的配置</li>
+<li>server.xml：用来配置启动过程的Service，Host，Context等配置</li>
+<li>context.xml：用来配置寻找web.xml</li>
+<li>web.xml：主要是类的应用逻辑的配置，包括Filter配置等</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/服务器/" rel="tag"># 服务器</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/09/28/Spring-Cloud-Alibaba微服务原理与实战/" rel="next" title="Spring Cloud Alibaba微服务原理与实战">
+                <i class="fa fa-chevron-left"></i> Spring Cloud Alibaba微服务原理与实战
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="caixueyuan" />
+          <p class="site-author-name" itemprop="name">caixueyuan</p>
+           
+              <p class="site-description motion-element" itemprop="description">Java后台开发程序员</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">69</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">41</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#tomcat介绍"><span class="nav-number">1.</span> <span class="nav-text">tomcat介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#应用服务器和Web服务器的区别"><span class="nav-number">1.1.</span> <span class="nav-text">应用服务器和Web服务器的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Tomcat总体架构"><span class="nav-number">1.2.</span> <span class="nav-text">Tomcat总体架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Tomcat类加载器"><span class="nav-number">1.3.</span> <span class="nav-text">Tomcat类加载器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Web请求处理"><span class="nav-number">1.4.</span> <span class="nav-text">Web请求处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Tomcat配置文件"><span class="nav-number">1.5.</span> <span class="nav-text">Tomcat配置文件</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">caixueyuan</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

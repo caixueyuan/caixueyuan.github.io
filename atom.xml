@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://caixueyuan.github.io/"/>
-  <updated>2020-10-12T15:51:51.175Z</updated>
+  <updated>2020-10-22T16:01:30.346Z</updated>
   <id>https://caixueyuan.github.io/</id>
   
   <author>
@@ -14,6 +14,93 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>tomcat应知应会</title>
+    <link href="https://caixueyuan.github.io/2020/10/21/tomcat%E5%BA%94%E7%9F%A5%E5%BA%94%E4%BC%9A/"/>
+    <id>https://caixueyuan.github.io/2020/10/21/tomcat应知应会/</id>
+    <published>2020-10-20T16:07:30.000Z</published>
+    <updated>2020-10-22T16:01:30.346Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="tomcat介绍"><a href="#tomcat介绍" class="headerlink" title="tomcat介绍"></a>tomcat介绍</h2><h3 id="应用服务器和Web服务器的区别"><a href="#应用服务器和Web服务器的区别" class="headerlink" title="应用服务器和Web服务器的区别"></a>应用服务器和Web服务器的区别</h3><p>应用服务器（如Tomcat)，是作为复杂业务逻辑处理的服务器，侧重于构建业务系统的组件支撑，以简化复杂系统的构建工作</p>
+<p>Web服务器（如Nginx），侧重于HTTP请求（静态资源）的处理。</p>
+<p>原因：对于Tomcat，一般情况下都是阻塞式的，对于每个请求，Tomcat会创建一个新的线程来处理请求，在大并发场景下，请求量较大，远远超过了系统的线程容量，导致系统可能出现宕机。特别是对于静态资源，如果静态资源相对较大的话，阻塞式的请求处理，会大大拖低系统的处理能力，让系统无法处理到来的请求。所以需要Nginx web服务器来处理静态资源，将对于静态资源的请求（如css文件，js文件）等用Nginx来进行。由于Nginx服务器对于每个请求，都是用进程来进行处理，默认情况下每个核一个进程来进行，不会有线程创建和释放的消耗。所以线程相对较好。（Nginx为啥子好，还不太清楚）。而对于业务的请求，通过Nginx进行转发到Tomcat应用服务器来进行处理，通过tomcat来处理复杂的请求。</p>
+<p>业界通用的请求处理模式如下：</p>
+<p>请求  —–&gt;  Gateway（负载均衡，鉴权）      ——&gt;     Nginx(处理静态资源)    ——-&gt; tomcat（处理Rest请求等）</p>
+<p>Gateway分为外部请求和内部请求，有些时候两次会合一。</p>
+<h3 id="Tomcat总体架构"><a href="#Tomcat总体架构" class="headerlink" title="Tomcat总体架构"></a>Tomcat总体架构</h3><p>Tomcat总体架构如下</p>
+<p><img src="tomcat总体架构.png" alt="image-20201022230717109"></p>
+<ol>
+<li>Bootstrap:通过Bootstrap来拉起tomcat实例</li>
+<li>Catalina:通过Digester组件来解析server.xml文件，拉起Catalina实例</li>
+<li>Server:通过Catalina来初始化Server。每个Server等实例都继承Lifecycle接口，实现对该实例进行周期管理</li>
+<li>Service:与Server是多对一的关系，Server下管理多个应用程序</li>
+<li>Connector:作为Service的组件之一，主要负责请求的接收，协议处理等，处理请求的URL和请求的信息</li>
+<li>Engine：引擎，与Service也是多对一的关系，也是一个容器，相当于请求处理的集合，包含请求的各个部分</li>
+<li>AbstractEndpoint:与端口进行对应，主要的作用是从指定的端口读取数据，包括启动端口监听等</li>
+<li>Processor:协议处理类，主要是对读取的数据进行指定协议的处理，处理出请求的数据出来</li>
+<li>MapperListener:连接监听器，不是ProtocolHandle处理的一部分，而是Service请求的一部分，主要是对抽取出来的请求进行处理，进行Mapper映射</li>
+<li>Mapper:存储着对象的映射</li>
+<li>Host：相当于域名服务器，对一个域名中的所有请求进行处理</li>
+<li>Context：相当于一个webapp</li>
+<li>Wrapper:相当于URL请求映射，包含Servlet请求。</li>
+<li>对于每一个Engine，Host，Context和Wrapper，都有一个Pipeline，每个Pipeline都使用了责任链模式，可以对请求进行拦截处理</li>
+<li>经过以上的Pipeline层次之后，才会经过Filter（Filter也是责任链模式），用来对请求进行处理，在Servlet请求的前面。</li>
+</ol>
+<h3 id="Tomcat类加载器"><a href="#Tomcat类加载器" class="headerlink" title="Tomcat类加载器"></a>Tomcat类加载器</h3><p><img src="tomcat类加载器.png" alt="image-20201022232855659"></p>
+<ol>
+<li>Bootstrap层次：主要加载jre核心类，可以通过-bootclasspath的方式来进行负载</li>
+<li>Extension层次：主要是用来加载Java核心代码，对于核心代码进行修改，可以通过以上的方式</li>
+<li>System层次：对于-classpath和-module-path的jar包，一概都是由System类加载进行加载。所以，对于应用程序来说，大部分的类都是由System Class Loader来加载的。只有类是由System层次加载的，才会使用CDS（Class Data Sharing)来进行加载的。对于bootstrap.jar和catalina-juli.jar都是由该类加载进行加载。</li>
+<li>Common Class Loader:Common类加载器是Tomcat类加载器，主要用来加载Tomcat启动应用服务器内部和Web应用均可见的类。可以在catalina.properties进行配置。</li>
+<li>Catalina Class Loader:用来加载只有Tomcat应用服务器内部可见的类，对于业务是不可见的。可以在catalina.properties进行配置。</li>
+<li>Shared Class Loader:用来加载Web应用共享的类，这些类Tomcat服务器不会依赖。可以在catalina.properties进行配置。</li>
+<li>Web App Class Loader:用来加载Web应用的类，该类只有该Context下才可见。</li>
+</ol>
+<p>Tomcat提供的Web应用类加载器与默认的委托模式有所不同。当进行类加载时，除JVM基础类库外，它会首先尝试通过当前类加载器加载，然后进行委托。Servlet规范相关API禁止通过。</p>
+<ol>
+<li>从缓存中加载</li>
+<li>如果没有，则从JVM的Bootstrap类加载器加载</li>
+<li>如果没有，则从当前类加载器加载，按照WEB-INF/classes，WEB-INF/lib的顺序</li>
+<li>如果没有，则从父类加载器加载，由于父类加载器采用默认的委派模式，所以加载顺序为System，Common，Shared。</li>
+</ol>
+<p>Tomcat提供了delegate属性用于控制是否启动Java委派模式，默认为false（不启动），当配置为true的时候，Tomcat将使用Java默认的委派模式，即</p>
+<ol>
+<li>从缓存中加载</li>
+<li>如果没有，从JVM的Bootstrap类加载器加载</li>
+<li>如果没有，则从父类加载器加载（System,Common,Shared)</li>
+<li>如果没有，则从当前类加载加载</li>
+</ol>
+<p>Tomcat还可以通过packageTriggersDeny属性只让某些包路径采用Java的委派模式，Web应用类加载器对于符合packageTriggersDeny指定包路径的类强制采用Java的委派模式。</p>
+<p>Tomcat通过该机制实现为Web应用中的Jar包覆盖服务器提供包的目的。Java核心类库/Servlet规范相关类库是无法覆盖的，此外Java默认提供的诸如XML工具包，由于位于JVM的Bootstrap类加载也无法覆盖，只能通过endorsed的方式来实现。</p>
+<h3 id="Web请求处理"><a href="#Web请求处理" class="headerlink" title="Web请求处理"></a>Web请求处理</h3><ol>
+<li>根据Connector的请求和响应对象创建Servlet请求和响应</li>
+<li>转换请求参数并完成请求映射</li>
+<li>得到当前的Engine的第一个Valve并执行，完成客户端请求处理</li>
+<li>对于Engine，Host，Context，Wrapper中Pipeline中Valve进行处理</li>
+<li>对于ApplicationFilterChain和Filter进行处理</li>
+<li>找到对应的Servlet，并进行处理</li>
+</ol>
+<h3 id="Tomcat配置文件"><a href="#Tomcat配置文件" class="headerlink" title="Tomcat配置文件"></a>Tomcat配置文件</h3><ol>
+<li>catalina.properties:该列主要是对类加载器的配置</li>
+<li>server.xml：用来配置启动过程的Service，Host，Context等配置</li>
+<li>context.xml：用来配置寻找web.xml</li>
+<li>web.xml：主要是类的应用逻辑的配置，包括Filter配置等</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;tomcat介绍&quot;&gt;&lt;a href=&quot;#tomcat介绍&quot; class=&quot;headerlink&quot; title=&quot;tomcat介绍&quot;&gt;&lt;/a&gt;tomcat介绍&lt;/h2&gt;&lt;h3 id=&quot;应用服务器和Web服务器的区别&quot;&gt;&lt;a href=&quot;#应用服务器和Web服务器的区
+    
+    </summary>
+    
+      <category term="微服务" scheme="https://caixueyuan.github.io/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/"/>
+    
+    
+      <category term="服务器" scheme="https://caixueyuan.github.io/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/"/>
+    
+  </entry>
   
   <entry>
     <title>Spring Cloud Alibaba微服务原理与实战</title>
@@ -1754,75 +1841,6 @@
     <summary type="html">
     
       &lt;h2 id=&quot;I-O体系结构&quot;&gt;&lt;a href=&quot;#I-O体系结构&quot; class=&quot;headerlink&quot; title=&quot;I/O体系结构&quot;&gt;&lt;/a&gt;I/O体系结构&lt;/h2&gt;&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/caixue
-    
-    </summary>
-    
-      <category term="Linux" scheme="https://caixueyuan.github.io/categories/Linux/"/>
-    
-    
-      <category term="Linux基础知识" scheme="https://caixueyuan.github.io/tags/Linux%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>锁和进程间通讯</title>
-    <link href="https://caixueyuan.github.io/2019/05/26/%E9%94%81%E5%92%8C%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E8%AE%AF/"/>
-    <id>https://caixueyuan.github.io/2019/05/26/锁和进程间通讯/</id>
-    <published>2019-05-26T04:20:46.000Z</published>
-    <updated>2019-05-26T13:09:30.207Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><blockquote>
-<ul>
-<li><p>临界区：访问和操作共享数据的代码段</p>
-</li>
-<li><p>竞态条件：当有多个线程同时进入临界区时，执行结果取决于线程的执行顺序。也就是说多个线程如果不受控制的话，那么产生的结果不一定是我们想要的</p>
-</li>
-</ul>
-</blockquote>
-<h2 id="内核锁"><a href="#内核锁" class="headerlink" title="内核锁"></a>内核锁</h2><p>锁是有开销的，内核锁的关键的开销在于CPU访问内存的时间，正常情况下CPU都是访问寄存器，寄存器的速度更快</p>
-<h3 id="原子操作"><a href="#原子操作" class="headerlink" title="原子操作"></a>原子操作</h3><p>概念：该操作在执行完成前不会允许被打断，是最小的执行单元。</p>
-<p>原子类型定义如下：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span> <span class="keyword">volatile</span> <span class="keyword">int</span> counter; &#125; <span class="keyword">atomic_t</span>;</div></pre></td></tr></table></figure>
-<p>volatile修饰字段告诉gcc不要对该类型的数据做优化处理，对它的访问都是对内存的访问，而不是对寄存器的访问。 </p>
-<p>用处：常用于引用计数</p>
-<h3 id="信号量"><a href="#信号量" class="headerlink" title="信号量"></a>信号量</h3><p>信号量在创建时需要设置一个初始值，表示同时可以有几个任务可以访问该信号量保护的共享资源，初始值为1就变成互斥锁（Mutex），即同时只能有一个任务可以访问信号量保护的共享资源。一个任务要想访问共享资源，首先必须得到信号量，获取信号量的操作将把信号量的值减1，若当前信号量的值为负数，表明无法获得信号量，该任务必须挂起在该信号量的等待队列等待该信号量可用；若当前信号量的值为非负数，表示可以获得信号量，因而可以立刻访问被该信号量保护的共享资源。当任务访问完被信号量保护的共享资源后，必须释放信号量，释放信号量通过把信号量的值加1实现，如果信号量的值为非正数，表明有任务等待当前信号量，因此它也唤醒所有等待该信号量的任务。</p>
-<p>用处：作为互斥量使用</p>
-<h3 id="读写信号量"><a href="#读写信号量" class="headerlink" title="读写信号量"></a>读写信号量</h3><p>读写信号量的访问规则：</p>
-<p>1，读写信号量同时拥有的读者数不受限制，也就说可以有任意多个读者同时拥有一个读写信号量。</p>
-<p>2,如果一个读写信号量当前没有被写者拥有并且也没有写者等待读者释放信号量，那么任何读者都可以成功获得该读写信号量；否则，读者必须被挂起直到写者释放该信号量。</p>
-<p>3，如果一个读写信号量当前没有被读者或写者拥有并且也没有写者等待该信号量，那么一个写者可以成功获得该读写信号量，否则写者将被挂起，直到没有任何访问者。 </p>
-<p>因此，写者是排他性的，独占性的。 </p>
-<p>读写信号量有两种实现，一种是通用的，不依赖于硬件架构，因此，增加新的架构不需要重新实现它，但缺点是性能低，获得和释放读写信号量的开销大；另一种是架构相关的，因此性能高，获取和释放读写信号量的开销小，但增加新的架构需要重新实现。在内核配置时，可以通过选项去控制使用哪一种实现。</p>
-<p>用处：适用于读多写少的环境下</p>
-<h3 id="自旋锁"><a href="#自旋锁" class="headerlink" title="自旋锁"></a>自旋锁</h3><p>自旋锁和互斥锁的区别在于自旋锁不会引起调用者睡眠，如果自旋锁已经被别的执行单元保持，调用者就一直循环在那里看是否该自旋锁的保持者已经释放了锁</p>
-<p>信号量和读写信号量适合于保持时间较长的情况，它们会导致调用者睡眠，因此只能在进程上下文使用（_trylock的变种能够在中断上下文使用），而自旋锁适合于保持时间非常短的情况，它可以在任何上下文使用。如果被保护的共享资源只在进程上下文访问，使用信号量保护该共享资源非常合适，如果对共巷资源的访问时间非常短，自旋锁也可以。但是如果被保护的共享资源需要在中断上下文访问（包括底半部即中断处理句柄和顶半部即软中断），就必须使用自旋锁。 </p>
-<h3 id="大内核锁-BKL–Big-Kernel-Lock"><a href="#大内核锁-BKL–Big-Kernel-Lock" class="headerlink" title="大内核锁(BKL–Big Kernel Lock)"></a>大内核锁(BKL–Big Kernel Lock)</h3><p>大内核锁本质上也是自旋锁，但是它又不同于自旋锁，自旋锁是不可以递归获得锁的，因为那样会导致死锁。但大内核锁可以递归获得锁。大内核锁用于保护整个内核，而自旋锁用于保护非常特定的某一共享资源。进程保持大内核锁时可以发生调度，具体实现是：在执行schedule时，schedule将检查进程是否拥有大内核锁，如果有，它将被释放，以致于其它的进程能够获得该锁，而当轮到该进程运行时，再让它重新获得大内核锁。注意在保持自旋锁期间是不允许发生调度的。 </p>
-<p>需要特别指出，整个内核只有一个大内核锁，其实不难理解，内核只有一个，而大内核锁是保护整个内核的，当然有且只有一个就足够了。 </p>
-<h3 id="读写锁（rwlock"><a href="#读写锁（rwlock" class="headerlink" title="读写锁（rwlock)"></a>读写锁（rwlock)</h3><p>读写锁实际是一种特殊的自旋锁，它把对共享资源的访问者划分成读者和写者，读者只对共享资源进行读访问，写者则需要对共享资源进行写操作。这种锁相对于自旋锁而言，能提高并发性，因为在多处理器系统中，它允许同时有多个读者来访问共享资源，最大可能的读者数为实际的逻辑CPU数。写者是排他性的，一个读写锁同时只能有一个写者或多个读者（与CPU数相关），但不能同时既有读者又有写者。<br>在读写锁保持期间也是抢占失效的。<br>读写锁访问规则:</p>
-<p>如果读写锁当前没有读者，也没有写者，那么写者可以立刻获得读写锁，否则它必须自旋在那里，直到没有任何写者或读者。<br>如果读写锁没有写者，那么读者可以立即获得该读写锁，否则读者必须自旋在那里，直到写者释放该读写锁。</p>
-<h3 id="大读者锁-brlock-Big-Reader-Lock"><a href="#大读者锁-brlock-Big-Reader-Lock" class="headerlink" title="大读者锁(brlock-Big Reader Lock)"></a>大读者锁(brlock-Big Reader Lock)</h3><p>大读者锁的实现机制是：每一个大读者锁在所有CPU上都有一个本地读者写者锁，一个读者仅需要获得本地CPU的读者锁，而写者必须获得所有CPU上的锁。</p>
-<h3 id="RCU-Read-Copy-Update"><a href="#RCU-Read-Copy-Update" class="headerlink" title="RCU(Read-Copy Update)"></a>RCU(Read-Copy Update)</h3><p>对于被RCU保护的共享数据结构，读者不需要获得任何锁就可以访问它，但写者在访问它时首先拷贝一个副本，然后对副本进行修改，最后使用一个回调（callback）机制在适当的时机把指向原来数据的指针重新指向新的被修改的数据。这个时机就是所有引用该数据的CPU都退出对共享数据的操作。 </p>
-<p>参考链接：</p>
-<h2 id="进程间通讯（IPC）"><a href="#进程间通讯（IPC）" class="headerlink" title="进程间通讯（IPC）"></a>进程间通讯（IPC）</h2><p>每个地址都有自己的虚拟空间，虚拟空间互不可见，进程间通讯需要通过内核，内核开辟出一块缓冲空间，进程A将数据从用户空间复制到内核空间，进程B将数据从内核缓冲区复制到用户空间来完成进程间通讯</p>
-<h3 id="管道"><a href="#管道" class="headerlink" title="管道"></a>管道</h3><p>管道是一种特殊文件，满足先进先出的原则，不能够随机读取，在建立管道之前要保证发送方和接收方的进程存在</p>
-<p>匿名管道和有名管道总结：<br>（1）管道是特殊类型的文件，在满足先入先出的原则条件下可以进行读写，但不能进行定位读写。<br>（2）匿名管道是单向的，只能在有亲缘关系的进程间通信；有名管道以磁盘文件的方式存在，可以实现本机任意两个进程通信。</p>
-<h3 id="信号"><a href="#信号" class="headerlink" title="信号"></a>信号</h3><p>信号生命周期和处理流程<br>（1）信号被某个进程产生，并设置此信号传递的对象（一般为对应进程的pid），然后传递给操作系统；<br>（2）操作系统根据接收进程的设置（是否阻塞）而选择性的发送给接收者，如果接收者阻塞该信号（且该信号是可以阻塞的），操作系统将暂时保留该信号，而不传递，直到该进程解除了对此信号的阻塞（如果对应进程已经退出，则丢弃此信号），如果对应进程没有阻塞，操作系统将传递此信号。<br>（3）目的进程接收到此信号后，将根据当前进程对此信号设置的预处理方式，暂时终止当前代码的执行，保护上下文（主要包括临时寄存器数据，当前程序位置以及当前CPU的状态）、转而执行中断服务程序，执行完成后在回复到中断的位置。当然，对于抢占式内核，在中断返回时还将引发新的调度。</p>
-<h3 id="消息队列"><a href="#消息队列" class="headerlink" title="消息队列"></a>消息队列</h3><p>消息队列特点总结：<br>（1）消息队列是消息的链表,具有特定的格式,存放在内存中并由消息队列标识符标识.<br>（2）消息队列允许一个或多个进程向它写入与读取消息.<br>（3）管道和消息队列的通信数据都是先进先出的原则。<br>（4）消息队列可以实现消息的随机查询,消息不一定要以先进先出的次序读取,也可以按消息的类型读取.比FIFO更有优势。<br>（5）目前主要有两种类型的消息队列：POSIX消息队列以及System V消息队列，系统V消息队列目前被大量使用。系统V消息队列是随内核持续的，只有在内核重起或者人工删除时，该消息队列才会被删除。</p>
-<h3 id="共享内存"><a href="#共享内存" class="headerlink" title="共享内存"></a>共享内存</h3><p>使得多个进程可以可以直接读写同一块内存空间，是最快的可用IPC形式。</p>
-<p>为了在多个进程间交换信息，内核专门留出了一块内存区，可以由需要访问的进程将其映射到自己的私有地址空间。进程就可以直接读写这一块内存而不需要进行数据的拷贝，从而大大提高效率。<br>由于多个进程共享一段内存，因此需要依靠某种同步机制（如信号量）来达到进程间的同步及互斥</p>
-<p>信号量与互斥量之间的区别：<br>（1）互斥量用于线程的互斥，信号量用于线程的同步。这是互斥量和信号量的根本区别，也就是互斥和同步之间的区别。<br>互斥：是指某一资源同时只允许一个访问者对其进行访问，具有唯一性和排它性。但互斥无法限制访问者对资源的访问顺序，即访问是无序的。</p>
-<p>同步：是指在互斥的基础上（大多数情况），通过其它机制实现访问者对资源的有序访问。</p>
-<p>在大多数情况下，同步已经实现了互斥，特别是所有写入资源的情况必定是互斥的。少数情况是指可以允许多个访问者同时访问资源</p>
-<h3 id="套接字socket"><a href="#套接字socket" class="headerlink" title="套接字socket"></a>套接字socket</h3><p>详细信息请见：<a href="https://www.jianshu.com/p/c1015f5ffa74" target="_blank" rel="external">进程间通讯</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;概念&quot;&gt;&lt;a href=&quot;#概念&quot; class=&quot;headerlink&quot; title=&quot;概念&quot;&gt;&lt;/a&gt;概念&lt;/h2&gt;&lt;blockquote&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;临界区：访问和操作共享数据的代码段&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;竞态条件：当有多个线程同时
     
     </summary>
     
