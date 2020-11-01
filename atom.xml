@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://caixueyuan.github.io/"/>
-  <updated>2020-10-22T16:01:30.346Z</updated>
+  <updated>2020-11-01T16:34:59.135Z</updated>
   <id>https://caixueyuan.github.io/</id>
   
   <author>
@@ -14,6 +14,149 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>MyBatis应知应会</title>
+    <link href="https://caixueyuan.github.io/2020/10/25/MyBatis%E5%BA%94%E7%9F%A5%E5%BA%94%E4%BC%9A/"/>
+    <id>https://caixueyuan.github.io/2020/10/25/MyBatis应知应会/</id>
+    <published>2020-10-25T15:22:36.000Z</published>
+    <updated>2020-11-01T16:34:59.135Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="MyBatis基础"><a href="#MyBatis基础" class="headerlink" title="MyBatis基础"></a>MyBatis基础</h2><h3 id="MyBatis与JPA-Hibernate-的区别"><a href="#MyBatis与JPA-Hibernate-的区别" class="headerlink" title="MyBatis与JPA(Hibernate)的区别"></a>MyBatis与JPA(Hibernate)的区别</h3><p>相同点：都是ORM(Object Relational Mapping)，将数据库的表和简单Java对象的映射关系模型。</p>
+<ol>
+<li>Hibernate优点:Spring Boot封装的JPA框架实际上就是使用Hibernate,Hibernate的好处是明显的，开发简单，不需要接触到SQL，全自动</li>
+<li>Hibernate缺点：Java对象全映射，耗费大量的资源，不支持存储过程，无法根据实际情况自行组装SQL语句</li>
+<li>MyBatis：Java映射关系自定义，解决Java对象全映射。能够接触到底层SQL</li>
+</ol>
+<p>目前Spring Boot集成的MyBatis版本为MyBatis 3，具体版本已经更新到最新。</p>
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><p>application.yml</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="attr">spring:</span></div><div class="line"><span class="attr">  datasource:</span></div><div class="line"><span class="attr">    url:</span> <span class="attr">jdbc:mysql://127.0.0.1:3306/book?useUnicode=true&amp;characterEncoding=utf-8&amp;serverTimezone=UTC&amp;useSSL=true</span></div><div class="line"><span class="attr">    username:</span> <span class="string">root</span></div><div class="line"><span class="attr">    password:</span> <span class="string">yuan1286</span></div><div class="line"><span class="attr">    driver-class-name:</span> <span class="string">com.mysql.cj.jdbc.Driver</span></div><div class="line"><span class="attr">    schema:</span> <span class="attr">classpath:db/schema.sql</span></div><div class="line"><span class="attr">    initialization-mode:</span> <span class="string">always</span></div><div class="line"><span class="attr">mybatis:</span></div><div class="line"><span class="attr">  config-location:</span> <span class="attr">classpath:mybatis/mybatis-config.xml</span></div></pre></td></tr></table></figure>
+<p>mybatis-config.xml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> encoding=<span class="string">"utf-8"</span><span class="meta">?&gt;</span></span></div><div class="line">        <span class="meta">&lt;!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"</span></div><div class="line">                "http://mybatis.org/dtd/mybatis-3-config.dtd"&gt;</div><div class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">settings</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">setting</span> <span class="attr">name</span>=<span class="string">"logImpl"</span> <span class="attr">value</span>=<span class="string">"STDOUT_LOGGING"</span> /&gt;</span> <span class="comment">&lt;!-- 打开SQL语句开发 --&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">settings</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></div></pre></td></tr></table></figure>
+<h2 id="映射器"><a href="#映射器" class="headerlink" title="映射器"></a>映射器</h2><h3 id="使用自增列"><a href="#使用自增列" class="headerlink" title="使用自增列"></a>使用自增列</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">insert</span> <span class="attr">id</span>=<span class="string">"insertRole"</span> <span class="attr">parameterType</span>=<span class="string">"com.example.demo.model.Role"</span> <span class="attr">useGeneratedKeys</span>=<span class="string">"true"</span> <span class="attr">keyProperty</span>=<span class="string">"id"</span>&gt;</span></div><div class="line">    insert into t_role(role_name,note) values (#&#123;roleName&#125;,#&#123;note&#125;)</div><div class="line"><span class="tag">&lt;/<span class="name">insert</span>&gt;</span></div></pre></td></tr></table></figure>
+<h3 id="sql元素"><a href="#sql元素" class="headerlink" title="sql元素"></a>sql元素</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">sql</span> <span class="attr">id</span>=<span class="string">"role_columns"</span>&gt;</span></div><div class="line">    $&#123;prefix&#125;.id,$&#123;prefix&#125;.role_name,$&#123;prefix&#125;.note</div><div class="line"><span class="tag">&lt;/<span class="name">sql</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">"findRoleByRoleName"</span> <span class="attr">parameterType</span>=<span class="string">"string"</span> <span class="attr">resultMap</span>=<span class="string">"roleMap"</span>&gt;</span></div><div class="line">    select</div><div class="line">      <span class="tag">&lt;<span class="name">include</span> <span class="attr">refid</span>=<span class="string">"role_columns"</span>&gt;</span></div><div class="line">          <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"prefix"</span> <span class="attr">value</span>=<span class="string">"r"</span>&gt;</span><span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">      <span class="tag">&lt;/<span class="name">include</span>&gt;</span></div><div class="line">      from t_role r where role_name = #&#123;roleName&#125;</div><div class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></div></pre></td></tr></table></figure>
+<h3 id="resultMap映射集合"><a href="#resultMap映射集合" class="headerlink" title="resultMap映射集合"></a>resultMap映射集合</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">resultMap</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">constructor</span>&gt;</span><span class="comment">&lt;!-- 构造函数--&gt;</span></div><div class="line">    	<span class="tag">&lt;<span class="name">idArg</span>&gt;</span><span class="tag">&lt;/<span class="name">idArg</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">arg</span>&gt;</span><span class="tag">&lt;/<span class="name">arg</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">constructor</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">id</span>&gt;</span><span class="tag">&lt;/<span class="name">id</span>&gt;</span> <span class="comment">&lt;!--主键，可以配置联合主键--&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">result</span>&gt;</span><span class="tag">&lt;/<span class="name">result</span>&gt;</span> <span class="comment">&lt;!-- 普通键值--&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">association</span>&gt;</span><span class="tag">&lt;/<span class="name">association</span>&gt;</span> <span class="comment">&lt;!-- 一对一--&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">collection</span>&gt;</span><span class="tag">&lt;/<span class="name">collection</span>&gt;</span> <span class="comment">&lt;!-- 一对多 --&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">discriminator</span>&gt;</span> <span class="comment">&lt;!-- 鉴别器，它可以根据实际选择采用哪个类作为实例--&gt;</span></div><div class="line">    	<span class="tag">&lt;<span class="name">case</span>&gt;</span><span class="tag">&lt;/<span class="name">case</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">discriminator</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">resultMap</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>一对多，一对一的关系，建议超过3层关联时，尽量少用级联。</p>
+<h3 id="延迟加载"><a href="#延迟加载" class="headerlink" title="延迟加载"></a><strong>延迟加载</strong></h3><p>一开始并不取出级联数据，只有当使用它了才发送SQL去取回数据。</p>
+<p><strong>实现原理</strong>：通过动态代理来实现，在默认情况下，MyBatis在3.3或者以上版本时，是采用Javaassist的动态代理，低版本使用CGLIB。它会生成一个动态代理对象，里面保存着相关的SQL和参数，一旦我们使用这个代理对象的方法，它会进去到动态代理对象的代理方法里，方法里面会通过发送SQL和参数，就可以把对应的结果从数据库里面查找回来。</p>
+<ol>
+<li>立即加载：多条SQL一次性发送</li>
+<li>延迟加载; 一条一条发送，按需发送</li>
+</ol>
+<p>有两个配置：</p>
+<ol>
+<li>lazyLoadingEnabled:是否开启延迟加载功能</li>
+<li>aggressiveLazyLoading:如果为true的时候，表示按照层级加载，如果为false的，表示按需加载</li>
+</ol>
+<p>对于每条SQL，都可以配置是否进行延迟加载。</p>
+<ol>
+<li>eager：立即加载</li>
+<li>lazy：延迟加载</li>
+</ol>
+<h3 id="缓存cache"><a href="#缓存cache" class="headerlink" title="缓存cache"></a>缓存cache</h3><p>缓存分为一级缓存和二级缓存                                                                                                                                                                                                                            </p>
+<ol>
+<li>一级缓存：sqlsession层面的，相同的sqlsession，执行相同的sql的话，会进行缓存，第二次查询的结果不进行查询，直接返回缓存中的数据给客户</li>
+<li>二级缓存：sqlsessionFactory层面，一个sqlsessionFactory中的所有的数据都会进行缓存，默认是不开启的，采用的是LRU（最近最少使用原则）来进行缓存管理，可以将二级缓存保存到远端的redis等缓存介质中。</li>
+</ol>
+<p>Mybatis默认是开启一级缓存的</p>
+<p>关闭一级缓存的方式</p>
+<ol>
+<li>全局配置：设置mybatis.configuration.local-cache-scope=statement</li>
+<li>指定 mapper 关闭：在 <code>mapper.xml</code> 的指定 statement 上标注 <code>flushCache=&quot;true&quot;</code></li>
+</ol>
+<h2 id="MyBatis解析和运行原理"><a href="#MyBatis解析和运行原理" class="headerlink" title="MyBatis解析和运行原理"></a>MyBatis解析和运行原理</h2><p><img src="MyBatis运行原理.png" alt="image-20201101224206498"></p>
+<p>MyBatis的初始化分为两部分：</p>
+<hr>
+<p>第一部分为SqlSessionFactory的初始化</p>
+<ol>
+<li>首先，Configuration类用来读取配置参数等</li>
+<li>通过SqlSessionFactoryBuilder类，使用构造器模式，来进行SqlSessionFactory的初始化</li>
+</ol>
+<hr>
+<p>第二部分为SqlSession的初始化和执行。</p>
+<p>SqlSession是SqlSessionFactory初始化出来的，执行的过程依赖于四大组件。</p>
+<p>四大组件：</p>
+<ol>
+<li>Executor:是执行SQL的全过程，包括组装参数，组装结果集返回和执行SQL 过程，都可以拦截，较为广泛</li>
+<li>StatementHandle:执行SQL的过程，可以重写SQL的过程，是最常用的拦截对象</li>
+<li>ParameterHandle:拦截执行SQL的参数组装，可以重写组装参数规则</li>
+<li>ResultSetHandle:用于拦截执行结果的组装，可以重写组装结果的规则。</li>
+</ol>
+<h2 id="插件"><a href="#插件" class="headerlink" title="插件"></a>插件</h2><p>而插件也依赖于四大组件，插件有几步：</p>
+<ol>
+<li>确定需要拦截的签名</li>
+<li>实现拦截方法</li>
+<li>组件的初始化</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Interceptor</span></span></div><div class="line">&#123;</div><div class="line">    <span class="comment">// 直接覆盖你所拦截对象原有的方法，通过反射的方式来调用原来的方法</span></div><div class="line">  	<span class="function">Object <span class="title">intercept</span><span class="params">(Invocation invocation)</span> <span class="keyword">throws</span> Throwable</span>;</div><div class="line">    <span class="comment">// 被拦截的对象，它的作用是给被拦截对象生成一个代理对象，并返回他，一般都是通过org.apache.ibatis.plugin.Plugin中的wrap静态方法提供生成代理的对象</span></div><div class="line">    <span class="function">Object <span class="title">plugin</span><span class="params">(Object target)</span></span>;</div><div class="line">    <span class="comment">// 允许在Plugin元素中配置所需要的参数，方法在插件初始化的时候会被调用一次，然后将插件对象存入到配置中</span></div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setProperties</span><span class="params">(Propertier properties)</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>插件也是使用责任链模式来进行操作的。重要的对象如MetaObject：可以有效读取或者修改一些重要对象的属性。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;MyBatis基础&quot;&gt;&lt;a href=&quot;#MyBatis基础&quot; class=&quot;headerlink&quot; title=&quot;MyBatis基础&quot;&gt;&lt;/a&gt;MyBatis基础&lt;/h2&gt;&lt;h3 id=&quot;MyBatis与JPA-Hibernate-的区别&quot;&gt;&lt;a href=&quot;#
+    
+    </summary>
+    
+      <category term="微服务" scheme="https://caixueyuan.github.io/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/"/>
+    
+    
+      <category term="三方件" scheme="https://caixueyuan.github.io/tags/%E4%B8%89%E6%96%B9%E4%BB%B6/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Spring Boot实战派</title>
+    <link href="https://caixueyuan.github.io/2020/10/23/Spring-Boot%E5%AE%9E%E6%88%98%E6%B4%BE/"/>
+    <id>https://caixueyuan.github.io/2020/10/23/Spring-Boot实战派/</id>
+    <published>2020-10-22T16:05:56.000Z</published>
+    <updated>2020-10-25T08:51:40.372Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="Spring-Boot基础"><a href="#Spring-Boot基础" class="headerlink" title="Spring Boot基础"></a>Spring Boot基础</h2><p>Spring Boot设计初衷是解决Spring各版本配置过程工作过于繁重的问题，简化初始搭建流程，降低开发难度，使得开发人员只需要专注应用程序的功能和业务逻辑实现，而不用在配置上花费太多时间。</p>
+<h3 id="Resource和Autowired区别"><a href="#Resource和Autowired区别" class="headerlink" title="Resource和Autowired区别"></a>Resource和Autowired区别</h3><p>Resource：继承于javax.annotation.Resource，默认是按照byName的方式来进行匹配</p>
+<p>Autowired：Spring注解类，默认是按照byType的方式来进行匹配。</p>
+<p>以上2个注解都可以通过byName和byType两个方式来处理的。</p>
+<p>参考连接 <a href="https://www.cnblogs.com/think-in-java/p/5474740.html" target="_blank" rel="external">https://www.cnblogs.com/think-in-java/p/5474740.html</a></p>
+<h3 id="RequestMapping"><a href="#RequestMapping" class="headerlink" title="RequestMapping"></a>RequestMapping</h3><p>如果用在类上，则表示类中的所有响应请求方法都是以该地址作为父路径的，该注解有6个属性：</p>
+<ol>
+<li>Params：指定Request中必须包含某些参数值，才让该方法处理</li>
+<li>Headers:指定Request中必须包含指定某些指定的Header值，才能让某方法处理该请求</li>
+<li>Value：指定请求的实际地址，指定地址可以是URL Template模式</li>
+<li>Method：指定请求的Method类型，如GET，POST，PUT，DELETE等</li>
+<li>Consumes:指定处理请求的提交内容Content-Type，如”application/json,text/html”</li>
+<li>Produces:指定返回的内容类型。只有当Request请求头中的Accept类型中包含该指定类型时才返回。</li>
+</ol>
+<h3 id="Spring工作流程"><a href="#Spring工作流程" class="headerlink" title="Spring工作流程"></a>Spring工作流程</h3><ol>
+<li>客户端发出的请求由Tomcat接收，然后Tomcat将请求转发给DispatcherServlet处理</li>
+<li>DispatcherServlet匹配控制器中配置的映射路径，进行下一步处理</li>
+<li>ViewResolver将ModelAndView或Exception解析成View。然后View会调用render()方法，并根据ModelAndView中的数据渲染出页面。</li>
+</ol>
+<p>Thymeleaf解决了前端开发人员要和后端开发人员配置一样环境的尴尬和低效。它通过属性进行模板渲染，不需要引入不能被浏览器识别的新的标签。页面直接作为HTML文件，用浏览器打开页面可看到最终的结果，可以降低前后端人员的沟通成本。</p>
+<h3 id="Webflow"><a href="#Webflow" class="headerlink" title="Webflow"></a>Webflow</h3><p>对于WebFlow，则可以做到立即响应（告诉用户等着），然后将收到的请求转发给Work线程去处理。WebFlow只会对Work线程形成阻塞，如果再来请求也可以处理。其主要应用场景是：在业务处理很耗时的场景中减少服务器资源的占用，提高并发处理速度。</p>
+<p>对于WebFlux的一个简单的理解就是：你来了，我立马答应你，但是服务需要等待；而不是没人理你，咨询服务半天也回复不了。</p>
+<h3 id="自动配置"><a href="#自动配置" class="headerlink" title="自动配置"></a>自动配置</h3><p>借助AutoConfigurationImportSelector，调用SpringFactoriesLoader的loadFactoryNames方法，从classpath中寻找所有的META-INF/spring.factories配置文件（Spring.factories配置了自动装配的类)，然后，再借助AutoConfigurationImportSelector，将所有符合条件的@Configuration配置都加载到IoC容器中。</p>
+<h3 id="SpringBoot功能"><a href="#SpringBoot功能" class="headerlink" title="SpringBoot功能"></a>SpringBoot功能</h3><ol>
+<li>利用@WebFilter来使用Web filter的功能</li>
+<li>利用WebListener来监听资源的的状态变化</li>
+<li>利用spring.factories来实现自定义Starter开发</li>
+<li>利用@Retention源注解来实现创建新的注解</li>
+<li>利用@ControllerAdvice来实现异常统一处理</li>
+<li></li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;Spring-Boot基础&quot;&gt;&lt;a href=&quot;#Spring-Boot基础&quot; class=&quot;headerlink&quot; title=&quot;Spring Boot基础&quot;&gt;&lt;/a&gt;Spring Boot基础&lt;/h2&gt;&lt;p&gt;Spring Boot设计初衷是解决Spring各版
+    
+    </summary>
+    
+      <category term="微服务" scheme="https://caixueyuan.github.io/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/"/>
+    
+    
+      <category term="Spring" scheme="https://caixueyuan.github.io/tags/Spring/"/>
+    
+  </entry>
   
   <entry>
     <title>tomcat应知应会</title>
@@ -1762,92 +1905,6 @@
     
     
       <category term="C++基础" scheme="https://caixueyuan.github.io/tags/C-%E5%9F%BA%E7%A1%80/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>C++学习笔记(变量和基础类型)</title>
-    <link href="https://caixueyuan.github.io/2019/07/08/C-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
-    <id>https://caixueyuan.github.io/2019/07/08/C-学习笔记/</id>
-    <published>2019-07-08T15:37:50.000Z</published>
-    <updated>2019-07-17T15:52:13.388Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="基本内置类型"><a href="#基本内置类型" class="headerlink" title="基本内置类型"></a>基本内置类型</h2><blockquote>
-<p>不要混用带符号类型和无符号类型（能不用无符号整数的可以不用）</p>
-<p>初始化不是赋值，初始化的含义是创建变量时赋予一个初始值，而赋值的含义是把对象的当前值擦除，而以一个新值来替代</p>
-</blockquote>
-<h3 id="声明和定义"><a href="#声明和定义" class="headerlink" title="声明和定义"></a>声明和定义</h3><p>声明使得名字为程序所知，一个文件如果想要使用到别处定义的名字则必须包含对那个名字的声明，而定义负责创建与名字关联的实体（变量声明规定了变量的类型和名字，而定义还申请存储空间，也可能创建与名字关联的实体</p>
-<p><strong>变量能且只能够定义一次，而可以被多次声明</strong></p>
-<h3 id="复合类型"><a href="#复合类型" class="headerlink" title="复合类型"></a>复合类型</h3><p><strong>引用</strong>：引用并非对象，它只是为一个已经存在的对象所起的另外一个名字。引用的对象必须是一个对象，不能够是一个字面量</p>
-<p><strong>引用必须被初始化</strong></p>
-<p>如果想要在多个文件之间共享const对象，必须在变量的定义之前添加extern关键字。</p>
-<h3 id="常量引用"><a href="#常量引用" class="headerlink" title="常量引用"></a>常量引用</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> i=<span class="number">2</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> &amp;i2 = i;</div><div class="line">r2 = <span class="number">1</span><span class="comment">//错误</span></div></pre></td></tr></table></figure>
-<p>注意：</p>
-<p><strong>常量引用仅是对引用可参与的操作做出了限定，对于引用的对象本身是不是一个变量未做限定</strong></p>
-<p><strong>指向常量的指针也没有规定其所指的对象必须是一个对象，仅仅要求不能够通过该指针改变对象的值</strong></p>
-<p><strong>概念</strong>：常量表达式：值不会改变并且在编译过程就能够得到计算结果的表达式</p>
-<p><strong>auto</strong>:auto一般会忽略顶层const，保留底层const</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> SALES_DATA_H<span class="comment">//当且仅当变量未定义时为真</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> SALES_DATA_H<span class="comment">//将一个名字作为预处理变量</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string&gt;</span></span></div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Sales_data</span>&#123;</span></div><div class="line">    <span class="built_in">std</span>::<span class="built_in">string</span> bookNo;</div><div class="line">    <span class="keyword">unsigned</span> units_sold = <span class="number">0</span>;</div><div class="line">    <span class="keyword">double</span> revenue = <span class="number">0.0</span>;</div><div class="line">&#125;;</div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span><span class="comment">//结束定义</span></span></div></pre></td></tr></table></figure>
-<figure class="highlight autoit"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">int</span> *<span class="built_in">ptr</span>[<span class="number">10</span>]<span class="comment">;//10个整形数组的指针</span></div><div class="line"><span class="built_in">int</span> (*<span class="built_in">ptr</span>)[<span class="number">10</span>] = &amp;<span class="built_in">ptr</span><span class="comment">;//一个指针指向有10个元素的数组</span></div><div class="line"><span class="built_in">int</span> (&amp;<span class="built_in">ptr</span>)[<span class="number">10</span>] = <span class="built_in">ptr</span><span class="comment">;//一个引用，引用了有10个元素的数组</span></div></pre></td></tr></table></figure>
-<p><em>C语句风格的数组</em>:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> <span class="keyword">char</span> ca1[] = <span class="string">"A string example"</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">char</span> ca2[] = <span class="string">"A different string"</span>;</div><div class="line"><span class="keyword">if</span>(<span class="built_in">strcmp</span>(ca1,ca2) &lt; <span class="number">0</span>)<span class="comment">//比较两个数组的大小</span></div></pre></td></tr></table></figure></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;基本内置类型&quot;&gt;&lt;a href=&quot;#基本内置类型&quot; class=&quot;headerlink&quot; title=&quot;基本内置类型&quot;&gt;&lt;/a&gt;基本内置类型&lt;/h2&gt;&lt;blockquote&gt;
-&lt;p&gt;不要混用带符号类型和无符号类型（能不用无符号整数的可以不用）&lt;/p&gt;
-&lt;p&gt;初始化
-    
-    </summary>
-    
-      <category term="C++" scheme="https://caixueyuan.github.io/categories/C/"/>
-    
-    
-      <category term="C++学习笔记" scheme="https://caixueyuan.github.io/tags/C-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>linux设备驱动程序</title>
-    <link href="https://caixueyuan.github.io/2019/05/29/linux%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8%E7%A8%8B%E5%BA%8F/"/>
-    <id>https://caixueyuan.github.io/2019/05/29/linux设备驱动程序/</id>
-    <published>2019-05-29T15:58:36.000Z</published>
-    <updated>2019-06-09T16:11:16.546Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="I-O体系结构"><a href="#I-O体系结构" class="headerlink" title="I/O体系结构"></a>I/O体系结构</h2><p><img src="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/linux/base/%E6%80%BB%E7%BA%BF.gif" alt="总线"></p>
-<p>两条高速总线用于在内存芯片上来回传送数据：前端总线将CPU连接到RAM控制器上，而后端总线将CPU连接到外部硬件的高速缓存上。</p>
-<p>主机上的桥将系统总线和前端总线连接在一起。</p>
-<p>任何设备只能够连接到一条总线上。</p>
-<p><img src="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/linux/base/PC%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84.gif" alt="IO体系结构"></p>
-<h3 id="I-O端口"><a href="#I-O端口" class="headerlink" title="I/O端口"></a>I/O端口</h3><p><img src="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/linux/base/%E4%B8%93%E7%94%A8IO%E7%AB%AF%E5%8F%A3.gif" alt="专用接口"></p>
-<p>I/O端口有两种方式：既可以使用为独立的I/O地址空间，又可以被映射到物理地址空间，这样就可以通过内存来访问I/O端口啦。不过一般情况下，都是作为独立的I/O地址空间。</p>
-<p>一般情况下，I/O有四个汇编指令，分别为in、out、ins、outs</p>
-<p>对于I/O端口，有特殊的数据结构来对应（resource），主要的作用是唯一性地指定I/O地址空间，让地址不重复</p>
-<h3 id="I-O接口"><a href="#I-O接口" class="headerlink" title="I/O接口"></a>I/O接口</h3><p>它起翻译器的作用，即把I/O端口中的值转换成设备所需要的命令和数据。在相反方向上，它检测设备状态的变化，并对起状态寄存器作用的I/O端口进行相应的更新。（也就是说将值转换为数据，并监控I/O状态)</p>
-<h3 id="控制器"><a href="#控制器" class="headerlink" title="控制器"></a>控制器</h3><blockquote>
-<ul>
-<li><p>对从I/O接口收到的高级命令进行解释，并通过向设备发送适当的电信号序列强制设备执行特定的操作。</p>
-</li>
-<li><p>对从设备接收到的电信号进行转换和适当的解释，并修改（通过I/O接口）状态寄存器的值。</p>
-</li>
-</ul>
-</blockquote>
-<h3 id="sysfs文件系统"><a href="#sysfs文件系统" class="headerlink" title="sysfs文件系统"></a>sysfs文件系统</h3><p>sysfs文件系统的目标是展现设备驱动程序模型组件间的层次关系，允许用户态应用程序访问内核内部数据结构的一种文件系统</p>
-<p><img src="https://raw.githubusercontent.com/caixueyuan/caixueyuan.github.io-picture/master/linux/base/%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8.PNG" alt="sysfs文件系统"></p>
-<p><code>sysfs是一个基于内存的文件系统，它的作用是将内核信息以文件的方式提供给用户程序使用；sysfs把连接在系统上的设备和总线组织成为一个分级的文件，它们可以由用户空间存取，向用户空间导出内核的数据结构以及它们的属性</code></p>
-<p><img src="https://blog.csdn.net/zqixiao_09/article/details/50864489" alt="详细信息"></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;I-O体系结构&quot;&gt;&lt;a href=&quot;#I-O体系结构&quot; class=&quot;headerlink&quot; title=&quot;I/O体系结构&quot;&gt;&lt;/a&gt;I/O体系结构&lt;/h2&gt;&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/caixue
-    
-    </summary>
-    
-      <category term="Linux" scheme="https://caixueyuan.github.io/categories/Linux/"/>
-    
-    
-      <category term="Linux基础知识" scheme="https://caixueyuan.github.io/tags/Linux%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/"/>
     
   </entry>
   
