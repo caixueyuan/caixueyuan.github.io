@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://caixueyuan.github.io/"/>
-  <updated>2020-11-01T16:34:59.135Z</updated>
+  <updated>2020-11-02T16:25:28.209Z</updated>
   <id>https://caixueyuan.github.io/</id>
   
   <author>
@@ -16,11 +16,63 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>zoZookeeper_分布式一致性</title>
+    <link href="https://caixueyuan.github.io/2020/11/02/Zookeeper-%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7/"/>
+    <id>https://caixueyuan.github.io/2020/11/02/Zookeeper-分布式一致性/</id>
+    <published>2020-11-02T14:47:04.000Z</published>
+    <updated>2020-11-02T16:25:28.209Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="分布式架构"><a href="#分布式架构" class="headerlink" title="分布式架构"></a>分布式架构</h2><h3 id="集中式与分布式"><a href="#集中式与分布式" class="headerlink" title="集中式与分布式"></a>集中式与分布式</h3><p>集中式无法调和的问题是单机故障，扩容难的问题</p>
+<p>分布式系统是一个硬件或软件组件分布在不同的网络计算机上，彼此之间仅仅通过消息传递进行通信和协调的系统。有以下特点：</p>
+<ol>
+<li>分布性</li>
+<li>对等性：计算机没有主备之分，组成分布式系统的所有计算机节点都是对等的。有数据副本和服务副本两种方式。</li>
+<li>并发性：对于资源有并发访问的需求</li>
+<li>缺乏全局时钟：无法区分事务谁先谁后</li>
+<li>故障总是会发生</li>
+</ol>
+<p>分布式典型问题：</p>
+<ol>
+<li>通信异常已经发生</li>
+<li>网络分区：由于节点或者网路终端导致集群分为网络分区</li>
+<li>三态：对于一个请求，有成功，失败和超时。我们需要将不可知的状态（如超时）进行处理，让请求只有两种状态</li>
+<li>节点故障</li>
+</ol>
+<h3 id="分布式事务"><a href="#分布式事务" class="headerlink" title="分布式事务"></a>分布式事务</h3><p><strong>概念</strong>：事务的参与者，支持事务的服务器，资源服务器以及事务管理器分别位于分布式系统的不同节点之上。</p>
+<p><strong>CAP理论</strong>：一个分布式系统不可能同时满足一致性，可用性，分区容错性。</p>
+<ol>
+<li>一致性：也就是强一致性。数据在多个副本之间是否能够保持一致的特性。</li>
+<li>可用性：对于客户的请求，要保证在合理的响应时间返回结果。</li>
+<li>分区容错性：分布式系统在遇到任何网络分区故障的时候，仍然需要能够保证对外提供满足一致性和可用性的服务，除非是整个网络环境都发生故障。</li>
+</ol>
+<p>对于可用性，是压倒性的，是必须满足的。分区容错性是建立在分区网络故障的基础上，也就是网络分区是一定存在的，所以，可用性和分区容错性是必须满足的。所以只能够牺牲一致性。</p>
+<p><strong>BASE理论</strong>：即使无法做到强一致性，但每个应用都可用根据自身的业务特点，采用适当的方式来使得系统达到最终一致性。</p>
+<ol>
+<li>基本可用（在分布式系统出现不可预知故障的时候，允许损失部分可用性，比如延长响应时间，或者功能上的损失）</li>
+<li>软状态：允许系统在不同节点的数据副本之间进行数据同步的过程存在延时。</li>
+<li>最终一致性：需要最终数据能够达到一致，也就是要求其他事务能够读取中间数据状态的结果而不报错，保证最终结果一致性就可以。</li>
+</ol>
+<h2 id="一致性协议"><a href="#一致性协议" class="headerlink" title="一致性协议"></a>一致性协议</h2>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;分布式架构&quot;&gt;&lt;a href=&quot;#分布式架构&quot; class=&quot;headerlink&quot; title=&quot;分布式架构&quot;&gt;&lt;/a&gt;分布式架构&lt;/h2&gt;&lt;h3 id=&quot;集中式与分布式&quot;&gt;&lt;a href=&quot;#集中式与分布式&quot; class=&quot;headerlink&quot; title=
+    
+    </summary>
+    
+      <category term="微服务" scheme="https://caixueyuan.github.io/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/"/>
+    
+    
+      <category term="分布式" scheme="https://caixueyuan.github.io/tags/%E5%88%86%E5%B8%83%E5%BC%8F/"/>
+    
+  </entry>
+  
+  <entry>
     <title>MyBatis应知应会</title>
     <link href="https://caixueyuan.github.io/2020/10/25/MyBatis%E5%BA%94%E7%9F%A5%E5%BA%94%E4%BC%9A/"/>
     <id>https://caixueyuan.github.io/2020/10/25/MyBatis应知应会/</id>
     <published>2020-10-25T15:22:36.000Z</published>
-    <updated>2020-11-01T16:34:59.135Z</updated>
+    <updated>2020-11-01T16:36:32.854Z</updated>
     
     <content type="html"><![CDATA[<h2 id="MyBatis基础"><a href="#MyBatis基础" class="headerlink" title="MyBatis基础"></a>MyBatis基础</h2><h3 id="MyBatis与JPA-Hibernate-的区别"><a href="#MyBatis与JPA-Hibernate-的区别" class="headerlink" title="MyBatis与JPA(Hibernate)的区别"></a>MyBatis与JPA(Hibernate)的区别</h3><p>相同点：都是ORM(Object Relational Mapping)，将数据库的表和简单Java对象的映射关系模型。</p>
 <ol>
@@ -1847,57 +1899,6 @@
     
       &lt;h2 id=&quot;表达式&quot;&gt;&lt;a href=&quot;#表达式&quot; class=&quot;headerlink&quot; title=&quot;表达式&quot;&gt;&lt;/a&gt;表达式&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;sizeof&lt;/strong&gt;返回的是表达式结果类型的大小，而不是实际对象值的内存的大小&lt;/p&gt;
 &lt;p&gt;&lt;img s
-    
-    </summary>
-    
-      <category term="C++" scheme="https://caixueyuan.github.io/categories/C/"/>
-    
-    
-      <category term="C++基础" scheme="https://caixueyuan.github.io/tags/C-%E5%9F%BA%E7%A1%80/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>C++ Prime第四章</title>
-    <link href="https://caixueyuan.github.io/2019/07/18/C-Prime%E7%AC%AC%E5%9B%9B%E7%AB%A0/"/>
-    <id>https://caixueyuan.github.io/2019/07/18/C-Prime第四章/</id>
-    <published>2019-07-17T16:08:00.000Z</published>
-    <updated>2019-07-17T16:53:22.462Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="基本内置类型"><a href="#基本内置类型" class="headerlink" title="基本内置类型"></a>基本内置类型</h2><ol>
-<li>不要混用带符号类型和无符号类型（能不用无符号整数的可以不用）</li>
-<li>初始化不是赋值，初始化的含义是创建变量时赋予一个初始值，而赋值的含义是把对象的当前值擦除，而以一个新值来替代</li>
-</ol>
-<h2 id="声明和定义"><a href="#声明和定义" class="headerlink" title="声明和定义"></a>声明和定义</h2><ol>
-<li><strong>声明使得名字为程序所知，一个文件如果想要使用到别处定义的名字则必须包含对那个名字的声明，而定义负责创建与名字关联的实体（变量声明规定了变量的类型和名字，而定义还申请存储空间，也可能创建与名字关联的实体</strong></li>
-<li><strong>变量能且只能够定义一次，而可以被多次声明</strong></li>
-</ol>
-<h2 id="复合类型"><a href="#复合类型" class="headerlink" title="复合类型"></a>复合类型</h2><ol>
-<li><strong>引用:</strong>引用并非对象，它只是为一个已经存在的对象所起的另外一个名字。引用的对象必须是一个对象，不能够是一个字面量</li>
-<li><strong>引用必须被初始化</strong></li>
-<li><strong>如果想要在多个文件之间共享</strong>const对象，必须在变量的定义之前添加extern关键字。</li>
-</ol>
-<h2 id="常量引用"><a href="#常量引用" class="headerlink" title="常量引用"></a>常量引用</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> i=<span class="number">2</span>;</div><div class="line"></div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> &amp;i2 = i;</div><div class="line"></div><div class="line">r2 = <span class="number">1</span><span class="comment">//错误</span></div></pre></td></tr></table></figure>
-<p>注意：</p>
-<p><strong>常量引用仅是对引用可参与的操作做出了限定，对于引用的对象本身是不是一个变量未做限定</strong></p>
-<p><strong>指向常量的指针也没有规定其所指的对象必须是一个对象，仅仅要求不能够通过该指针改变对象的值</strong></p>
-<p><strong>概念</strong>：常量表达式：值不会改变并且在编译过程就能够得到计算结果的表达式</p>
-<p><strong>auto</strong>：auto一般会忽略顶层const，保留底层const</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> SALES_DATA_H<span class="comment">//当且仅当变量未定义时为真</span></span></div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> SALES_DATA_H<span class="comment">//将一个名字作为预处理变量</span></span></div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string&gt;</span></span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Sales_data</span>&#123;</span></div><div class="line"></div><div class="line">​    <span class="built_in">std</span>::<span class="built_in">string</span> bookNo;</div><div class="line"></div><div class="line">​    <span class="keyword">unsigned</span> units_sold = <span class="number">0</span>;</div><div class="line"></div><div class="line">​    <span class="keyword">double</span> revenue = <span class="number">0.0</span>;</div><div class="line"></div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span><span class="comment">//结束定义</span></span></div></pre></td></tr></table></figure>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> *ptr[<span class="number">10</span>];<span class="comment">//10个整形数组的指针</span></div><div class="line"></div><div class="line"><span class="keyword">int</span> (*ptr)[<span class="number">10</span>] = &amp;ptr;<span class="comment">//一个指针指向有10个元素的数组</span></div><div class="line"></div><div class="line"><span class="keyword">int</span> (&amp;ptr)[<span class="number">10</span>] = ptr;<span class="comment">//一个引用，引用了有10个元素的数组</span></div></pre></td></tr></table></figure>
-<h2 id="C语句风格的数组"><a href="#C语句风格的数组" class="headerlink" title="C语句风格的数组:"></a>C语句风格的数组:</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> <span class="keyword">char</span> ca1[] = <span class="string">"A string example"</span>;</div><div class="line"></div><div class="line"><span class="keyword">const</span> <span class="keyword">char</span> ca2[] = <span class="string">"A different string"</span>;</div><div class="line"></div><div class="line"><span class="keyword">if</span>(<span class="built_in">strcmp</span>(ca1,ca2) &lt; <span class="number">0</span>)<span class="comment">//比较两个数组的大小</span></div></pre></td></tr></table></figure>
-<p>这样可以创建一个数组（将数组转换为vector）</p>
-<p><img src="1563380478962.png" alt="1563380478962"></p>
-<p>使用别名来代替类型</p>
-<p><img src="使用别名来代替类型.png" alt="使用别名来代替类型"></p>
-<p>第一行和第二行是等价的</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;基本内置类型&quot;&gt;&lt;a href=&quot;#基本内置类型&quot; class=&quot;headerlink&quot; title=&quot;基本内置类型&quot;&gt;&lt;/a&gt;基本内置类型&lt;/h2&gt;&lt;ol&gt;
-&lt;li&gt;不要混用带符号类型和无符号类型（能不用无符号整数的可以不用）&lt;/li&gt;
-&lt;li&gt;初始化不是赋值，
     
     </summary>
     
