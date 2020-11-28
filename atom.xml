@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://caixueyuan.github.io/"/>
-  <updated>2020-11-02T16:25:28.209Z</updated>
+  <updated>2020-11-28T16:30:35.421Z</updated>
   <id>https://caixueyuan.github.io/</id>
   
   <author>
@@ -16,11 +16,52 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>&#39;架构解密_从分布式到微服务&#39;</title>
+    <link href="https://caixueyuan.github.io/2020/11/28/%E6%9E%B6%E6%9E%84%E8%A7%A3%E5%AF%86-%E4%BB%8E%E5%88%86%E5%B8%83%E5%BC%8F%E5%88%B0%E5%BE%AE%E6%9C%8D%E5%8A%A1/"/>
+    <id>https://caixueyuan.github.io/2020/11/28/架构解密-从分布式到微服务/</id>
+    <published>2020-11-28T15:38:35.000Z</published>
+    <updated>2020-11-28T16:30:35.421Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="深入理解网络"><a href="#深入理解网络" class="headerlink" title="深入理解网络"></a>深入理解网络</h2><h3 id="NIO"><a href="#NIO" class="headerlink" title="NIO"></a>NIO</h3><p>NIO模型比较复杂，最好不要尝试自己手写一个NIO程序，最好能够运用到开源的软件，比如Netty。</p>
+<p>DirectByteBuffer是采用堆外内存来存放数据的。</p>
+<p>MappedByteBuffer使用mmap系统调用来实现文件的内存映射，建立内存映射的效率很高。</p>
+<h3 id="内存模型"><a href="#内存模型" class="headerlink" title="内存模型"></a>内存模型</h3><p><img src="/C++内存模型.png" alt="image-20201128234949578"></p>
+<p>参考连接：<a href="https://blog.csdn.net/yusiguyuan/article/details/39496057" target="_blank" rel="external">https://blog.csdn.net/yusiguyuan/article/details/39496057</a></p>
+<ol>
+<li>对于所有的对象创建，归根到底都是使用了malloc的方式来进行初始化内存。对于malloc的调用，实际上也是使用brk和mmap的系统调用</li>
+<li>brk和mmap的作用是相同的，那就是占用虚拟内存，将虚拟内存映射到物理内存中，不过呢，对于malloc的调用，虽然从时间上已经占用了虚拟内存，但是呢，物理内存是没有进行占用，只有在使用的时候才会进行占用。</li>
+<li>brk和mmap的区别是，如果对于brk的时候，有可能会造成内存空洞问题，也就是只要高水位线的对象没有进行释放的话，那么物理内存和虚拟内存就不会进行释放。</li>
+<li>对于现在的应用程序来说，虚拟内存基本上是无限的，因为对于64位的程序来说，实际可用的虚拟内存为2^48的大小，也就是256TB，所以，虚拟内存是足够使用的，对于brk和mmap来说。但是呢，物理内存是可能不够用的。如果系统无法申请到内存的话，会将程序的评分的排行榜，将程序kill掉。</li>
+<li>对于虚拟地址映射到物理地址的话，是通过MMU（硬件来实现），中间也就是通过页表来实现。如果通过虚拟内存来访问物理内存的时候，这个时候如果出现了缺页中断的时候，会将物理内存映射到虚拟内存中，这时候，将物理内存的电位发生变化，将物理内存的原有的内存刷掉进行使用</li>
+</ol>
+<h3 id="非阻塞和阻塞"><a href="#非阻塞和阻塞" class="headerlink" title="非阻塞和阻塞"></a>非阻塞和阻塞</h3><p>TCP：对于TCP来说，如果应用进程一直没有读取，则在Buffer满了之后发生的动作是：通知对端TCP中的窗口进行关闭，保证TCP套接口接收缓冲区不会一处，保证TCP是可靠传输的。</p>
+<p>阻塞：对应着同步，传统的Socket阻塞模式直接导致每个Socket都必须绑定一个线程来操作数据，参与通信的任意一方如果处理数据的速度较慢，都会直接拖累另一方，导致另一方的线程不得不浪费大量的时间在IO等待中。所以，每个Socket都要绑定一个单独的线程正式传统Socket阻塞模式的根本缺陷。</p>
+<p>非阻塞：对应着异步。引入事件机制来达到解耦的目的，可以认为在IO层中存在IO调度线程，它不断扫描每个Ｓｏｃｋｅｔ的缓冲区，当发现写入缓冲区额为空时，它会产生一个Ｓｏｃｋｅｔ可写事件，此时程序就可以将数据写入Ｓｏｃｋｅｔ中，如果一次写不完，则等待下次可写事件的通知，当发现在读取缓冲区中有数据时，会产生一个Socket可读事件，程序会收到这个通知事件，就可以从Socket读取数据了。</p>
+<p>所以呢，其实对于分布式架构上来说，如果要实现彻底的解耦，那么使用事件通知机制相对会好一点。但是呢，事件通知机制虽然是异步的，但是呢，从整体上不好控制进度，所以，对于分布式架构来说，追求可控，使用RPC或者Restful接口，都是使用同步的方式。</p>
+<p>Reactor模型，是著名的非阻塞的框架，一般原则是Reactor的数量与CPU核心书保持一致</p>
+<h3 id="网络传输中的对象序列化问题"><a href="#网络传输中的对象序列化问题" class="headerlink" title="网络传输中的对象序列化问题"></a>网络传输中的对象序列化问题</h3><p>Java自身的序列化机制有两个问题（也就是Serializable)：序列化的数据比较大，传输效率低，其他语言无法识别和对接。</p>
+<p>其实，对于通用的互联网来说，目前是使用JSON机制，JSON序列化存在占用空间大，性能低下等缺陷。但是呢，在进行网络传输的过程中，我们最好还是使用字符串的方式，而不是二进制的方式，虽然二进制的方式相对会比较小一点。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;深入理解网络&quot;&gt;&lt;a href=&quot;#深入理解网络&quot; class=&quot;headerlink&quot; title=&quot;深入理解网络&quot;&gt;&lt;/a&gt;深入理解网络&lt;/h2&gt;&lt;h3 id=&quot;NIO&quot;&gt;&lt;a href=&quot;#NIO&quot; class=&quot;headerlink&quot; title=&quot;NIO
+    
+    </summary>
+    
+      <category term="分布式" scheme="https://caixueyuan.github.io/categories/%E5%88%86%E5%B8%83%E5%BC%8F/"/>
+    
+    
+      <category term="架构" scheme="https://caixueyuan.github.io/tags/%E6%9E%B6%E6%9E%84/"/>
+    
+  </entry>
+  
+  <entry>
     <title>zoZookeeper_分布式一致性</title>
     <link href="https://caixueyuan.github.io/2020/11/02/Zookeeper-%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7/"/>
     <id>https://caixueyuan.github.io/2020/11/02/Zookeeper-分布式一致性/</id>
     <published>2020-11-02T14:47:04.000Z</published>
-    <updated>2020-11-02T16:25:28.209Z</updated>
+    <updated>2020-11-22T10:32:14.715Z</updated>
     
     <content type="html"><![CDATA[<h2 id="分布式架构"><a href="#分布式架构" class="headerlink" title="分布式架构"></a>分布式架构</h2><h3 id="集中式与分布式"><a href="#集中式与分布式" class="headerlink" title="集中式与分布式"></a>集中式与分布式</h3><p>集中式无法调和的问题是单机故障，扩容难的问题</p>
 <p>分布式系统是一个硬件或软件组件分布在不同的网络计算机上，彼此之间仅仅通过消息传递进行通信和协调的系统。有以下特点：</p>
@@ -52,7 +93,40 @@
 <li>软状态：允许系统在不同节点的数据副本之间进行数据同步的过程存在延时。</li>
 <li>最终一致性：需要最终数据能够达到一致，也就是要求其他事务能够读取中间数据状态的结果而不报错，保证最终结果一致性就可以。</li>
 </ol>
-<h2 id="一致性协议"><a href="#一致性协议" class="headerlink" title="一致性协议"></a>一致性协议</h2>]]></content>
+<h2 id="一致性协议"><a href="#一致性协议" class="headerlink" title="一致性协议"></a>一致性协议</h2><h3 id="2PC与3PC算法"><a href="#2PC与3PC算法" class="headerlink" title="2PC与3PC算法"></a>2PC与3PC算法</h3><h4 id="2PC算法"><a href="#2PC算法" class="headerlink" title="2PC算法"></a>2PC算法</h4><p>2PC算法分为两个阶段：第一个阶段提交事务请求，第二个阶段是执行事务提交。第一阶段是比较耗时的，第二个阶段基本上可以在瞬间执行。</p>
+<p>优点：原理简单，实现方便</p>
+<p>缺点：</p>
+<ol>
+<li>同步阻塞（在二阶段提交执行过程中，所有参与该事务操作的逻辑都处于阻塞状态，也就是各个参与者在等待其他参与者响应的过程中，将无法进行其他任何操作</li>
+<li>单点问题：在锁定事务资源之后，假设协调者出现宕机等问题时，其他事务将会一直处于锁定事务资源的状态中，而无法继续完成事务操作。</li>
+<li>数据不一致：在二阶段时，当发起事务提交的过程中，可能出现有些参与者收不到消息，导致出现数据不一致的情况</li>
+<li>太过保守（一般情况下，如果所有的机器都要成功的话，策略会显得比较保守，一般最好的情况是半数以上的都能够成功，然后剩下的通过数据同步的方式来继续同步就行啦）</li>
+</ol>
+<h4 id="3PC算法"><a href="#3PC算法" class="headerlink" title="3PC算法"></a>3PC算法</h4><p>该算法实际上并没有改变2PC算法的本质的， 只是在2PC的基础上，加上一个预先检测而已，让协调者能够在最开始的时候就能够确定是否有机器出现宕机。相比二阶段提交协议，最大优点就是降低了参与者的阻塞范围，并且能够在出现单点故障后继续达到一致。</p>
+<h3 id="Paxos算法"><a href="#Paxos算法" class="headerlink" title="Paxos算法"></a>Paxos算法</h3><p>该算法解决的问题是如何在一个可能发生宕机或者网络异常的分布式系统中，快速且正确地在集群内部对某个数据的值达成一致，并且保证不论发生以上任何异常，都不会破坏整个系统的一致性。</p>
+<p>该算法最大的思想就是通过少数服从多数的方式，保证有容错性。</p>
+<p>该算法太复杂，一般在实际上很少使用。一般都是作为内部算法，不需要我们来感知存在。</p>
+<h2 id="Zookeeper与Paxos"><a href="#Zookeeper与Paxos" class="headerlink" title="Zookeeper与Paxos"></a>Zookeeper与Paxos</h2><h3 id="初识ZooKeeper"><a href="#初识ZooKeeper" class="headerlink" title="初识ZooKeeper"></a>初识ZooKeeper</h3><p>Zookeeper为分布式应用提供了高效且可靠的分布式协调服务，提供了诸如统一命名服务，配置管理和分布式锁等分布式的基础服务。</p>
+<p>ZooKeeper设计目标：</p>
+<ol>
+<li>简单的数据模型（ZooKeeper使得分布式程序能够通过一个共享的，树型结果的名字空间来相互协调，Zookeeper将全量数据存储到内存中，一次来实现提高服务器吞吐，减少延迟的目的。</li>
+<li>可以构建集群，只要集群中存在超过一半的机器能够正常工作，那么集群就能够对外服务。都是以一主多备的方式来运行。</li>
+<li>顺序访问：对于来自客户端的每个更新请求，ZooKeeper都会分配一个全局唯一的递增编号，返回所有事务操作的先后顺序。（但是一般因为分布式操作的不确定，一般情况下，很难保证谁先谁后）</li>
+<li>高性能：所有的ZNode都是在内存中，运行比较快。（一般情况下）</li>
+</ol>
+<h3 id="ZooKeeper基本概念"><a href="#ZooKeeper基本概念" class="headerlink" title="ZooKeeper基本概念"></a>ZooKeeper基本概念</h3><p>集群角色：Leader服务器为客户端提供读和写服务，Follower和Observer都能够提供读服务，唯一的区别就是Observer不参与Leader选举过程，也不参与写操作的过半写成功的策略，因此Observer可以在不影响写性能的情况下提升集群的读性能。</p>
+<p>会话：客户端和服务器之间建立的TCP连接，当由于服务器压力，网络故障等问题导致客户端连接断开时，只要在sessionTimeout规定的时间内能够重新连接上集群中的任何一台服务器，那么之前创建的会话依然有效。</p>
+<p>数据节点：跟文件系统类似，分为持久化节点和临时节点</p>
+<p>版本：ZooKeeper的每个ZNode上将会存储数据，对应每个ZNode，ZooKeeper都会为其维护一个叫Stat的数据结构，Stat中记录了这个ZNode的三个数据版本，分别是version（当前ZNode的版本），cversion（当前ZNode子节点的版本）和aversion（当前ZNode的ACL版本）</p>
+<p>Watcher：节点在特定事件中触发的事件通知</p>
+<p>ACL：权限控制。</p>
+<h2 id="使用ZooKeeper"><a href="#使用ZooKeeper" class="headerlink" title="使用ZooKeeper"></a>使用ZooKeeper</h2><p>ZooKeeper默认都不支持递归创建，即无法在父节点不存在的情况下创建一个子节点。</p>
+<p>ZooKeeper节点内容只支持字节数组类型，也就是说ZooKeeper不负责为节点内容进行序列化，开发人员需要自己使用序列化工具自己序列化。</p>
+<p>ZooKeeper的Watcher通知都是一次性的，即一旦触发一次通知后，该Watcher就失效了，因此客户端需要返回注册Watcher。</p>
+<p>目前最为常用的ZooKeeper客户端为Curator。</p>
+<p><strong>其实，ZooKeeper的本身是相对比较简单的，提供了类似于文件系统的特性，包括四种节点：临时节点，临时顺序节点，持久节点，持久顺序节点。并且对节点注册了Watcher事件通知机制，每个ZNode都有权限限制。另外，ZooKeeper集群都是在过半进程都能够启动的情况下提供服务，少于半数的时候不提供服务。</strong></p>
+<p>ZooKeeper是作为一个分布式协调的作用，一般情况下，如果你涉及到在分布式节点中进程控制，配置管理等小数据量的操作，都应该优先考虑到ZooKeeper。如数据分布式订阅，命名服务，分布式协调/通知，集群管理，Master选举，分布式锁以及分布式队列等分布式场景。</p>
+]]></content>
     
     <summary type="html">
     
@@ -1855,57 +1929,6 @@
     
     
       <category term="LinuxC++" scheme="https://caixueyuan.github.io/tags/LinuxC/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>C++基础</title>
-    <link href="https://caixueyuan.github.io/2019/07/21/C-%E5%9F%BA%E7%A1%80/"/>
-    <id>https://caixueyuan.github.io/2019/07/21/C-基础/</id>
-    <published>2019-07-21T15:17:43.000Z</published>
-    <updated>2019-07-23T16:23:39.956Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="表达式"><a href="#表达式" class="headerlink" title="表达式"></a>表达式</h2><p><strong>sizeof</strong>返回的是表达式结果类型的大小，而不是实际对象值的内存的大小</p>
-<p><img src="1563722534600.png" alt="1563722534600"></p>
-<h3 id="强制类型转换"><a href="#强制类型转换" class="headerlink" title="强制类型转换"></a>强制类型转换</h3><ol>
-<li>static_cast:任何具有明确定义的类型转换，主要不包含底层const，都可以使用static_cast.</li>
-<li>const_cast:只能改变运算对象的底层const，将const对象转换为非const对象，没办法做类型转换</li>
-<li>reinterpret_cast:为运算对象的位模式提供较低层次上的重新解析，不改变内容，只改变了表达的方式</li>
-</ol>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">double</span> slope = <span class="keyword">static_cast</span>&lt;<span class="keyword">double</span>&gt;(j)/i;</div><div class="line"><span class="keyword">const</span> <span class="keyword">char</span> *pc;</div><div class="line"><span class="keyword">char</span>* pc1 = <span class="keyword">const_cast</span>&lt;<span class="keyword">char</span>*&gt;(pc);</div><div class="line"><span class="keyword">int</span> *ip;</div><div class="line"><span class="keyword">char</span> *pc = <span class="keyword">reinterpret_cast</span>&lt;<span class="keyword">char</span>*&gt;(ip);<span class="comment">//实际上pc存储的还是int类型的指针</span></div></pre></td></tr></table></figure>
-<h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><h3 id="局部静态成员"><a href="#局部静态成员" class="headerlink" title="局部静态成员"></a>局部静态成员</h3><p><strong>局部静态成员</strong>：在程序执行路径第一次经过此对象定义语句的时候初始化，直到程序终止才被销毁，在此期间即使对象所在的函数结束执行也不会对其有影响</p>
-<p><img src="1563811767670.png" alt="1563811767670"></p>
-<p>定义函数的源文件应该把含有函数声明的头文件包含进来，编译器负责验证函数的定义和声明是否匹配</p>
-<p><strong>initializer_list</strong>:可变参数列表</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//expect和actual是string对象</span></div><div class="line"><span class="keyword">if</span>(expected != actual)</div><div class="line">    error_msg(&#123;<span class="string">"function"</span>,expected,actual&#125;);</div><div class="line"><span class="keyword">else</span></div><div class="line">    error_msg(&#123;<span class="string">"functionX"</span>,<span class="string">"OKAY"</span>&#125;);</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">error_msg</span><span class="params">(ErrCode e,<span class="built_in">initializer_list</span>&lt;<span class="built_in">string</span>&gt; il)</span></span>&#123;</div><div class="line">    <span class="built_in">cout</span> &lt;&lt; e.msg() &lt;&lt; <span class="string">":"</span>;</div><div class="line">    <span class="keyword">for</span>(<span class="keyword">const</span> <span class="keyword">auto</span> &amp;elem:il)</div><div class="line">        <span class="built_in">cout</span> &lt;&lt; elem &lt;&lt; <span class="string">" "</span>;</div><div class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="返回值："><a href="#返回值：" class="headerlink" title="返回值："></a><strong>返回值</strong>：</h3><ol>
-<li>不要返回局部对象的引用和指针。因为如果返回局部对象的引用时，由于函数运行结束之后局部对象会被析构，导致返回值为未知对象。</li>
-<li>引用返回左值，返回值可以作为左值，如果返回的是引用的话</li>
-</ol>
-<p><strong>重载函数</strong>：</p>
-<p>C++重载的是不区分顶层，区分底层</p>
-<p>C++中名字查找发生在类型检查之前</p>
-<p><img src="重载.png" alt="1563897046529"></p>
-<p><strong>内联函数</strong>：内联函数只是向编译器发出的一个请求，编译器可以忽略这个请求。通常就是在每个调用点内联展开。</p>
-<p><strong>constexpr函数</strong>：函数的返回值以及所有形参的类型都是字面值类型，而且函数体内必须有且只有一条return语句。constexpr为内联函数，不一定返回常量表达式。</p>
-<h3 id="调试帮助"><a href="#调试帮助" class="headerlink" title="调试帮助"></a>调试帮助</h3><p>assert预处理宏：是预处理器，而不是编译器检查的。用来检查不可能的情况</p>
-<p><strong>NDEBUG预处理变量</strong>：assert的行为依赖于这个预处理变量的状态，如果定义了这个预处理变量，就什么都不做。</p>
-<p><img src="预处理1.png" alt="1563898004510"></p>
-<p><img src="预处理2.png" alt="1563898033745"></p>
-<h3 id="函数指针"><a href="#函数指针" class="headerlink" title="函数指针"></a>函数指针</h3><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">bool lengthCompare(const string &amp;,const string &amp;);</div><div class="line">bool (*pf)(const string&amp;,const string &amp;);</div><div class="line">pf = lengthCompare;</div><div class="line">pf = &amp;lengthCompare;</div><div class="line">bool b1 = pf("a","b");</div><div class="line">bool b2 = (*pf)("a","b");</div><div class="line"></div><div class="line">//声明函数指针</div><div class="line">int (*f1(int))(int*,int);</div><div class="line">auto f1(int) -&gt; int(*)(int*,int);</div><div class="line"></div><div class="line">//使用decltype简化书写函数返回类型的过程，第三个函数接受一个string类型的参数，返回一个指针，该指针指向前两个函数中的一个。</div><div class="line">string:size_type sumLength(const string&amp; ,const string &amp;);</div><div class="line">string:size_type largeLength(const string&amp;,const string &amp;);</div><div class="line">decltype (sumLength) *getLength(const string &amp;);//*表示返回指针类型</div></pre></td></tr></table></figure>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;表达式&quot;&gt;&lt;a href=&quot;#表达式&quot; class=&quot;headerlink&quot; title=&quot;表达式&quot;&gt;&lt;/a&gt;表达式&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;sizeof&lt;/strong&gt;返回的是表达式结果类型的大小，而不是实际对象值的内存的大小&lt;/p&gt;
-&lt;p&gt;&lt;img s
-    
-    </summary>
-    
-      <category term="C++" scheme="https://caixueyuan.github.io/categories/C/"/>
-    
-    
-      <category term="C++基础" scheme="https://caixueyuan.github.io/tags/C-%E5%9F%BA%E7%A1%80/"/>
     
   </entry>
   

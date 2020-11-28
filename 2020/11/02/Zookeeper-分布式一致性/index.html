@@ -102,7 +102,7 @@
 <meta property="og:url" content="https://caixueyuan.github.io/2020/11/02/Zookeeper-分布式一致性/index.html">
 <meta property="og:site_name" content="caixueyuan">
 <meta property="og:description" content="分布式架构集中式与分布式集中式无法调和的问题是单机故障，扩容难的问题 分布式系统是一个硬件或软件组件分布在不同的网络计算机上，彼此之间仅仅通过消息传递进行通信和协调的系统。有以下特点：  分布性 对等性：计算机没有主备之分，组成分布式系统的所有计算机节点都是对等的。有数据副本和服务副本两种方式。 并发性：对于资源有并发访问的需求 缺乏全局时钟：无法区分事务谁先谁后 故障总是会发生  分布式典型问题">
-<meta property="og:updated_time" content="2020-11-02T16:25:28.209Z">
+<meta property="og:updated_time" content="2020-11-22T10:32:14.715Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="zoZookeeper_分布式一致性">
 <meta name="twitter:description" content="分布式架构集中式与分布式集中式无法调和的问题是单机故障，扩容难的问题 分布式系统是一个硬件或软件组件分布在不同的网络计算机上，彼此之间仅仅通过消息传递进行通信和协调的系统。有以下特点：  分布性 对等性：计算机没有主备之分，组成分布式系统的所有计算机节点都是对等的。有数据副本和服务副本两种方式。 并发性：对于资源有并发访问的需求 缺乏全局时钟：无法区分事务谁先谁后 故障总是会发生  分布式典型问题">
@@ -394,7 +394,40 @@
 <li>软状态：允许系统在不同节点的数据副本之间进行数据同步的过程存在延时。</li>
 <li>最终一致性：需要最终数据能够达到一致，也就是要求其他事务能够读取中间数据状态的结果而不报错，保证最终结果一致性就可以。</li>
 </ol>
-<h2 id="一致性协议"><a href="#一致性协议" class="headerlink" title="一致性协议"></a>一致性协议</h2>
+<h2 id="一致性协议"><a href="#一致性协议" class="headerlink" title="一致性协议"></a>一致性协议</h2><h3 id="2PC与3PC算法"><a href="#2PC与3PC算法" class="headerlink" title="2PC与3PC算法"></a>2PC与3PC算法</h3><h4 id="2PC算法"><a href="#2PC算法" class="headerlink" title="2PC算法"></a>2PC算法</h4><p>2PC算法分为两个阶段：第一个阶段提交事务请求，第二个阶段是执行事务提交。第一阶段是比较耗时的，第二个阶段基本上可以在瞬间执行。</p>
+<p>优点：原理简单，实现方便</p>
+<p>缺点：</p>
+<ol>
+<li>同步阻塞（在二阶段提交执行过程中，所有参与该事务操作的逻辑都处于阻塞状态，也就是各个参与者在等待其他参与者响应的过程中，将无法进行其他任何操作</li>
+<li>单点问题：在锁定事务资源之后，假设协调者出现宕机等问题时，其他事务将会一直处于锁定事务资源的状态中，而无法继续完成事务操作。</li>
+<li>数据不一致：在二阶段时，当发起事务提交的过程中，可能出现有些参与者收不到消息，导致出现数据不一致的情况</li>
+<li>太过保守（一般情况下，如果所有的机器都要成功的话，策略会显得比较保守，一般最好的情况是半数以上的都能够成功，然后剩下的通过数据同步的方式来继续同步就行啦）</li>
+</ol>
+<h4 id="3PC算法"><a href="#3PC算法" class="headerlink" title="3PC算法"></a>3PC算法</h4><p>该算法实际上并没有改变2PC算法的本质的， 只是在2PC的基础上，加上一个预先检测而已，让协调者能够在最开始的时候就能够确定是否有机器出现宕机。相比二阶段提交协议，最大优点就是降低了参与者的阻塞范围，并且能够在出现单点故障后继续达到一致。</p>
+<h3 id="Paxos算法"><a href="#Paxos算法" class="headerlink" title="Paxos算法"></a>Paxos算法</h3><p>该算法解决的问题是如何在一个可能发生宕机或者网络异常的分布式系统中，快速且正确地在集群内部对某个数据的值达成一致，并且保证不论发生以上任何异常，都不会破坏整个系统的一致性。</p>
+<p>该算法最大的思想就是通过少数服从多数的方式，保证有容错性。</p>
+<p>该算法太复杂，一般在实际上很少使用。一般都是作为内部算法，不需要我们来感知存在。</p>
+<h2 id="Zookeeper与Paxos"><a href="#Zookeeper与Paxos" class="headerlink" title="Zookeeper与Paxos"></a>Zookeeper与Paxos</h2><h3 id="初识ZooKeeper"><a href="#初识ZooKeeper" class="headerlink" title="初识ZooKeeper"></a>初识ZooKeeper</h3><p>Zookeeper为分布式应用提供了高效且可靠的分布式协调服务，提供了诸如统一命名服务，配置管理和分布式锁等分布式的基础服务。</p>
+<p>ZooKeeper设计目标：</p>
+<ol>
+<li>简单的数据模型（ZooKeeper使得分布式程序能够通过一个共享的，树型结果的名字空间来相互协调，Zookeeper将全量数据存储到内存中，一次来实现提高服务器吞吐，减少延迟的目的。</li>
+<li>可以构建集群，只要集群中存在超过一半的机器能够正常工作，那么集群就能够对外服务。都是以一主多备的方式来运行。</li>
+<li>顺序访问：对于来自客户端的每个更新请求，ZooKeeper都会分配一个全局唯一的递增编号，返回所有事务操作的先后顺序。（但是一般因为分布式操作的不确定，一般情况下，很难保证谁先谁后）</li>
+<li>高性能：所有的ZNode都是在内存中，运行比较快。（一般情况下）</li>
+</ol>
+<h3 id="ZooKeeper基本概念"><a href="#ZooKeeper基本概念" class="headerlink" title="ZooKeeper基本概念"></a>ZooKeeper基本概念</h3><p>集群角色：Leader服务器为客户端提供读和写服务，Follower和Observer都能够提供读服务，唯一的区别就是Observer不参与Leader选举过程，也不参与写操作的过半写成功的策略，因此Observer可以在不影响写性能的情况下提升集群的读性能。</p>
+<p>会话：客户端和服务器之间建立的TCP连接，当由于服务器压力，网络故障等问题导致客户端连接断开时，只要在sessionTimeout规定的时间内能够重新连接上集群中的任何一台服务器，那么之前创建的会话依然有效。</p>
+<p>数据节点：跟文件系统类似，分为持久化节点和临时节点</p>
+<p>版本：ZooKeeper的每个ZNode上将会存储数据，对应每个ZNode，ZooKeeper都会为其维护一个叫Stat的数据结构，Stat中记录了这个ZNode的三个数据版本，分别是version（当前ZNode的版本），cversion（当前ZNode子节点的版本）和aversion（当前ZNode的ACL版本）</p>
+<p>Watcher：节点在特定事件中触发的事件通知</p>
+<p>ACL：权限控制。</p>
+<h2 id="使用ZooKeeper"><a href="#使用ZooKeeper" class="headerlink" title="使用ZooKeeper"></a>使用ZooKeeper</h2><p>ZooKeeper默认都不支持递归创建，即无法在父节点不存在的情况下创建一个子节点。</p>
+<p>ZooKeeper节点内容只支持字节数组类型，也就是说ZooKeeper不负责为节点内容进行序列化，开发人员需要自己使用序列化工具自己序列化。</p>
+<p>ZooKeeper的Watcher通知都是一次性的，即一旦触发一次通知后，该Watcher就失效了，因此客户端需要返回注册Watcher。</p>
+<p>目前最为常用的ZooKeeper客户端为Curator。</p>
+<p><strong>其实，ZooKeeper的本身是相对比较简单的，提供了类似于文件系统的特性，包括四种节点：临时节点，临时顺序节点，持久节点，持久顺序节点。并且对节点注册了Watcher事件通知机制，每个ZNode都有权限限制。另外，ZooKeeper集群都是在过半进程都能够启动的情况下提供服务，少于半数的时候不提供服务。</strong></p>
+<p>ZooKeeper是作为一个分布式协调的作用，一般情况下，如果你涉及到在分布式节点中进程控制，配置管理等小数据量的操作，都应该优先考虑到ZooKeeper。如数据分布式订阅，命名服务，分布式协调/通知，集群管理，Master选举，分布式锁以及分布式队列等分布式场景。</p>
+
       
     </div>
 
@@ -445,6 +478,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/11/28/架构解密-从分布式到微服务/" rel="prev" title="'架构解密_从分布式到微服务'">
+                '架构解密_从分布式到微服务' <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -516,7 +553,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">72</span>
+                <span class="site-state-item-count">73</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -527,7 +564,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-count">21</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -538,7 +575,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-count">44</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -580,7 +617,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#分布式架构"><span class="nav-number">1.</span> <span class="nav-text">分布式架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#集中式与分布式"><span class="nav-number">1.1.</span> <span class="nav-text">集中式与分布式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分布式事务"><span class="nav-number">1.2.</span> <span class="nav-text">分布式事务</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一致性协议"><span class="nav-number">2.</span> <span class="nav-text">一致性协议</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#分布式架构"><span class="nav-number">1.</span> <span class="nav-text">分布式架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#集中式与分布式"><span class="nav-number">1.1.</span> <span class="nav-text">集中式与分布式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分布式事务"><span class="nav-number">1.2.</span> <span class="nav-text">分布式事务</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一致性协议"><span class="nav-number">2.</span> <span class="nav-text">一致性协议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2PC与3PC算法"><span class="nav-number">2.1.</span> <span class="nav-text">2PC与3PC算法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2PC算法"><span class="nav-number">2.1.1.</span> <span class="nav-text">2PC算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3PC算法"><span class="nav-number">2.1.2.</span> <span class="nav-text">3PC算法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Paxos算法"><span class="nav-number">2.2.</span> <span class="nav-text">Paxos算法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Zookeeper与Paxos"><span class="nav-number">3.</span> <span class="nav-text">Zookeeper与Paxos</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#初识ZooKeeper"><span class="nav-number">3.1.</span> <span class="nav-text">初识ZooKeeper</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ZooKeeper基本概念"><span class="nav-number">3.2.</span> <span class="nav-text">ZooKeeper基本概念</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用ZooKeeper"><span class="nav-number">4.</span> <span class="nav-text">使用ZooKeeper</span></a></li></ol></div>
             
 
           </div>
