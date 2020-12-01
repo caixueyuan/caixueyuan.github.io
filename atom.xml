@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://caixueyuan.github.io/"/>
-  <updated>2020-11-29T07:28:15.923Z</updated>
+  <updated>2020-12-01T16:38:07.831Z</updated>
   <id>https://caixueyuan.github.io/</id>
   
   <author>
@@ -14,6 +14,65 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Java虚拟机必知必会</title>
+    <link href="https://caixueyuan.github.io/2020/11/29/Java%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%BF%85%E7%9F%A5%E5%BF%85%E4%BC%9A/"/>
+    <id>https://caixueyuan.github.io/2020/11/29/Java虚拟机必知必会/</id>
+    <published>2020-11-29T14:22:59.000Z</published>
+    <updated>2020-12-01T16:38:07.831Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="Java内存区域与内存溢出异常"><a href="#Java内存区域与内存溢出异常" class="headerlink" title="Java内存区域与内存溢出异常"></a>Java内存区域与内存溢出异常</h2><h3 id="运行时数据区域"><a href="#运行时数据区域" class="headerlink" title="运行时数据区域"></a>运行时数据区域</h3><p><strong>程序计数器</strong>是一块较小的内存空间，是当前线程所执行的字节码的行号指示器。通过改变这个计数器的值来选取下一条需要执行的字节码指令。每个线程都需要由一个独立的程序计数器，各条线程之间的计数器互不影响，独立存储。如果线程正在执行的是一个Java方法，计数器记录的是正在执行的虚拟机字节码指令的地址；如果正在执行的是native方法，这个计数器值则为空。</p>
+<p><strong>Java虚拟机栈</strong>描述的是Java方法执行的线程内存模型：每个方法被执行的时候，java虚拟机都会同步创建一个栈帧，用于存储局部变量表，操作数栈，动态连接，方法出口等信息。一般都是使用-xss进行指定。</p>
+<p><strong>本地方法栈</strong>:本地方法栈式为虚拟机使用的本地方法服务提供服务，而虚拟机栈是为虚拟机执行Java方法服务的。</p>
+<p><strong>Java堆</strong>：虚拟机所管理的内存中最大的一块。所有线程共享的Java堆中可以划分出多个线程私有的分配缓冲区，以提升对象分配时的效率，Java堆可以处于物理上不连续的内存空间中，但在逻辑上它应该被视为连续的，虚拟地址是连续的</p>
+<p><strong>方法区</strong>：是各个线程共享的内存区域，它用于存储已被虚拟机加载的类型信息，常量，静态变量，即时编译器编译后的代码缓存等数据。除了和Java堆一样不需要连续内存和可以选择固定大小或者可扩展外，甚至还可以选择不实现垃圾收集。如果方法区无法满足新的内存分配需求时，将抛出OutOfMemoryError异常。</p>
+<p><strong>运行时常量池</strong>：是方法区的一部分，Class文件中除了有类的版本，字段，方法，接口等描述信息外，还有一项信息是常量池，用于存放编译器生成的各种字面量和符号引用。这部分内容将在类加载后存放到方法区的运行时常量池中。同时，还会把由符号引用翻译出来的直接引用也存储在运行时常量池中。同时，具备动态性，并不要求常量一定只有在编译器才能产生，运行期也可以把新的常量放入池中，比如String.intern()</p>
+<p><strong>直接内存</strong>：通过NIO中的DirectByteBuffer等对象作为内存的引用来进行操作，不受到Java堆大小的限制，通过<code>-XX:MaxDirectMemorySize</code>来进行限制。不受<code>-Xmx</code>来进行限制。</p>
+<h3 id="对象探秘"><a href="#对象探秘" class="headerlink" title="对象探秘"></a>对象探秘</h3><h4 id="对象创建"><a href="#对象创建" class="headerlink" title="对象创建"></a>对象创建</h4><ol>
+<li>当Java虚拟机遇到一条字节码new指令时，首先将去检查这个指令的参数是否能在常量池中定位到一个类的符号引用，并且检查这个符号引用代表的类是否已经被加载，解析和初始化。如果没有，必须执行相应的类加载。</li>
+<li>虚拟机为新生对象分配内存。通过指针碰撞和空闲列表的方式来为一个对象分配确定大小的内存。如果采用的垃圾收集器由内存压缩整理的功能，则使用指针碰撞的方式，如果采用的垃圾收集器如CMS，没有内存压缩整理的，那么采用空闲列表的方式来分配内存</li>
+<li>另外，分配内存还存在两种方式，通过<code>-XX:+/-UseTLAB</code>来进行控制，一种是对分配内存空间的动作进行同步处理，实际上虚拟机时采用CAS配上失败重试的方式保证更新操作的原子性。另外一种是把内存分配的动作按照线程划分在不同的空间之中进行分配，即每个线程在Java堆中预先分配内存，就在那个线程的本地缓存区中分配。</li>
+<li>Java虚拟机对对象的元数据信息，对象的哈希码，对象的GC分代年龄等信息，存放在对象的对象头</li>
+<li>执行对象的init方法</li>
+</ol>
+<h4 id="对象的内存布局"><a href="#对象的内存布局" class="headerlink" title="对象的内存布局"></a>对象的内存布局</h4><ol>
+<li>对象头[第一部分存储对象自身的运行时数据（Mark Word)，如哈希码，GC分代年龄，锁状态标识，线程持有的锁，偏向线程ID，偏向时间戳等；类型指针：即对象指向它的类型元数据的指针，Java虚拟机通过这个指针来确定该对象是哪个类的实例]</li>
+<li>实例数据：对象真正存储的有效信息</li>
+<li>对齐填充，HotSpot虚拟机的自动内存管理系统要求对象起始地址必须是8子节的整数倍。</li>
+</ol>
+<h4 id="对象的访问定位"><a href="#对象的访问定位" class="headerlink" title="对象的访问定位"></a>对象的访问定位</h4><p>虚拟机使用的是直接指针来进行对象访问，也就是reference中存储的就是对象地址。</p>
+<h2 id="垃圾收集器与内存分配策略"><a href="#垃圾收集器与内存分配策略" class="headerlink" title="垃圾收集器与内存分配策略"></a>垃圾收集器与内存分配策略</h2><h3 id="GC回收算法"><a href="#GC回收算法" class="headerlink" title="GC回收算法"></a>GC回收算法</h3><p>Hotspot虚拟机使用的是可达性分析算法来胖丁对象是否存在的。这个算法是通过一系列成为“GC ROOT”的根对象作为起始节点集，从这些节点开始，根据引用关系向下搜索，搜索过程所走过的路径成为“引用链”，如果某个对象到GC Roots间没有任何引用链相连，或者用图论的话来说，从GC Roots到这个对象不可达时，则证明此对象是不可能再被使用的。</p>
+<p>作为GC Roots对象如下：</p>
+<ol>
+<li>在虚拟机栈中引用的对象，譬如各个线程被调用的方法栈中使用的参数，局部变量和临时变量</li>
+<li>在方法区中类静态属性引用的对象，譬如Java类的引用类型静态变量</li>
+<li>在方法区中常量引用的对象，譬如字符串常量池里的引用</li>
+<li>在本地方法栈中NJNI（Native方法）引用的对象</li>
+<li>Java虚拟机内部的引用，如基本数据类型对应的Class对象，一些常驻的异常对象，系统加载器</li>
+<li>所有被同步锁持有的对象</li>
+<li>反映Java虚拟机内部情况的JMXBean,JVMTI中注册的回调，本地代码缓存。</li>
+</ol>
+<h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><ol>
+<li>强引用：无论任何情况下，只要强引用关系还存在，垃圾收集器就永远不会回收掉被引用的对象</li>
+<li>软引用：描述一些还有用，但非必须的对象，只被软引用关联着的对象，在系统将要发生内存溢出异常前，会把这些对象列出回收范围之中，进行第二次回收</li>
+<li>弱引用：被弱引用关联的对象只能够生存到下一次垃圾收集发生为止。当垃圾收集器开始工作，无论当前内存是否足够，都会回收掉只被弱引用关联的对象</li>
+<li>虚引用：一个对象是否有虚引用的存在，完全不会对其生存时间构成影响，也无法通过虚引用来获取一个对象实例。为一个对象设置虚引用关联的唯一目的只是为了能在这个对象垃圾回收时收到一个系统通知。（可以用来判断对象是否存在，进而判断对象实例的个数）</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;Java内存区域与内存溢出异常&quot;&gt;&lt;a href=&quot;#Java内存区域与内存溢出异常&quot; class=&quot;headerlink&quot; title=&quot;Java内存区域与内存溢出异常&quot;&gt;&lt;/a&gt;Java内存区域与内存溢出异常&lt;/h2&gt;&lt;h3 id=&quot;运行时数据区域&quot;&gt;&lt;a h
+    
+    </summary>
+    
+      <category term="Java" scheme="https://caixueyuan.github.io/categories/Java/"/>
+    
+    
+      <category term="Java" scheme="https://caixueyuan.github.io/tags/Java/"/>
+    
+  </entry>
   
   <entry>
     <title>&#39;架构解密_从分布式到微服务&#39;</title>
@@ -2021,42 +2080,6 @@
     
     
       <category term="Linux,C++" scheme="https://caixueyuan.github.io/tags/Linux-C/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>C++程序概述</title>
-    <link href="https://caixueyuan.github.io/2019/07/23/C-%E7%A8%8B%E5%BA%8F%E6%A6%82%E8%BF%B0/"/>
-    <id>https://caixueyuan.github.io/2019/07/23/C-程序概述/</id>
-    <published>2019-07-22T16:21:59.000Z</published>
-    <updated>2019-07-22T16:41:16.814Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="可执行程序"><a href="#可执行程序" class="headerlink" title="可执行程序"></a>可执行程序</h2><p><img src="冯诺依曼式" alt="img"></p>
-<p>上面为冯诺依曼式计算机</p>
-<p>指令执行的过程：</p>
-<p>（1） 程序计数器PC将指令的地址发送给地址寄存器AR</p>
-<p>（2）地址寄存器到响应的存储单元中将指令取出放入指令寄存器</p>
-<p>（3） 指令寄存器将指令交给指令译码器ID进行译码，经过分析这条指令的操作数是一个地址</p>
-<p>（4）控制器将指令中的地址传回地址寄存器AR</p>
-<p>（6）在控制器的协调下，到相应的存储器中取出数据，将其送到运算器的缓冲寄存器DR</p>
-<p>（7）缓冲寄存器将数据送到算数逻辑单元ALU</p>
-<p>（8）操作控制器发送一个加一操作的信号给算数逻辑单元ALU</p>
-<p>（9）ALU完成运算，并将运算结果放回到累加器中</p>
-<p>详情请见：<a href="https://blog.csdn.net/chenkaibsw/article/details/78315931" target="_blank" rel="external">冯诺依曼式计算机</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;可执行程序&quot;&gt;&lt;a href=&quot;#可执行程序&quot; class=&quot;headerlink&quot; title=&quot;可执行程序&quot;&gt;&lt;/a&gt;可执行程序&lt;/h2&gt;&lt;p&gt;&lt;img src=&quot;冯诺依曼式&quot; alt=&quot;img&quot;&gt;&lt;/p&gt;
-&lt;p&gt;上面为冯诺依曼式计算机&lt;/p&gt;
-&lt;p&gt;指令执行
-    
-    </summary>
-    
-      <category term="C++" scheme="https://caixueyuan.github.io/categories/C/"/>
-    
-    
-      <category term="LinuxC++" scheme="https://caixueyuan.github.io/tags/LinuxC/"/>
     
   </entry>
   
