@@ -1,0 +1,814 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="开源软件," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="caixueyuan" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="基础和应用篇Redis(Remote Dictionary Service)：远程字典服务 Redis基础数据结构string（字符串）Redis所有的数据结构都以唯一的key字符串作为名称，然后通过这个唯一key值来获取相应的value数据。Redis的字符串是动态字符串，是可以修改的字符串，类似于Java的ArrayList，采用预分配冗余空间的方式来减少内存的频繁分配。 1set name">
+<meta name="keywords" content="开源软件">
+<meta property="og:type" content="article">
+<meta property="og:title" content="redis必知必会">
+<meta property="og:url" content="https://caixueyuan.github.io/2020/12/19/redis必知必会/index.html">
+<meta property="og:site_name" content="caixueyuan">
+<meta property="og:description" content="基础和应用篇Redis(Remote Dictionary Service)：远程字典服务 Redis基础数据结构string（字符串）Redis所有的数据结构都以唯一的key字符串作为名称，然后通过这个唯一key值来获取相应的value数据。Redis的字符串是动态字符串，是可以修改的字符串，类似于Java的ArrayList，采用预分配冗余空间的方式来减少内存的频繁分配。 1set name">
+<meta property="og:image" content="https://caixueyuan.github.io/2020/12/19/redis必知必会/image-20201219171637504.png">
+<meta property="og:image" content="https://caixueyuan.github.io/2020/12/19/redis必知必会/image-20201219172319288.png">
+<meta property="og:image" content="https://caixueyuan.github.io/2020/12/19/redis必知必会/image-20201219172949620.png">
+<meta property="og:image" content="https://caixueyuan.github.io/2020/12/19/redis必知必会/image-20201220002620551.png">
+<meta property="og:updated_time" content="2020-12-19T16:26:45.113Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="redis必知必会">
+<meta name="twitter:description" content="基础和应用篇Redis(Remote Dictionary Service)：远程字典服务 Redis基础数据结构string（字符串）Redis所有的数据结构都以唯一的key字符串作为名称，然后通过这个唯一key值来获取相应的value数据。Redis的字符串是动态字符串，是可以修改的字符串，类似于Java的ArrayList，采用预分配冗余空间的方式来减少内存的频繁分配。 1set name">
+<meta name="twitter:image" content="https://caixueyuan.github.io/2020/12/19/redis必知必会/image-20201219171637504.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://caixueyuan.github.io/2020/12/19/redis必知必会/"/>
+
+
+
+
+
+  <title>redis必知必会 | caixueyuan</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">caixueyuan</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">SCUT</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://caixueyuan.github.io/2020/12/19/redis必知必会/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="caixueyuan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="caixueyuan">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">redis必知必会</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-12-19T17:02:25+08:00">
+                2020-12-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="基础和应用篇"><a href="#基础和应用篇" class="headerlink" title="基础和应用篇"></a>基础和应用篇</h2><p>Redis(Remote Dictionary Service)：远程字典服务</p>
+<h3 id="Redis基础数据结构"><a href="#Redis基础数据结构" class="headerlink" title="Redis基础数据结构"></a>Redis基础数据结构</h3><h4 id="string（字符串）"><a href="#string（字符串）" class="headerlink" title="string（字符串）"></a><strong>string（字符串）</strong></h4><p>Redis所有的数据结构都以唯一的key字符串作为名称，然后通过这个唯一key值来获取相应的value数据。Redis的字符串是动态字符串，是可以修改的字符串，类似于Java的ArrayList，采用预分配冗余空间的方式来减少内存的频繁分配。</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">set</span> <span class="built_in">name</span> codehole</div></pre></td></tr></table></figure>
+<h4 id="list（列表）"><a href="#list（列表）" class="headerlink" title="list（列表）"></a><strong>list（列表）</strong></h4><p>Redis的列表相当于Java语言的LinkedList，它是链表，而不是数组。列表中的每个元素都使用双向指针顺序，串起来可以同时支持前向后向遍历。Redis的列表结构常用来做异步队列，栈使用。Redis底层存储的不是一个简单的linkedlist，而是quicklist的一个结构。首先，在队列元素较少的情况下，会使用一块连续的内存存储，这个结构是ziplist，即压缩队列。它将所有的元素彼此紧挨着一起存储，分配的是一块连续的内存。当数据库较多的时候才改成quicklist。</p>
+<p><img src="image-20201219171637504.png" alt="image-20201219171637504"></p>
+<figure class="highlight tcl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">rpush books python </div><div class="line">lpop books</div><div class="line"><span class="keyword">lrange</span> books <span class="number">0</span> <span class="number">-1</span></div><div class="line">ltrim books <span class="number">0</span> <span class="number">-1</span> # 清空列表的区域</div></pre></td></tr></table></figure>
+<h4 id="hash-字典"><a href="#hash-字典" class="headerlink" title="hash(字典)"></a><strong>hash(字典)</strong></h4><p>Redis的字典相当于Java语言里面的HashMap，它是无序字典，内部存储了很多键值对。实现的结构跟Java的HashMap也是一样的。也就是第一维hash的数组位置碰撞时，就会将碰撞的元素使用链表串接起来。</p>
+<p><img src="image-20201219172319288.png" alt="image-20201219172319288"></p>
+<p>当字段很大的情况下，要进行rehash时，Java需要一次性全部rehash。而Redis做了个改进，采用的是渐进式rehash策略。（渐进式rehash会在rehash的同时，保留新旧两个hash结构，然后通过后台异步线程来处理rehash的任务。查询时会同时查询两个hash结构，然后在后续的定时任务以及hash操作指令中，循环渐进地将旧hash的内容一点点地迁移到新的hash结构中。当搬迁完成后，就会使用新的hash结构取而代之。</p>
+<p><img src="image-20201219172949620.png" alt="image-20201219172949620"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">hset books java &quot;think in java&quot;</div><div class="line">hset books golang &quot;concurrency in go&quot;</div><div class="line">hgetall books</div><div class="line">hlen books</div><div class="line">hget books java</div><div class="line">hincrby books age 1</div></pre></td></tr></table></figure>
+<h4 id="set-集合"><a href="#set-集合" class="headerlink" title="set(集合)"></a><strong>set(集合)</strong></h4><p>Redis的集合相当于Java语言里面的HashSet，它的内部实现相当于一个特殊的字典，字典中的所有的value都是一个值Null。当集合中最后一个元素被移除后，数据结构被自动删除，内存会被回收。</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">sadd <span class="keyword">books </span>python</div><div class="line">sadd <span class="keyword">books </span><span class="keyword">java </span>golang</div><div class="line">smember <span class="keyword">books</span></div><div class="line">sismember <span class="keyword">books </span><span class="keyword">java </span><span class="comment"># 判断value是否存在</span></div><div class="line"><span class="keyword">scard </span><span class="keyword">books </span><span class="comment">#获取set的长度</span></div><div class="line">spop <span class="keyword">books </span><span class="comment">#弹出一个</span></div></pre></td></tr></table></figure>
+<h4 id="zset-有序列表"><a href="#zset-有序列表" class="headerlink" title="zset(有序列表)"></a><strong>zset(有序列表)</strong></h4><p>一方面它是一个set，保证了内部value的唯一性，另一方面，它可以给每个value赋予一个score，代表这个value的排序权重。zset中的最后一个value被移除后，数据结构被自动删除，内存被回收。zset内部的排序功能是通过<strong>跳跃列表</strong>数据结构来实现的。</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="symbol">zadd</span> <span class="keyword">books </span><span class="number">9</span>.<span class="number">0</span> <span class="string">"think in java"</span></div><div class="line"><span class="symbol">zrange</span> <span class="keyword">books </span><span class="number">0</span> -<span class="number">1</span></div><div class="line"><span class="symbol">zrevrange</span> <span class="keyword">books </span><span class="number">0</span> -<span class="number">1</span></div><div class="line"><span class="symbol">zcard</span> <span class="keyword">books</span></div><div class="line"><span class="symbol">zscore</span> <span class="keyword">books </span><span class="string">"java concurrency"</span></div><div class="line"><span class="symbol">zrank</span> <span class="keyword">books </span><span class="string">"java concurrency"</span></div><div class="line"><span class="symbol">zrangebyscore</span> <span class="keyword">books </span><span class="number">0</span> <span class="number">0</span>.<span class="number">91</span></div></pre></td></tr></table></figure>
+<h3 id="分布式锁"><a href="#分布式锁" class="headerlink" title="分布式锁"></a>分布式锁</h3><p>容器型数据结构：</p>
+<ol>
+<li>create if not exists:如果容器不存在，那就创建一个，在进行操作。</li>
+<li>drop if no elements:如果容器里的元素没有了，那么立即删除容器，释放内存。</li>
+</ol>
+<p>Redis本身没有实现分布式锁，但是呢，可以通过setnx(set if not exists)指令，来只允许被一个客户端占坑，来实现独占锁。至于其他的工作，但是需要用户进行实现的。在实现的过程，要考虑redis的超时机制，不能实现可靠的分布式锁。</p>
+<h3 id="延时队列"><a href="#延时队列" class="headerlink" title="延时队列"></a>延时队列</h3><p>Redis的消息队列不是专门的消息的队列，它没有非常多的高级特性，没有ack保证，如果对消息的可靠性有这极高要求，不满足使用。</p>
+<p>Redis的list列表数据结构常用来作为异步消息队列使用，用rpush和lpush操作入队列，用lpop和rpop操作出队列。</p>
+<p>阻塞读在队列没有数据的时候，会立即进入休眠状态，一旦数据到来，则立即醒过来。消息的延迟几乎为零。用blpop/brpop替代前面的lpop/rpop，就解决通过sleep不能够实时读取消息的作用。</p>
+<p>如果线程一直阻塞在那里，redis的客户端连接就成为闲置连接，闲置过久，服务器一般会主动断开连接，减少闲置资源占用。如果如果抛出异常的时候，一定要进行重试。</p>
+<p>Redis的zrem方法是多线程多进程争抢任务的关键，它的返回值决定了当前实例有没有抢到任务，通过zrem来删除队列的消息来决定唯一的属主。</p>
+<h3 id="位图"><a href="#位图" class="headerlink" title="位图"></a>位图</h3><p>Redis的位数组是自动扩展的，如果设置了某个偏移位置超出了现有的内容范围，就会自动将位数组进行零扩展。</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">setbit s <span class="number">1</span> <span class="number">1</span></div><div class="line">setbit s <span class="number">2</span> <span class="number">1</span></div><div class="line">get s</div><div class="line">bitcount w</div></pre></td></tr></table></figure>
+<p> <code>bitcount</code>用来统计指定位置范围内1的个数，bitpos用来查找指定范围内出现的第一个0或者1.</p>
+<h3 id="HyperLogLog"><a href="#HyperLogLog" class="headerlink" title="HyperLogLog"></a>HyperLogLog</h3><p>提供不准确的去重计数方案，虽然不准确，但是也不是非常离谱，标准误差是0.81%。</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">pfadd</span> codehole user1</div><div class="line">pfcount codehole <span class="comment"># 获取数目</span></div><div class="line">pfmerge <span class="comment"># 用于将多个pf计数值累加在一起形成一个新的pf值</span></div></pre></td></tr></table></figure>
+<p>HyperLogLog需要占据12KB的存储空间，Redis对HyperLogLog的存储进行了优化，在计数比较小时，它的存储空间采用稀疏矩阵存储，空间占用小，仅仅在计数慢慢变大，稀疏矩阵占用空间渐渐超过了阈值，才会一次性转变成稠密矩阵，才会占用12KB的空间。</p>
+<h3 id="布隆过滤器"><a href="#布隆过滤器" class="headerlink" title="布隆过滤器"></a>布隆过滤器</h3><p>起到去重作用的同时，在空间上还能够节省90%以上，只是有一定的误判概率。但是主要参数设置得当，它的准确率也可以控制得相对足够准确，只有小小得误判概率。当布隆过滤器说某个值存在时，这个值可能不存在；当它说某个值不存在时，那就肯定不存在。并且误判率越低，需要的空间就越大。布隆过滤器到了Redis4提供了插件功能之后才正式登场，需要自己下载该功能。</p>
+<h3 id="Scan"><a href="#Scan" class="headerlink" title="Scan"></a>Scan</h3><p>平时使用了<code>keys</code>函数的好坏处</p>
+<ol>
+<li>没有offset/limit参数，一次性吐出所有满足要求的key</li>
+<li>keys算法时遍历算法，复杂度时O(n)，如果实例中有千万级以上的key，使用keys就会导致Redis服务卡顿，所有读写Redis的其他指令都会被延后甚至耗时报错。因为Redis是单线程程序，顺序执行所有指令，其他指令必须等到当前的keys指令执行完才能够继续。</li>
+</ol>
+<p>Scan的好处：</p>
+<ol>
+<li>复杂度虽然是O(n)，但它是通过游标分步进行的，不会阻塞线程</li>
+<li>提供limit参数，可以控制每次返回结果的最大条数，limit只是一个hint，返回的结果可多可少（limit不是限定返回结果的数量，而是限定服务器单次遍历的字典槽位数量）</li>
+<li>同keys一样，提供了模式匹配功能</li>
+<li>服务器不需要为游标保存状态，游标的唯一状态就是scan返回给客户端的游标整数</li>
+<li>返回的结果可能有重复</li>
+<li>遍历的过程中如果有数据修改，修改后的数据能不能遍历到是不确定的</li>
+<li>单次返回的结果是空并不意味着遍历结束，而是要看返回的游标值是否为零。</li>
+</ol>
+<p>Java的HashMap在扩容时会一次性地将旧数组下挂接的元素全部转移到新数组下面，如果HashMap中元素特别多，线程就会出现卡顿现象。Redis采用的时渐进式rehash。它会同时保留旧数组和新数组，然后在定时任务中以及后续对hash的指令操作中渐渐地将旧数组中挂接的元素迁移到新数组上。这意味着要操作处于rehash中的字段，需要同时访问新旧两个数组结构。如果在旧数组下面找不到元素，还需要到新数组下面寻找。scan对于rehash中的字典，需要同时扫描新旧槽位，然后将结果融合后返回给客户端，所以导致可能出现重复值。</p>
+<h2 id="原理篇"><a href="#原理篇" class="headerlink" title="原理篇"></a>原理篇</h2><h3 id="线程IO模型"><a href="#线程IO模型" class="headerlink" title="线程IO模型"></a>线程IO模型</h3><p>Redis是个单线程程序，Node.js也是单线程，Nginx也是单线程程序。</p>
+<p><strong>非阻塞IO</strong>：当调用套接字的读写方法，默认它是阻塞的，比如read方法要传递进去一个参数n，表示最多读取n个字节后再返回，如果一个字节都没有，线程就会卡在那里，直到新的数据到来或连接关闭，read方法才会返回。该为阻塞IO。非阻塞IO在套接字对象上提供了一个选项Non_Blocking，当这个选项打开时，读写方法不会阻塞，而是能读多少读多少，能写多少写多少。读方法和写方法都会通过返回值来告知程序实际读写了多少字节。</p>
+<p><strong>事件轮询</strong>：最简单的事件轮询API是select函数，它是系统调用，输入是读写描述符read_fds &amp; write_fds,输出是与之对应的可读可写事件，同时还提供了一个timeout参数，如果没有事件到来，那么最多等待timeout的值的时间，线程处于阻塞状态，一旦线程还有其他事件到来，就可以立即返回。时间过了之后还是没有任何事件到来，也会立即返回。现代操作系统使用的是epoll。</p>
+<p><strong>指令队列</strong>：Redis会将每个客户端套接字都关联一个指令队列。客户端的指令通过队列来排队进行顺序处理，先到先得</p>
+<p><strong>响应队列</strong>：Redis服务器通过响应队列来将指令的返回结果回复给客户端，如果队列为空，可以将当前客户端描述符从write_fds里面移出来，防止没有啥子数据可写，一直在尝试，占用CPU。</p>
+<p><strong>定时任务</strong>：Redis定时任务会记录在一个最小堆的数据结构中，最快要执行的任务排在堆的最上方，在每个循环周期里，Redis都会怼最小堆里面已经到时间点的任务排在堆的最上方。处理完毕后，将最快要执行的任务还需要的时间记录下来。</p>
+<h3 id="通讯协议"><a href="#通讯协议" class="headerlink" title="通讯协议"></a>通讯协议</h3><p>Redis采用的是文本协议，名字叫RESP，是一个文本协议，优势在于实现过程异常简单，解析性能极好。但是比较浪费流量。</p>
+<h3 id="持久化"><a href="#持久化" class="headerlink" title="持久化"></a>持久化</h3><p>Redis的持久化的方式分为两种：</p>
+<ol>
+<li>快照（全量备份）</li>
+<li>AOF日志（连续的增量备份）</li>
+</ol>
+<p><strong>快照</strong>：Redis在持久化会调用glibc的函数fork产生一个子进程，快照持久化完全交给子进程来处理，父进程继续处理客户端请求。子进程做数据持久化，不会修改现有的内存数据结构，然后序列化写到磁盘中。父进程使用COW（Copy On Write)的方式来对内存进行修改。所以，虽然Redis一直在处理外部的请求，但是呢，子进程对应的内存是没有发生改变。</p>
+<p><strong>AOF</strong>：AOF日志存储的是Redis服务器的顺序指令序列，AOF日志只记录对内存进行修改的指令记录。Redis会在收到客户端修改指令后，进行参数校验，逻辑处理，如果没有问题，会立即将该指令文本存储到AOF日志中。也就是说，先执行指令才将日志罗盘。（主机的AOF日志在内存中实际上是一个环状结构）</p>
+<p><strong>AOF重写</strong>：提供了bgrewwriteaof指令用于对AOF日志进行瘦身，其原理就是开辟一个子进程对内存进行遍历，转换成一系列Redis的操作指令，序列化到一个新的AOF日志文件中。序列化完毕后再将操作期间发生的增量AOF日志追加到这个新的AOF日志文件中，追加完毕后就会立即替换旧的AOF日志文件</p>
+<p><strong>fsync</strong>：对AOF文件写操作，将内存写到了内核为文件描述符分配的一个内存缓存中，然后内核会异步将脏数据刷回到磁盘中。Redis现在采用的是每隔1s左右执行一次fsync操作，也就是说，如果操作系统宕机了，会丢失一秒钟的数据</p>
+<p><strong>Redis混合持久化</strong>：采用rdb文件+增量的AOF日志文件。AOF日志是自持久化开始到持久化结束的这段时间发生的增量AOF日志。</p>
+<p><strong>对于IO操作，我们不一定要采用每执行一个指令就fsync一次磁盘，也不能够采用操作系统自己控制的方式，而是应该控制在一定的时间内，或者一定的事务个数</strong></p>
+<p><strong>管道</strong></p>
+<p>pipeline：对于客户端和服务器的沟通时，如果对于每个指令都进行tcp发送的话，会导致效率优有限。最好能够采用的将多个指令合并成一个数据包进行发送的方式，来让节省网络的时间。</p>
+<p><strong>操作系统socket write操作只负责将数据写到本地操作系统内存的发送缓存中，然后就返回了，剩下的事务交给操作系统内核异步将数据发送到目标机器。但是如果发送缓存满了，那么就需要等待缓冲空出空闲空间出来，这个就是写操作IO操作的真正耗时</strong></p>
+<p><strong>read操作也是一样的道理，read操作只负责将数据从本地操作系统内核的接收缓存中取出来就了事，但是如果缓冲是空的，就需要等待数据到来，这个就是read操作IO操作的真正耗时</strong></p>
+<p><strong>其实，TCP机制一般都是将ACK报文和数据报文一起发送的方式，来提高效率。</strong></p>
+<p><img src="image-20201220002620551.png" alt="image-20201220002620551"></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/开源软件/" rel="tag"># 开源软件</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/11/29/Java虚拟机必知必会/" rel="next" title="Java虚拟机必知必会">
+                <i class="fa fa-chevron-left"></i> Java虚拟机必知必会
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="caixueyuan" />
+          <p class="site-author-name" itemprop="name">caixueyuan</p>
+           
+              <p class="site-description motion-element" itemprop="description">Java后台开发程序员</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">75</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基础和应用篇"><span class="nav-number">1.</span> <span class="nav-text">基础和应用篇</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis基础数据结构"><span class="nav-number">1.1.</span> <span class="nav-text">Redis基础数据结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#string（字符串）"><span class="nav-number">1.1.1.</span> <span class="nav-text">string（字符串）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#list（列表）"><span class="nav-number">1.1.2.</span> <span class="nav-text">list（列表）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#hash-字典"><span class="nav-number">1.1.3.</span> <span class="nav-text">hash(字典)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#set-集合"><span class="nav-number">1.1.4.</span> <span class="nav-text">set(集合)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#zset-有序列表"><span class="nav-number">1.1.5.</span> <span class="nav-text">zset(有序列表)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分布式锁"><span class="nav-number">1.2.</span> <span class="nav-text">分布式锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#延时队列"><span class="nav-number">1.3.</span> <span class="nav-text">延时队列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#位图"><span class="nav-number">1.4.</span> <span class="nav-text">位图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HyperLogLog"><span class="nav-number">1.5.</span> <span class="nav-text">HyperLogLog</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#布隆过滤器"><span class="nav-number">1.6.</span> <span class="nav-text">布隆过滤器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Scan"><span class="nav-number">1.7.</span> <span class="nav-text">Scan</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原理篇"><span class="nav-number">2.</span> <span class="nav-text">原理篇</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#线程IO模型"><span class="nav-number">2.1.</span> <span class="nav-text">线程IO模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#通讯协议"><span class="nav-number">2.2.</span> <span class="nav-text">通讯协议</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#持久化"><span class="nav-number">2.3.</span> <span class="nav-text">持久化</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">caixueyuan</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
