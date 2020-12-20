@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://caixueyuan.github.io/"/>
-  <updated>2020-12-20T06:22:57.359Z</updated>
+  <updated>2020-12-20T16:29:45.696Z</updated>
   <id>https://caixueyuan.github.io/</id>
   
   <author>
@@ -14,6 +14,100 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>docker必知必会</title>
+    <link href="https://caixueyuan.github.io/2020/12/20/docker%E5%BF%85%E7%9F%A5%E5%BF%85%E4%BC%9A/"/>
+    <id>https://caixueyuan.github.io/2020/12/20/docker必知必会/</id>
+    <published>2020-12-20T10:32:52.000Z</published>
+    <updated>2020-12-20T16:29:45.696Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="容器发展之路"><a href="#容器发展之路" class="headerlink" title="容器发展之路"></a>容器发展之路</h2><p>读《深入浅出Docker》所知，比较偏应用。</p>
+<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>Docker引擎是用于运行和编排容器的基础设施工具，是运行容器的核心容器运行时。</p>
+<p>OCI（The Open Container Initiative)：是一个旨在对容器基础架构中的基础组件进行标准化的管理委员会。</p>
+<p><strong>虚拟机</strong>：依赖其专用的操作系统，OS会占用额外的CPU，RAM和存储，并且，每个OS都需要补丁，监控，license等。由虚拟机管理器统一接管操作硬件资源。</p>
+<p><strong>容器</strong>：容器的运行不会独占操作系统，运行在相同宿主机上的容器是共享一个操作系统，节省大量的资源。</p>
+<h2 id="Docker安装"><a href="#Docker安装" class="headerlink" title="Docker安装"></a>Docker安装</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">wget -qO- https://get.docker.com/ | sh</div><div class="line">sudo usermod -aG docker ubuntu</div></pre></td></tr></table></figure>
+<p>安装的速度比较慢，国内的网不行。</p>
+<p><strong>Docker存储驱动</strong>：每个Docker容器都有一个本地存储空间，用来保存层叠的镜像层以及挂载的容器文件系统。默认情况下，容器的所有读写操作都发生在其镜像层上或挂载的文件系统中。可以通过修改<code>/etc/docker/daemon.json</code>文件来修改存储引擎配置，修改完之后重启Dockers才能够生效，Linux默认为overlay2.</p>
+<p>默认情况下，对于容器的所有的读写，如果容器实例停止运行，文件都不会保留下来。镜像本身是不会发生变化的。</p>
+<h2 id="纵观Docker"><a href="#纵观Docker" class="headerlink" title="纵观Docker"></a>纵观Docker</h2><p>Dockers分为Dockers客户端和Docker daemon(服务器或者叫引擎)，docker实现了Docker引擎的API。在Linux中，客户端于daemon之间的通信是通过本地IPC/UNIX Socket完成的（/var/run/docker.sock)</p>
+<h3 id="运维视图"><a href="#运维视图" class="headerlink" title="运维视图"></a>运维视图</h3><p><strong>镜像</strong>包含了基础操作系统，以及应用程序运行所需的代码或依赖包。Docker的每个镜像都有自己的唯一ID，用户可以通过引用镜像的ID或名称来使用镜像。</p>
+<p><strong>容器</strong>是运行过程中的镜像。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">docker version</div><div class="line">docker image ls</div><div class="line">docker image pull ubuntu:latest</div><div class="line">docker container run -it ubuntu:latest /bin/bash # 以交互的方式</div><div class="line">docker container ls -a # 让Dockers列出所有容器，甚至包括那些处于停止状态的</div><div class="line">docker container stop ubuntu</div><div class="line">docker container rm ubuntu</div></pre></td></tr></table></figure>
+<p>这里要注意，要删除镜像，要先stop容器，然后再将容器删除掉，才能够删除镜像。</p>
+<h3 id="开发视图"><a href="#开发视图" class="headerlink" title="开发视图"></a>开发视图</h3><p>docker文件的构建文件是通过Dockerfile来进行定义的</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">docker image build -t test:latest .</div><div class="line">docker image ls</div><div class="line">docker container rin -d --name web1 --publish 8080:8080 test:latest</div></pre></td></tr></table></figure>
+<h2 id="Docker引擎"><a href="#Docker引擎" class="headerlink" title="Docker引擎"></a>Docker引擎</h2><p><img src="image-20201220225221904.png" alt="image-20201220225221904"></p>
+<p><strong>daemon</strong>:主要功能包括镜像管理，镜像构建，RestAPI，身份验证安全，核心网络以及编排。</p>
+<p><strong>containerd</strong>:主要的任务是容器的声明周期管理——start|stop|pause|rm,还包括镜像管理等。</p>
+<p><strong>runc</strong>: 所有的容器运行代码在一个单独的OCI兼容层中实现，runc是OCI容器运行时规范的参考实现，是一个轻量级，针对Libcontainer进行包装的命令行交互工具，生来就只有一个作用——创建容器，是一个独立的容器运行时工具</p>
+<p><strong>shim</strong>：保证所有STDIN和STDOUT流是开启状态，从而当daemon重启时，容器不会因为管道的关闭而终止，将容器的退出状态反馈给daemon。</p>
+<p><img src="image-20201220225954646.png" alt="image-20201220225954646" style="zoom: 67%;"></p>
+<p>启动过程如下所示：</p>
+<ol>
+<li>Docker客户端会将其转换成合适的API格式，并发送到正确的API端点</li>
+<li>Docker daemon接收客户端的命令，向containered发出调用。daemon使用一种CRUD风格的API,通过gPRC与containered进行通信。</li>
+<li>container不负责创建容器，指挥runc去做。containered将Docker镜像转换为OCI Bundle，并让runc基于此创建一个新的容器</li>
+<li>runc与操作系统内核接口进行通讯，基于所有不需要的工具（Namespace，CGroup)来创建容器。容器进程作为runc的子进程启动，启动完毕后，runc将会推出。</li>
+</ol>
+<p><strong>优势</strong>:将所有的用于启动，管理容器的逻辑和代码从daemon中移除，保证容器运行时与Docker daemon是解耦的，也就是无守护进程的容器</p>
+<h2 id="Docker镜像"><a href="#Docker镜像" class="headerlink" title="Docker镜像"></a>Docker镜像</h2><h3 id="简介-1"><a href="#简介-1" class="headerlink" title="简介"></a>简介</h3><p>镜像是一种构建时结构，而容器可以理解为一种运行时结构</p>
+<p>一旦容器从镜像启动后，二者之间就变成了相互依赖的关系，并且在镜像上启动的容器全部停止之前，镜像是无法被删除的</p>
+<p>镜像不包含内核——容器都是共享所在Docker主机的内核。</p>
+<p>Docker客户端的镜像仓库服务是可配置的，默认使用Docker Hub,主要给出镜像的名字和标签，就能够定位到镜像，默认标签为latest。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">docker image pull ubuntu:latest</div><div class="line">docker image ls --filter dangling=true</div><div class="line">docker image ls --filter=reference="*.latest"</div><div class="line">docker image ls --format "&#123;&#123;.Size&#125;&#125;"</div><div class="line">docker image ls --format "&#123;&#123;.Repository&#125;&#125;: &#123;&#123;.Tag&#125;&#125;: &#123;&#123;.Size&#125;&#125;"</div><div class="line">docker search nigelpoulton # 允许通过CLI的方式搜索Docker Hub</div><div class="line">docker image inspact ubuntu:latest</div></pre></td></tr></table></figure>
+<p>没有标签的镜像是悬虚镜像，通常出现这种情况，是因为构建了一个新镜像，然后为该镜像打了一个已经存在的标签。</p>
+<h3 id="镜像和分层"><a href="#镜像和分层" class="headerlink" title="镜像和分层"></a>镜像和分层</h3><p>Docker镜像由一些松耦合的只读镜像层组成。</p>
+<p>Dockers负责堆叠这些镜像层，并且将他们表示为单个统一的对象</p>
+<p>每层镜像层都是在原来的基础上加上去。如果对原来的镜像有修改，就会产生镜像层</p>
+<p>在拉取镜像的过程，会根据镜像中的镜像层来拉取，如果镜像层已经存在了，不会重复拉取，节省网络。</p>
+<p>镜像本身就是一个配置对象，其中包含了镜像层的列表以及一些元数据信息。镜像层才是实际数据存储的地方，镜像的唯一标识是一个加密ID，即配置对象本身的散列值。每个镜像层由一个加密ID区分，其值为镜像层本身内容的散列值。这意味着修改镜像内容以及其中任意的镜像层，都会导致加密散列值的变化，所以，镜像和其镜像层都不可变的，任何改动都能轻松辨别，这就是内容散列。</p>
+<p>对于目前要实现跨平台的化，是通过Manifest列表（指某个镜像标签支持的架构列表，其支持的每个架构，都有自己的Manifest定义，其中列出了该镜像的构成）</p>
+<p><img src="image-20201220233122992.png" alt="image-20201220233122992" style="zoom:50%;"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker image rm $(docker image ls -q) -f</div></pre></td></tr></table></figure>
+<p>删除操作会在当前主机上删除该镜像以及相关的镜像层，如果镜像层被多个镜像共享的化，只有等全部依赖该镜像层的镜像都被删除，才会被释放</p>
+<h2 id="Docker容器"><a href="#Docker容器" class="headerlink" title="Docker容器"></a>Docker容器</h2><h3 id="容器和虚拟机"><a href="#容器和虚拟机" class="headerlink" title="容器和虚拟机"></a>容器和虚拟机</h3><p><strong>共同点</strong>：容器和虚拟机都依赖于宿主机才能够运行。Hypervisor是硬件虚拟化，将硬件物理资源划分为虚拟资源，容器是操作系统虚拟化，容器将系统资源划分为虚拟资源</p>
+<p><strong>不同点</strong>：</p>
+<p><strong>虚拟机</strong>：在虚拟机模型中，首先会开启物理机，并启动Hypervisor引导程序，一旦Hypervisor启动，就会占用机器上的全部物理资源，然后将这些物理资源划分为虚拟资源，然后将这些资源打包进入虚拟机（VM），并在其中安装系统和应用</p>
+<p><strong>容器</strong>：在OS层上，需要安装容器引擎，容器引擎可以获取系统资源，接着将资源分割为安全的互相隔离的资源结构</p>
+<h3 id="容器"><a href="#容器" class="headerlink" title="容器"></a>容器</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">service docker status</div><div class="line">systemctl is-active docker</div><div class="line">docker container run -d --name always --restart always alpine sleep 1d # 容器经过stop命令停止后，重启daemon，容器会启动</div><div class="line">docker container run -d --name ubless-stopped --restart unless-stopped --restart unless-stopped alpine sleep 1d #容器经过stop命令停止后，重启daemon，容器不会启动</div><div class="line">docker restart docker</div><div class="line">docker container rm $(docker container ls -aq) -f#清除所有的容器，镜像保留</div></pre></td></tr></table></figure>
+<p>容器进程：一般情况下，Linux容器进程只有一个，是容器中运行且唯一运行的进程，而且，该进程的PID为1，杀死容器中的主进程，则容器也就会被杀死。</p>
+<p><code>docker container stop</code>命令向容器内的PID 1进程发送了SIGTERM这样的信号，会为进程预留一个优雅停止时间，如果10s内进程没有终止，就会收到SIGKILL信号</p>
+<h2 id="应用的容器化"><a href="#应用的容器化" class="headerlink" title="应用的容器化"></a>应用的容器化</h2><h3 id="build过程"><a href="#build过程" class="headerlink" title="build过程"></a>build过程</h3><p>Dockerfile主要包括两个用途：</p>
+<ol>
+<li>对当前应用的描述</li>
+<li>指导Docker完成应用的容器化</li>
+</ol>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">FROM</span> alpine</div><div class="line"><span class="keyword">LABEL</span><span class="bash"> maintainer=<span class="string">"cxy"</span></span></div><div class="line"><span class="keyword">RUN</span><span class="bash"> apk add --update nodejs nodejs-npm</span></div><div class="line"><span class="keyword">COPY</span><span class="bash"> ./src</span></div><div class="line"><span class="keyword">WORKDIR</span><span class="bash"> /src</span></div><div class="line"><span class="keyword">RUN</span><span class="bash"> npm install</span></div><div class="line"><span class="keyword">EXPOSE</span> <span class="number">8080</span></div><div class="line"><span class="keyword">ENTRYPOINT</span><span class="bash"> [<span class="string">"node"</span>,<span class="string">"./app.js"</span>]</span></div></pre></td></tr></table></figure>
+<p>每个Dockerfile文件第一行都是FROM指令，From指令指定的镜像，会作为当前镜像的一个基础镜像层，当前应用的剩余内容会作为新增镜像层添加到基础镜像层之上。</p>
+<p>Dockerfile中通过标签（LABLE）方式指定了当前镜像的维护者，每个标签其实是一个键值对，在一个镜像当中可以通过增加标签的方式来为镜像添加自定义元数据。</p>
+<p>使用RUN，COPY等都会产生镜像层</p>
+<p>通过ENTRYPOINT指令来指定当前镜像的入口程序。ENTRYPOINT指定的配置信息也是通过镜像元数据的形式保存下来的，而不是新增镜像层。</p>
+<p>如果指令的作用是向镜像中增加新的文件或者程序，那么这条指令就会新建镜像层；如果只是告诉Docker如何完成构建或者如何运行应用程序，那么就只会增加镜像的元数据</p>
+<h3 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h3><p><strong>利用构建缓存</strong>：首先，一旦有指令在缓存中没有命中，则后续的整个构建过程将不在使用缓存，所以，应该尽量将易于发生变化的指令至于Dockerfile文件的后方执行。这意味着缓存未命中的情况将直到构建的后期才会出现。<code>docker image build --nocache=true</code></p>
+<p><strong>合并镜像</strong>：当镜像中层次太多，合并镜像层是不错的优化，不过呢，合并的镜像层将无法共享镜像层。<code>docker image build--squash</code>来创建一个合并的镜像。</p>
+<h2 id="使用Docker-Compose部署应用"><a href="#使用Docker-Compose部署应用" class="headerlink" title="使用Docker Compose部署应用"></a>使用Docker Compose部署应用</h2><p><strong>Docker Compose主要解决本地docker容器编排问题</strong></p>
+<p>Docker Compose并不是通过脚本和各种冗长的docker命令来将应用组件组织起来，而是通过一个声明式的配置文件描述整个应用，从而使用一条命令完成部署。Docker Compose的作用就是对多容器应用进行部署和管理</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="attr">version:</span> <span class="string">"3.5"</span></div><div class="line"><span class="attr">services:</span></div><div class="line"><span class="attr">  web-fe:</span></div><div class="line"><span class="attr">    build:</span> <span class="string">.</span></div><div class="line"><span class="attr">    command:</span> <span class="string">python</span> <span class="string">app.py</span></div><div class="line"><span class="attr">    ports:</span></div><div class="line"><span class="attr">      - target:</span> <span class="number">5000</span></div><div class="line"><span class="attr">        published:</span> <span class="number">5000</span></div><div class="line"><span class="attr">    networks:</span></div><div class="line"><span class="bullet">      -</span> <span class="string">counter-net</span></div><div class="line"><span class="attr">    volumes:</span></div><div class="line"><span class="attr">      - type:</span> <span class="string">volume</span></div><div class="line"><span class="attr">        source:</span> <span class="string">counter-vol</span></div><div class="line"><span class="attr">        target:</span> <span class="string">/code</span></div><div class="line"><span class="attr">  redis:</span></div><div class="line"><span class="attr">    image:</span> <span class="string">"redis:alpine"</span></div><div class="line"><span class="attr">    networks:</span></div><div class="line"><span class="attr">      counter-net:</span></div><div class="line"></div><div class="line"><span class="attr">networks:</span></div><div class="line"><span class="attr">  counter-net:</span></div><div class="line"><span class="attr">volumes:</span></div><div class="line"><span class="attr">  counter-vol:</span></div></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">docker-compose up &amp;</div><div class="line">docker-compose -f prod-equus-bass.yml up &amp;</div><div class="line">docker-compose down</div><div class="line">docker-compose up -d # 后台启动</div><div class="line">docker-compose top</div><div class="line">docker-compose stop</div></pre></td></tr></table></figure>
+<h2 id="Docker-Swarm"><a href="#Docker-Swarm" class="headerlink" title="Docker Swarm"></a>Docker Swarm</h2><p><strong>docker-swarm是解决多主机多个容器调度部署得问题，Docker Swarm默认是建立在docker上，但是能够调用docker-compose</strong></p>
+<p>作用：Swarm将一个或多个Docker节点组织起来，使得用户能够以集群方式管理他们。Swarm默认内置有加密的分布式集群存储，加密网络，共用TLS，安全集群接入令牌以及简化数字证书管理的PKI。在编排方面，Swarm提供了一套丰富的API来使得部署和管理复杂的微服务应用变得易如反掌，通过将应用定义在声明式配置文件中，使用原生的docker命令完成部署，并有滚动升级，回滚以及扩缩容操作。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;容器发展之路&quot;&gt;&lt;a href=&quot;#容器发展之路&quot; class=&quot;headerlink&quot; title=&quot;容器发展之路&quot;&gt;&lt;/a&gt;容器发展之路&lt;/h2&gt;&lt;p&gt;读《深入浅出Docker》所知，比较偏应用。&lt;/p&gt;
+&lt;h3 id=&quot;简介&quot;&gt;&lt;a href=&quot;#简介&quot; c
+    
+    </summary>
+    
+      <category term="Cloud" scheme="https://caixueyuan.github.io/categories/Cloud/"/>
+    
+    
+      <category term="容器化" scheme="https://caixueyuan.github.io/tags/%E5%AE%B9%E5%99%A8%E5%8C%96/"/>
+    
+  </entry>
   
   <entry>
     <title>redis必知必会</title>
@@ -2225,38 +2319,6 @@
     
     
       <category term="linux,C++" scheme="https://caixueyuan.github.io/tags/linux-C/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>C++ Prime Plus第9章</title>
-    <link href="https://caixueyuan.github.io/2019/07/31/C-Prime-Plus%E7%AC%AC9%E7%AB%A0/"/>
-    <id>https://caixueyuan.github.io/2019/07/31/C-Prime-Plus第9章/</id>
-    <published>2019-07-30T16:02:06.000Z</published>
-    <updated>2019-07-30T16:25:28.804Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><p><strong>重载</strong>：</p>
-<ol>
-<li>重载不区分const和非const变量</li>
-<li>重载不区分引用和非引用</li>
-<li>重载不区分返回值</li>
-</ol>
-<p><strong>模板函数</strong></p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">Swap</span><span class="params">(T&amp; a,T&amp; b)</span></span>;<span class="comment">//常规模板</span></div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;&gt; <span class="keyword">void</span> Swap&lt;job&gt;(job&amp; a,job&amp; b);<span class="comment">//具体化</span></div></pre></td></tr></table></figure>
-<p>具体函数优于具体化，优于常规模板</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;函数&quot;&gt;&lt;a href=&quot;#函数&quot; class=&quot;headerlink&quot; title=&quot;函数&quot;&gt;&lt;/a&gt;函数&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;重载&lt;/strong&gt;：&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;重载不区分const和非const变量&lt;/li&gt;
-&lt;li&gt;重载不区分引用
-    
-    </summary>
-    
-      <category term="学习笔记" scheme="https://caixueyuan.github.io/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
-    
     
   </entry>
   
