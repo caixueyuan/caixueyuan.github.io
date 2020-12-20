@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://caixueyuan.github.io/"/>
-  <updated>2020-12-19T16:26:45.113Z</updated>
+  <updated>2020-12-20T06:22:57.359Z</updated>
   <id>https://caixueyuan.github.io/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="https://caixueyuan.github.io/2020/12/19/redis%E5%BF%85%E7%9F%A5%E5%BF%85%E4%BC%9A/"/>
     <id>https://caixueyuan.github.io/2020/12/19/redis必知必会/</id>
     <published>2020-12-19T09:02:25.000Z</published>
-    <updated>2020-12-19T16:26:45.113Z</updated>
+    <updated>2020-12-20T06:22:57.359Z</updated>
     
     <content type="html"><![CDATA[<h2 id="基础和应用篇"><a href="#基础和应用篇" class="headerlink" title="基础和应用篇"></a>基础和应用篇</h2><p>Redis(Remote Dictionary Service)：远程字典服务</p>
 <h3 id="Redis基础数据结构"><a href="#Redis基础数据结构" class="headerlink" title="Redis基础数据结构"></a>Redis基础数据结构</h3><h4 id="string（字符串）"><a href="#string（字符串）" class="headerlink" title="string（字符串）"></a><strong>string（字符串）</strong></h4><p>Redis所有的数据结构都以唯一的key字符串作为名称，然后通过这个唯一key值来获取相应的value数据。Redis的字符串是动态字符串，是可以修改的字符串，类似于Java的ArrayList，采用预分配冗余空间的方式来减少内存的频繁分配。</p>
@@ -95,6 +95,64 @@
 <p><strong>read操作也是一样的道理，read操作只负责将数据从本地操作系统内核的接收缓存中取出来就了事，但是如果缓冲是空的，就需要等待数据到来，这个就是read操作IO操作的真正耗时</strong></p>
 <p><strong>其实，TCP机制一般都是将ACK报文和数据报文一起发送的方式，来提高效率。</strong></p>
 <p><img src="image-20201220002620551.png" alt="image-20201220002620551"></p>
+<h3 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h3><p>Redis的事务指令分别是multi，exec，discard。multi指示事务的开始，exec指示事务的执行，discard指示事务的丢弃。</p>
+<p>由于Redis的单线程特性，它不用担心自己在执行队列的时候被其他指令所打断。</p>
+<p>Redis事务根本不具备“原子性”，而仅仅是满足了事务的隔离性中的串行化——当前执行的事务有着不被其他事务打断的权利。</p>
+<p>Redis可以使用watch机制来进行乐观锁的判断。watch会在事务开始之前盯住一个或者多个关键变量，当事务执行时，也就是服务器收到exec指令要顺序执行的事务队列时，Redis会检查关键变量自watch之后是否被修改（包括当前事务所在的客户端），如果关键变量被人动过，exec指令会返回NULL，客户端可以选择重试。</p>
+<h3 id="PubSub"><a href="#PubSub" class="headerlink" title="PubSub"></a>PubSub</h3><p>Redis自己没有实现消息队列，消息队列不支持消息的多播机制。（不过基于Redis开发的插件是能够实现该功能的）</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">client = redis.StrictRedis()</div><div class="line">p = client.pubsub()</div><div class="line">p.subscribe(<span class="string">"code"</span>)</div><div class="line"></div><div class="line"><span class="comment"># 发布</span></div><div class="line">p.publish(<span class="string">"code"</span>,<span class="string">"abc"</span>)</div></pre></td></tr></table></figure>
+<p>PubSub的生产者传递过来一个消息，Redis会直接找到相应的消费者传递过去，如果消费者都没有，消息会被丢掉，不会保存。</p>
+<h3 id="小对象压缩"><a href="#小对象压缩" class="headerlink" title="小对象压缩"></a>小对象压缩</h3><p>Redis对于小对象，不会采用HashMap这样的二维数组，而是采用ziplist这样的一维字节数组结构。Redis的intset是一个紧凑的整数数组结构，用于存放元素都是整数且元素个数较少的set集合。当集合对象的元素不断增加，或者某个值过大，这种小对象存储会自动升级到标准结构。</p>
+<figure class="highlight dsconfig"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="string">hash-max-</span><span class="string">ziplist-entries </span><span class="string">512 </span><span class="comment"># hash的元素个数超过512就会使用标准的二维数组</span></div><div class="line"><span class="string">hash-max-</span><span class="string">ziplist-value </span><span class="string">64 </span><span class="comment"># hash的任意元素的key/value的长度</span></div><div class="line"><span class="built_in">list-max-ziplist-entries512</span> <span class="comment"># list的元素个数超过512就必须用标准</span></div><div class="line"><span class="built_in">list-max-ziplist-value</span> <span class="string">64 </span><span class="comment"># list的任意元素的超度超过64就必须用标准</span></div><div class="line"><span class="string">zset-max-</span><span class="string">ziplist-entries </span><span class="string">128</span></div><div class="line"><span class="string">zset-max-</span><span class="string">ziplist-value </span><span class="string">64</span></div><div class="line"><span class="built_in">set-max-intset-entries</span> <span class="string">512</span></div><div class="line"></div><div class="line"><span class="string">redis </span>&gt; <span class="string">object </span><span class="string">encoding </span><span class="string">helo </span><span class="comment"># 查看使用的数据结构</span></div></pre></td></tr></table></figure>
+<h2 id="集群篇"><a href="#集群篇" class="headerlink" title="集群篇"></a>集群篇</h2><h3 id="CAP原理"><a href="#CAP原理" class="headerlink" title="CAP原理"></a>CAP原理</h3><p>当网络分区发生时，一致性和可用性两难全</p>
+<p>Redis不能保证实时一致性，只能够保证最终一致性</p>
+<p><strong>Redis同步方式</strong>：</p>
+<ol>
+<li>增量同步（指令流—），主节点会将那些对自己的状态产生修改性影响的指令记录在本地的内存buffer中，然后异步将buffer中的指令同步到从节点，从节点一边执行同步指令来达到和主节点一样的状态，<strong>一边向主节点反馈自己同步到哪里</strong>（偏移量）。要设置合适buffer大小参数，来保证在全量同步时间内的日志存储量。</li>
+<li>快照同步：主节点使用bgsave，将当前内存的数据全部快照到磁盘文件中，然后再把快照文件的内容全部传送到从节点。从节点进行全量加载，完毕后再进行增量同步。</li>
+<li>无盘复制：主服务直接通过套接字将快照内容直接发送到从节点，不用先存储到磁盘中，再进行发送。</li>
+</ol>
+<h3 id="Sentinel"><a href="#Sentinel" class="headerlink" title="Sentinel"></a>Sentinel</h3><p>Redis Sentinel集群看成时一个zookeeper集群，它是集群高可用的心脏，一般有3-5个节点组成。（跟zookeeper是相同的功能）</p>
+<p><code>min-slaves-to-write 1</code>第一个参数表示主节点必须有一个从节点在进行正常复制，否则就停止对外写服务，丧失可用性。</p>
+<p><strong>连接池建立新连接时，回去查询主节点地址，如果主节点挂掉了，或者主节点是只读的，就断开所有连接，重新使用新地址来建立新连接。Redis一般都是在处理命令时捕捉一个异常ReadOnlyError</strong>。我们的代码设计也可以采用相同的方式</p>
+<h3 id="Cluster"><a href="#Cluster" class="headerlink" title="Cluster"></a>Cluster</h3><p><img src="image-20201220115959982.png" alt="image-20201220115959982"></p>
+<p>Redis Cluster是去中心化，也就是每个服务都能够对外界提供服务，而且是提供所有服务的功能，然后再由该服务将请求转发到对应的服务上去，。（Redis之间是通过一种特殊的二进制协议交互集群信息，保证速度块）</p>
+<p>Redis Cluster槽位的信息存储于每个节点中，并且，可以通过纠正机制来实现槽位信息的校验调整，来保证所有的槽位能够正确对应到对应的Redis实例中。</p>
+<h2 id="扩展篇"><a href="#扩展篇" class="headerlink" title="扩展篇"></a>扩展篇</h2><h3 id="Stream"><a href="#Stream" class="headerlink" title="Stream"></a>Stream</h3><p>Stream在Redis中发布出来，是插件。它是一个支持多播的可持久消息队列。也就是说Stream是独立的，跟客户端的session没有绑定关系。</p>
+<p>每个Stream都可以挂多个消费组，每个消费组都由个游标last_delivered_id在Stream数组之上往前移动，表示当前消费组已经消费到那条消息了。每个消费组都有一个Stream内唯一的名称，消费组不会自动创建。</p>
+<p>每个消费组的状态都是独立的，相互不影响。也就是说同一份Stream内部的消息会被每个消费组都消费到。</p>
+<p>同一个消费组可以挂接多个消费者，这些消费者之间是竞争关系，任意一个消费者读取了消息都会使游标last_delivered_id往前移动。每个消费者都有一个组内唯一名称。</p>
+<p>Stream在Sentinel和Cluster集群环境下，Stream是可以支持高可用的。</p>
+<figure class="highlight tap"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">xadd codehole * name cai age<span class="number"> 30 </span><span class="comment"># 向Stream追加消息</span></div><div class="line">xdel <span class="comment"># 从Stream中删除消息，这里的删除仅仅是设置标志位，不影响消息总长度</span></div><div class="line">xrange <span class="comment"># 获取Stream消息长度，会自动过滤掉已经删除的消息</span></div><div class="line">xlen <span class="comment"># 获取Stream消息长度</span></div><div class="line">xread block<span class="number"> 0 </span>count<span class="number"> 1 </span>streams codeholes $ <span class="comment"># 阻塞读</span></div></pre></td></tr></table></figure>
+<h3 id="Redis内存策略"><a href="#Redis内存策略" class="headerlink" title="Redis内存策略"></a>Redis内存策略</h3><p>当Redis内存超出了配置的限制的话，就会采用策略，来让用户自己决定如何腾出新空间来提供读写服务。</p>
+<p>redis目前使用的是近似LRU算法，当出现内存超出maxmemory时，就会执行LRU淘汰算法，随机采样出5个key，然后淘汰最旧的key，如果淘汰后内存还是超出maxmemory，继续淘汰。（采样的范围有两种：已经过期的数据和所有的keys)</p>
+<p>该过程是通过后台的线程一直在扫描</p>
+<h3 id="过期策略"><a href="#过期策略" class="headerlink" title="过期策略"></a>过期策略</h3><p>Redis会将每个设置了过期时间的key放入一个独立的字典中，以后会定时遍历这个字典来删除到期的key（定时时间默认为10s，由后面线程定时扫描）（注意，我们在设置超时时间的时候，不要设置在统一的时间，防止在同一时间大量删除keys导致出现卡顿）</p>
+<p>另外一种方法，就是零散处理，在访问到对应的key的时候，对已经超时的key进行删除。</p>
+<p>所谓的懒惰删除，实际上，就是后台保存一个队列，队列保存着任务，定时从队列中获取任务进行执行</p>
+<h2 id="源码篇"><a href="#源码篇" class="headerlink" title="源码篇"></a>源码篇</h2><h3 id="探索字符串内部"><a href="#探索字符串内部" class="headerlink" title="探索字符串内部"></a>探索字符串内部</h3><p>字符串内部使用的是SDS（Simple Dynamic String),如同ArrayList。Redis规定字符串的长度不能超过512M。</p>
+<p>Redis每个key都有对应的数据结构进行代表</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">RedisObject</span>&#123;</span></div><div class="line">    int4 type;</div><div class="line">    int4 encoding;</div><div class="line">    int24 lru;</div><div class="line">    <span class="keyword">int</span> <span class="number">32</span> refcount;</div><div class="line">    <span class="keyword">void</span> *ptr;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>字符串的存储一般分为两种</p>
+<p><img src="image-20201220134439452.png" alt="image-20201220134439452"></p>
+<p>第一种是SDS直接在RedisObject的连续内存的后面，适合存放不超过44个字节的字符串</p>
+<p>第二种是存放大字符串，有一个新的内存位置进行存储</p>
+<p>在字符串长度小于1MB之前，扩容空间采用加倍策略，也就是保留100%的冗余空间。当字符串长度超过1MB之后，为了避免加倍后的冗余空间过大而导致浪费，每次扩容只会多分配1MB大小的冗余空间。</p>
+<h3 id="探索字典内部"><a href="#探索字典内部" class="headerlink" title="探索字典内部"></a>探索字典内部</h3><p>跟HashMap相似。只是rehash的时候采用的是渐进式的而已。</p>
+<p>说白了，就是直接提交任务给后台线程，让后台线程异步运行来进行扩容字典。</p>
+<p>rehash扩容条件：当hash表中元素的个数等于第一维数组的长度时，就会开始扩容。扩容是异步的，由后台线程来处理。如果元素的个数已经超过第一维数组长度的5倍，那就是强制扩容。</p>
+<p>缩容条件：元素个数低于数组长度的10%。</p>
+<h3 id="探索压缩列表内部"><a href="#探索压缩列表内部" class="headerlink" title="探索压缩列表内部"></a>探索压缩列表内部</h3><p>压缩列表用来实现zset。压缩列表是一块连续的内存空间，元素之间紧挨着压缩，没有任何冗余空隙。</p>
+<p>ziplist都是紧凑存储，没有冗余空间，如果插入一个新的元素就需要调用realloc扩展内存。ziplist不适合存储大型字符串，存储的元素也不应过多</p>
+<h3 id="探索快速列表内部"><a href="#探索快速列表内部" class="headerlink" title="探索快速列表内部"></a>探索快速列表内部</h3><p>类似于LinkedList，后面采用了另外一种方法，就是quicklist，其根本的目的还是在于节省内存，毕竟每个LinkedLink的前后都要有一个指针。</p>
+<p><img src="image-20201220141232728.png" alt="image-20201220141232728"></p>
+<p>quicklist内部默认单个ziplist长度为8KB，超过了这个字节数，就会另起一个ziplist。ziplist的长度由配置参数list-max-ziplist-size决定。</p>
+<h3 id="探索跳跃列表内部"><a href="#探索跳跃列表内部" class="headerlink" title="探索跳跃列表内部"></a>探索跳跃列表内部</h3><p>主要用在zset,也就是有序set。zset的内部实现是一个hash字典+一个跳跃列表。</p>
+<p><strong>LFU和LRU</strong></p>
+<p>LRU：只要一次访问，就会让数据变热</p>
+<p>LFU：需要追踪最近一段时间的访问频率，如果某个key只是偶然被访问一次是不足变热，需要在近一段时间内被访问很多次才有机会被LFU算法认为变热。</p>
+<p>默认Redis时钟值每毫秒更新一次，在定时任务serverCron里主动设置。</p>
+<p>淘汰机制只会在内存达到maxmemory的设置时才会触发，在每一个指令的执行之前都会触发。每次触发都是采用随机策略，随机挑选若干个key，更新这个key的热度，淘汰掉热度最低的key。</p>
 ]]></content>
     
     <summary type="html">
