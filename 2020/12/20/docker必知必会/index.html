@@ -105,7 +105,9 @@
 <meta property="og:image" content="https://caixueyuan.github.io/2020/12/20/docker必知必会/image-20201220225221904.png">
 <meta property="og:image" content="https://caixueyuan.github.io/2020/12/20/docker必知必会/image-20201220225954646.png">
 <meta property="og:image" content="https://caixueyuan.github.io/2020/12/20/docker必知必会/image-20201220233122992.png">
-<meta property="og:updated_time" content="2020-12-20T16:29:45.696Z">
+<meta property="og:image" content="https://caixueyuan.github.io/2020/12/20/docker必知必会/image-20201221235617176.png">
+<meta property="og:image" content="https://caixueyuan.github.io/2020/12/20/docker必知必会/image-20201222002943822.png">
+<meta property="og:updated_time" content="2021-01-11T16:30:20.767Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="docker必知必会">
 <meta name="twitter:description" content="容器发展之路读《深入浅出Docker》所知，比较偏应用。 简介Docker引擎是用于运行和编排容器的基础设施工具，是运行容器的核心容器运行时。 OCI（The Open Container Initiative)：是一个旨在对容器基础架构中的基础组件进行标准化的管理委员会。 虚拟机：依赖其专用的操作系统，OS会占用额外的CPU，RAM和存储，并且，每个OS都需要补丁，监控，license等。由虚拟">
@@ -439,6 +441,64 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">docker-compose up &amp;</div><div class="line">docker-compose -f prod-equus-bass.yml up &amp;</div><div class="line">docker-compose down</div><div class="line">docker-compose up -d # 后台启动</div><div class="line">docker-compose top</div><div class="line">docker-compose stop</div></pre></td></tr></table></figure>
 <h2 id="Docker-Swarm"><a href="#Docker-Swarm" class="headerlink" title="Docker Swarm"></a>Docker Swarm</h2><p><strong>docker-swarm是解决多主机多个容器调度部署得问题，Docker Swarm默认是建立在docker上，但是能够调用docker-compose</strong></p>
 <p>作用：Swarm将一个或多个Docker节点组织起来，使得用户能够以集群方式管理他们。Swarm默认内置有加密的分布式集群存储，加密网络，共用TLS，安全集群接入令牌以及简化数字证书管理的PKI。在编排方面，Swarm提供了一套丰富的API来使得部署和管理复杂的微服务应用变得易如反掌，通过将应用定义在声明式配置文件中，使用原生的docker命令完成部署，并有滚动升级，回滚以及扩缩容操作。</p>
+<h3 id="Docker-Swarm详解"><a href="#Docker-Swarm详解" class="headerlink" title="Docker Swarm详解"></a><strong>Docker Swarm详解</strong></h3><p>从集群角度来说，一个Swarm由一个或多个Docker节点组成，唯一的前提就是要求所有节点通过可靠的网络相连。节点会被配置为管理节点或者工作节点。管理节点负责集群控制面，进行诸如监控集群状态/分发任务至工作节点等操作。工作节点接收来自管理节点的任务并执行。</p>
+<p>Swarm的配置和状态信息保存在一套位于所有管理节点上的分布式etcd数据库中。该数据库运行于内存中，并保持数据的最新状态。</p>
+<p>关于集群管理，最大的挑战在于其安全性，Swarm使用TLS进行通信加密/节点认证和角色授权/自动密钥轮换等。</p>
+<p>Swarm中的最小调度单元是服务。当容器被封装在一个服务中时，称之为一个任务或一个副本。</p>
+<p><img src="image-20201221235617176.png" alt="image-20201221235617176">0</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">docker swarm init --advertise-addr 10.0.0.1:2377 --listen-addr 10.0.0.1:2377 # 初始化节点，作为管理节点</div><div class="line">docker node ls # 查看节点</div><div class="line">docker swarm join-token worker # 查看加入作为worker的token</div><div class="line">docker swarm join-token manager # 查看加入作为manager的token</div><div class="line">docker swarm join --token token_value --advertise-addr 10.0.0.4:2377 --listen-addr 10.0.0.4:2377</div></pre></td></tr></table></figure>
+<p>工作节点和管理节点的接入命令中使用的接入Token是不同的。一个节点是作为工作节点还是管理节点，完全依赖于使用了哪个Token。接入的Token要被妥善保存。</p>
+<h4 id="Swarm管理器高可用性"><a href="#Swarm管理器高可用性" class="headerlink" title="Swarm管理器高可用性"></a>Swarm管理器高可用性</h4><p>Swarm的管理节点内置由对HA的支持，也就是，即使一个或者多个节点发生故障，剩余的管理节点也会继续保证Swarm的运转。Swarm使用Raft共识算法来支持管理节点的HA。包括以下的最佳实践原则：</p>
+<ol>
+<li>部署奇数个管理节点</li>
+<li>不要部署太多管理节点（一般都是3个或5个，不要超过7个）</li>
+</ol>
+<p>Docker提供了自动锁机制来锁定Swarm，这会强制要求重启的管理节点在提供一个集群解锁码之后才有权从新接入集群。</p>
+<h3 id="Swarm服务"><a href="#Swarm服务" class="headerlink" title="Swarm服务"></a>Swarm服务</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">docker service create --name web-fe -p 8080:8080 -replicas 5 nigelpoulton/pluralsight-docker-ci</div><div class="line">docker service ls</div><div class="line">docker service ps web-fe</div><div class="line">docker service inspect --pretty web-fe</div><div class="line">docker service scale web-fe=10 # 能够动态扩容或者缩容</div><div class="line">docker service rm web-fe</div><div class="line">docker network create -d overlay uber-net # 该命令会创建一个名为uber-net的覆盖网络，会与要创建的服务结合使用。覆盖网络是一个二层网络，容器可以接入该网络，并且所有接入的容器均可互相通信。也就是说覆盖网络是创建于底层异构网络之上的一个新的二层容器网络</div><div class="line">docker service logs &lt;service-name&gt; # 查看日志</div></pre></td></tr></table></figure>
+<p>服务的默认复制模式是副本模式，这种模式会部署期望数量的服务副本，并尽可能地将各个副本分布在整个集群中。另外一种模式是全局模式，在这种模式中，每个节点仅运行一个副本。</p>
+<p>默认情况下会使用Ingress模式，也就是说即使某个节点上并未运行服务的副本，依然可以进入该页面——所有节点都配置有映射，因此会将请求转发给运行有服务副本的节点。</p>
+<p>服务日志能够正常运行的前提是，容器内的应用程序运行于PID为1的进程，并且将日志发送给STDOUT，错误信息发送给STDERR。日志驱动会将这些日志转发到其配置指定的位置。</p>
+<h2 id="Docker网络"><a href="#Docker网络" class="headerlink" title="Docker网络"></a>Docker网络</h2><p>Docker网络架构源自一种叫做容器网络模型的方案，该方案是开源的并且支持插接式连接。Libnetwork是Docker对CNM的一种实现，提供了Docker核心网络架构的全部功能。不同的驱动可以通过插拔的方式接入Libnetwork来提供定制化的网络拓扑。Libnetwork提供了本地服务发现和基础的容器负载均衡解决方案。</p>
+<h3 id="Docker网络——详解"><a href="#Docker网络——详解" class="headerlink" title="Docker网络——详解"></a>Docker网络——详解</h3><p><img src="image-20201222002943822.png" alt="image-20201222002943822"></p>
+<p>Docker网络架构由3个主要部分组成：CNM，Libnetwork和驱动。</p>
+<ol>
+<li><p>CNM是设计标准，规定了Docker网络的基础组成要素（包括沙盒，终端和网络)，负责为容器提供网络功能</p>
+<ol>
+<li><strong>沙盒</strong>：独立网络栈，包括以太网接口，端口，路由表以及DNS配置</li>
+<li><strong>终端</strong>：虚拟网络接口，就想普通网络接口一样，终端主要职责是负责创建连接</li>
+<li><strong>网络</strong>：802.1网桥的软件实现。网络是需要交互的终端的集合，并且终端之间相互独立</li>
+</ol>
+</li>
+<li><p>Libnetwork:实现了CNM中定义的全部3个组件，还实现了本地服务发现，基于Ingress的容器负载均衡，以及网络控制层和管理层功能，实现控制层和管理层功能</p>
+</li>
+<li>驱动：实现数据层，封装了若干内置驱动，每个驱动都负责其上所有网络资源的创建和管理，Libnetwork支持同时激活多个网格驱动。</li>
+</ol>
+<h3 id="单机桥接网络"><a href="#单机桥接网络" class="headerlink" title="单机桥接网络"></a>单机桥接网络</h3><p>该网络只能在单个Docker主机上运行，并且只能在所在Docker主机上的容器进行连接。每个Docker主机都有一个默认的单机桥接网络，并且，不同的主机上的单机桥接网络不能进行通信。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">docker network ls</div><div class="line">docker network inspect bridge</div><div class="line">docker network create -d bridge localnet</div></pre></td></tr></table></figure>
+<p>单机桥接网络有一个特点：同一个网络上的不同容器可以根据名称进行通信，容器运行了一个本地DNS解析器，该解析器将请求转发到了Docker内部DNS服务器当中。DNS服务器中记录了容器启动时通过–name或–net-alias参数指定的名称与容器之间的映射关系。</p>
+<p>端口映射允许将某个容器端口映射到Docker主机端口上。</p>
+<h3 id="多级覆盖网络"><a href="#多级覆盖网络" class="headerlink" title="多级覆盖网络"></a>多级覆盖网络</h3><p>覆盖网络使用于多机环境，它允许单个网络包含多个主机，这样不同主机上的容器间就可以在链路层实现通信。覆盖网络是理想的容器间通信方式，支持完全容器化的应用，并且具备良好的伸缩性。</p>
+<p>Docker内置的Maxvlan驱动通过为容器提供MAC和IP地址，让容器在物理网络上成为”一等公民“。优点是性能优异，无须端口映射或者额外桥接，可以直接通过主机接口访问容器接口。但是Macvlan的缺点是需要将主机网卡设置为混杂模式。</p>
+<h3 id="服务发现"><a href="#服务发现" class="headerlink" title="服务发现"></a>服务发现</h3><p>服务发现允许容器和Swarm服务通过名称互相定位，唯一的要求就是需要处于同一个网路上。其底层实现是利用了Docker内置的DNS服务器，为每个容器提供DNS解析功能。</p>
+<ol>
+<li>ping c2命令调用本地DNS解析器，尝试将c2解析为具体IP地址。每个Docker容器都有本地DNS解析器</li>
+<li>如果本地解析器在本地缓存中没有找到c2对应的IP地址，本地解析器会向Docker DNS服务器发起一个递归查询。本地服务解析器是预先配置好并知道Docker DNS服务器细节的</li>
+<li>Docker DNS服务器记录了全部容器名称和IP地址的映射关系，其中容器名称是容器创建时通过–name或者–net-alias参数设置的，这意味着Docker DNS服务器知道容器c2的IP地址</li>
+<li>DNS服务返回c2对应的IP地址到c1本地DNS解析器，之所以会这样是因为两个容器位于相同的网络当中，如果所处网络不同则该命令不可行</li>
+<li>ping命令会发往c2对应的IP地址</li>
+</ol>
+<h3 id="Ingress网络"><a href="#Ingress网络" class="headerlink" title="Ingress网络"></a>Ingress网络</h3><p>通过Ingress模式发布的服务，可以保证从Swarm集群内任一节点都能访问该服务，默认为Ingress模式；以HOST模式发布的服务只能通过运行服务副本的节点来访问。如果存在多个运行中的副本，流量会平均到每个副本之上。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">docker network ls # 查询</div><div class="line">docker network create -d overlay overnet # 创建网络</div><div class="line">docker network inspect</div><div class="line">docker network prune # 删除Docker主机上全部未使用的网络</div><div class="line">docker network rm # 删除Docker主机上指定网络</div></pre></td></tr></table></figure>
+<p>只有当运行中的容器连接到覆盖网络的时候，该网络才变为可用状态。这种延迟策略通过减少网络梳理，提升了网络的扩展性。</p>
+<h2 id="卷与持久化数据"><a href="#卷与持久化数据" class="headerlink" title="卷与持久化数据"></a>卷与持久化数据</h2><p>如果希望自己的容器数据保留下来（持久化），则需要将数据存储在卷上。卷和容器是解耦的，从而可以独立地创建并管理卷，并且卷并未与任意容器生命周期绑定。最终效果则用户可以删除一个关联了卷的容器，但是卷不会删除。</p>
+<p>每个容器被自动分配了本地存储。默认情况下，这是容器全部文件和文件系统保存的地方。总之，非持久存储属于容器的一部分，并且与容器的生命周期一致——容器创建时创建非持久化存储，同时，该存储也会随着容器的删除而删除。</p>
+<p>在Linux系统中，该存储的目录在<code>/var/lib/docker/&lt;storage-driver&gt;/</code>之下，是容器的一部分。在Windows系统中位于<code>C:\ProgramData\Docker\windowsfilter\</code>目录之下。默认情况下，容器的所有存储都使用本地存储。所以默认情况下容器全部目录都是用该存储。也就是不持久存储。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">docker volume create myvol</div><div class="line">docker volume ls</div><div class="line">docker volume prune myvol</div><div class="line">docker volume rm myvol</div><div class="line">docker volumn inspect myvol</div></pre></td></tr></table></figure>
+<h2 id="使用Docker-Stack部署应用"><a href="#使用Docker-Stack部署应用" class="headerlink" title="使用Docker Stack部署应用"></a>使用Docker Stack部署应用</h2><p>Stack还提供了简单的方式来部署应用并管理其完整的生命周期：初始化部署 &gt; 健康检查  &gt;  扩容 &gt;  更新 &gt;  回滚。</p>
+<p>Compose文件中包含了构成应用所需的完整服务栈，此外还包括了卷，网络，安全以及安全所需的其他基础架构。然后基于该文件使用docker stack deploy命令来部署应用。</p>
+<p>服务是通过docker-stack.yml文件来定义了应用及其依赖。version代表了Compose文件格式的版本号，services中定义了组成当前组成的服务都有哪些。networks列出必需的网络，secrets定义了应用用到的密钥。</p>
+<p>Docker Stack和Docker Compose的一个区别是，Stack不支持构建。默认情况下，所有端口都采用Ingress模式。这意味着Swarm集群中的每个接待你的对应端口都会映射并且是可访问，即使是那些没有运行副本的节点。另一种方式是Host模式，端口只映射到了运行副本的Swarm节点上。</p>
+<p>当Docker停止某个容器的时候，会给容器内部PID为1的进程发送SIGTERM信号。容器内PID为1的进程会有10s的优雅停止时间来执行一些清理操作。如果进程没有处理该信号，则10s后就会被SIGKILL信号强制结束。</p>
 
       
     </div>
@@ -490,6 +550,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/01/10/shell必知必会/" rel="prev" title="shell必知必会">
+                shell必知必会 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -561,7 +625,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">76</span>
+                <span class="site-state-item-count">77</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -625,7 +689,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#容器发展之路"><span class="nav-number">1.</span> <span class="nav-text">容器发展之路</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#简介"><span class="nav-number">1.1.</span> <span class="nav-text">简介</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker安装"><span class="nav-number">2.</span> <span class="nav-text">Docker安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#纵观Docker"><span class="nav-number">3.</span> <span class="nav-text">纵观Docker</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#运维视图"><span class="nav-number">3.1.</span> <span class="nav-text">运维视图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开发视图"><span class="nav-number">3.2.</span> <span class="nav-text">开发视图</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker引擎"><span class="nav-number">4.</span> <span class="nav-text">Docker引擎</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker镜像"><span class="nav-number">5.</span> <span class="nav-text">Docker镜像</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#简介-1"><span class="nav-number">5.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#镜像和分层"><span class="nav-number">5.2.</span> <span class="nav-text">镜像和分层</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker容器"><span class="nav-number">6.</span> <span class="nav-text">Docker容器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#容器和虚拟机"><span class="nav-number">6.1.</span> <span class="nav-text">容器和虚拟机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#容器"><span class="nav-number">6.2.</span> <span class="nav-text">容器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#应用的容器化"><span class="nav-number">7.</span> <span class="nav-text">应用的容器化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#build过程"><span class="nav-number">7.1.</span> <span class="nav-text">build过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#最佳实践"><span class="nav-number">7.2.</span> <span class="nav-text">最佳实践</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用Docker-Compose部署应用"><span class="nav-number">8.</span> <span class="nav-text">使用Docker Compose部署应用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker-Swarm"><span class="nav-number">9.</span> <span class="nav-text">Docker Swarm</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#容器发展之路"><span class="nav-number">1.</span> <span class="nav-text">容器发展之路</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#简介"><span class="nav-number">1.1.</span> <span class="nav-text">简介</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker安装"><span class="nav-number">2.</span> <span class="nav-text">Docker安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#纵观Docker"><span class="nav-number">3.</span> <span class="nav-text">纵观Docker</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#运维视图"><span class="nav-number">3.1.</span> <span class="nav-text">运维视图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开发视图"><span class="nav-number">3.2.</span> <span class="nav-text">开发视图</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker引擎"><span class="nav-number">4.</span> <span class="nav-text">Docker引擎</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker镜像"><span class="nav-number">5.</span> <span class="nav-text">Docker镜像</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#简介-1"><span class="nav-number">5.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#镜像和分层"><span class="nav-number">5.2.</span> <span class="nav-text">镜像和分层</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker容器"><span class="nav-number">6.</span> <span class="nav-text">Docker容器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#容器和虚拟机"><span class="nav-number">6.1.</span> <span class="nav-text">容器和虚拟机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#容器"><span class="nav-number">6.2.</span> <span class="nav-text">容器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#应用的容器化"><span class="nav-number">7.</span> <span class="nav-text">应用的容器化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#build过程"><span class="nav-number">7.1.</span> <span class="nav-text">build过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#最佳实践"><span class="nav-number">7.2.</span> <span class="nav-text">最佳实践</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用Docker-Compose部署应用"><span class="nav-number">8.</span> <span class="nav-text">使用Docker Compose部署应用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker-Swarm"><span class="nav-number">9.</span> <span class="nav-text">Docker Swarm</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Docker-Swarm详解"><span class="nav-number">9.1.</span> <span class="nav-text">Docker Swarm详解</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Swarm管理器高可用性"><span class="nav-number">9.1.1.</span> <span class="nav-text">Swarm管理器高可用性</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Swarm服务"><span class="nav-number">9.2.</span> <span class="nav-text">Swarm服务</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker网络"><span class="nav-number">10.</span> <span class="nav-text">Docker网络</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Docker网络——详解"><span class="nav-number">10.1.</span> <span class="nav-text">Docker网络——详解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#单机桥接网络"><span class="nav-number">10.2.</span> <span class="nav-text">单机桥接网络</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多级覆盖网络"><span class="nav-number">10.3.</span> <span class="nav-text">多级覆盖网络</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#服务发现"><span class="nav-number">10.4.</span> <span class="nav-text">服务发现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Ingress网络"><span class="nav-number">10.5.</span> <span class="nav-text">Ingress网络</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#卷与持久化数据"><span class="nav-number">11.</span> <span class="nav-text">卷与持久化数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用Docker-Stack部署应用"><span class="nav-number">12.</span> <span class="nav-text">使用Docker Stack部署应用</span></a></li></ol></div>
             
 
           </div>
@@ -648,7 +712,7 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2020</span>
+  <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
